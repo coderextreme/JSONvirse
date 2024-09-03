@@ -1,4 +1,4 @@
 function publish() {
-	let obj = JSON.parse($("#json").val());
+	let obj = $("#json").val();
 	return obj;
 }

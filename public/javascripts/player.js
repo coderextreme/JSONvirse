@@ -60,7 +60,7 @@ Player.prototype = {
       $('form').submit(function(){
         socket.emit('clientmessage', $('#m').val());
         $('#m').val('');
-	socket.emit('clientpublish', JSON.parse($('#json').val()));
+	socket.emit('clientpublish', $('#json').val());
         return false;
       });
   socket.on('servermessage', Player.prototype.servermessage);

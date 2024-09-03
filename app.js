@@ -1,7 +1,9 @@
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var io = require('socket.io')(http, {
+    maxHttpBufferSize: 1e8, pingTimeout: 60000
+});
 var metaServer = "http://localhost:8090";
 var Client = require('node-rest-client').Client;
 var client = new Client();
@@ -206,6 +208,7 @@ io.on('connection', function(socket){
   });
   socket.on('disconnect', function(){
 	if (players[socket.client.id]) {
+		console.log('servermessage', players[socket.client.id].playernumber+" quit.");
 		io.emit('servermessage', players[socket.client.id].playernumber+" quit.");
 		oldplayers[socket.client.id] = players[socket.client.id];
 		for (var card in players[socket.client.id].cards) {
