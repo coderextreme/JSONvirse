@@ -1,0 +1,86 @@
+function Player() {
+}
+
+Player.prototype = {
+	servermessage: function(msg) {
+		$('#messages').append($('<li>').text(msg));
+		scrollToBottom();
+	},
+	serverpublish: function(msg) {
+		console.log("Receiving publish", msg)
+		loadJS("#scene", msg[0]);
+	},
+	serverupdate: function(playernumber, position, orientation) {
+		if (typeof orientation[0] === 'string') {
+			Player.prototype.servermessage(playernumber+" at "+position+" turns "+printCard(orientation[0].substr(4)));
+		} else {
+			Player.prototype.servermessage(playernumber+" at "+position+" turns "+orientation);
+		}
+		// orientation: stack, number, card, visibility
+		if (typeof players[playernumber] === 'undefined') {
+			players[playernumber] = {
+				position: position,
+				orientation: orientation,
+			};
+		} else {
+			players[playernumber].position = position;
+			players[playernumber].orientation = orientation;
+		}
+		//onLocationfound = function(e){
+			for (var player in players) {
+				console.log("update "+player+" position "+players[player].position);
+
+			}
+		//}
+        },
+	serverheal: function() { console.log(arguments);},
+	serverdamage: function() { console.log(arguments);},
+	servercollision: function() { console.log(arguments);},
+	serverorderchange: function() { console.log(arguments);},
+	serverdie: function() { console.log(arguments);},
+	servererror: function() { console.log(arguments);},
+	serverroompurge: function() { console.log(arguments);},
+	serverroomready: function() { console.log(arguments);},
+	serverpowerplay: function() { console.log(arguments);},
+	servercounter: function() { console.log(arguments);},
+	serverturnbegin: function() { console.log(arguments);},
+	serverturnend: function() { console.log(arguments);},
+	servercapability: function() {
+		if ( history.pushState ) {
+			var href = location.href;
+			var i = href.indexOf("?");
+			if (i >= 0) {
+				href = href.substring(0, i);
+			}
+			history.pushState( {}, document.title, href+"?"+arguments[0].id );
+		}
+		thisplayer = arguments[1];
+	}
+};
+      $('form').submit(function(){
+        socket.emit('clientmessage', $('#m').val());
+        $('#m').val('');
+	socket.emit('clientpublish', JSON.parse($('#json').val()));
+        return false;
+      });
+  socket.on('servermessage', Player.prototype.servermessage);
+  socket.on('serverpublish', Player.prototype.serverpublish);
+  socket.on('serverupdate', Player.prototype.serverupdate);
+  socket.on('serverheal', Player.prototype.serverheal);
+  socket.on('serverdamage', Player.prototype.serverdamage);
+  socket.on('servercollision', Player.prototype.servercollision);
+  socket.on('serverorderchange', Player.prototype.serverorderchange);
+  socket.on('serverdie', Player.prototype.serverdie);
+  socket.on('servererror', Player.prototype.servererror);
+  socket.on('serverroompurge', Player.prototype.serverroompurge);
+  socket.on('serverroomready', Player.prototype.serverroomready);
+  socket.on('serverscore', Player.prototype.serverscore);
+  socket.on('serverpowerplay', Player.prototype.serverpowerplay);
+  socket.on('servercounter', Player.prototype.servercounter);
+  socket.on('serverturnbegin', Player.prototype.serverturnbegin);
+  socket.on('serverturnend', Player.prototype.serverturnend);
+  socket.on('servercapability', Player.prototype.servercapability);
+  socket.on('serverdeal', Player.prototype.serverdeal);
+  socket.emit('clientrejoin', location.href);
+  socket.emit('clientmove', [0,0,0], [0,0,0]);
+  // socket.emit('clientjoin');

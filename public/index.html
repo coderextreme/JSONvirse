@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <title>JSONverse</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script language="Javascript" src="javascripts/motion.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/x_ite@10.4.2/dist/x_ite.min.js"></script>
+  </head>
+  <body>
+    <x3d-canvas id="scene"></x3d-canvas>
+    <textarea id="json" rows="15" cols="80"></textarea><br>
+    <div id="chat">
+    <ul id="messages"></ul>
+    <ul id="score"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    </div>
+    <script language="Javascript" src="javascripts/bottomscroll.js"></script>
+    <script language="Javascript" src="javascripts/edit.js"></script>
+    <script language="Javascript" src="javascripts/browse.js"></script>
+    <script language="Javascript" src="javascripts/player.js"></script>
+  </body>
+</html>

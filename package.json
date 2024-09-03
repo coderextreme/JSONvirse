@@ -1,0 +1,23 @@
+{
+	"name": "JSONverse",
+	"version": "0.0.1",
+	"description": "JSON messaging system and and multiuser X3D browsing, authoring and publishing",
+	"main": "app.js",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/coderextreme/JSONverse.git"
+	},
+	"dependencies": {
+		"debug": "*",
+		"express": "*",
+		"extend": "*",
+		"lodash": "*",
+		"mime": "*",
+		"node-rest-client": "*",
+		"qs": "*",
+		"socket.io": "*"
+	},
+	"scripts": {
+		"start": "node app.js"
+	}
+}
