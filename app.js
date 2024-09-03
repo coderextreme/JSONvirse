@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var metaServer = "https://salty-beyond-41854.herokuapp.com";
+var metaServer = "http://localhost:8090";
 var Client = require('node-rest-client').Client;
 var client = new Client();
 app.use(express.static(__dirname + '/public'));
@@ -17,6 +17,7 @@ router.route('/servers')
 				res.json(JSON.parse(gameServers));
 			});
 		} catch (e) {
+			console.error("Start meta server first.");
 			console.log(e);
 		}
         });
@@ -55,8 +56,8 @@ function reportPlayers(socket) {
 		var args = { path:{"host": host, port: port, players: numPlayers}};
 		try {
 			client.get(metaServer+"/api/servers/${host}/${port}/${players}", args, function(data, response){
-				console.log(data);
-				console.log(response);
+				// console.log(data);
+				// console.log(response);
 			});
 		} catch (e) {
 			console.log(e);
@@ -95,7 +96,7 @@ Multiplayer.prototype = {
 			players[socket.client.id].position = [0,0,0];
 			players[socket.client.id].orientation = orientation;
 		}
-		console.log('serverupdate', players[socket.client.id].playernumber, players[socket.client.id].position, players[socket.client.id].orientation);
+		// console.log('serverupdate', players[socket.client.id].playernumber, players[socket.client.id].position, players[socket.client.id].orientation);
 		io.emit('serverupdate', players[socket.client.id].playernumber, players[socket.client.id].position, players[socket.client.id].orientation);
 		function close(v1, v2) {
 			return Math.abs(v1 - v2) < 0.01;
@@ -152,7 +153,7 @@ Multiplayer.prototype = {
 	},
 	clientjoin: function(socket) {
 		players[socket.client.id] = {playernumber: maxplayers, id: socket.client.id, score:0};
-		console.log(players[socket.client.id]);
+		// console.log(players[socket.client.id]);
 		maxplayers++;
 		io.emit('servermessage', players[socket.client.id].playernumber+" joined.");
 		reportPlayers(socket);
@@ -177,7 +178,7 @@ io.on('connection', function(socket){
   });
   socket.on('clientmove', function() {
 	if (players[socket.client.id]) { // if joined
-		console.log(arguments);
+		// console.log(arguments);
 		Multiplayer.prototype.clientmove(socket, arguments[0], arguments[1]);
 	}
   });
