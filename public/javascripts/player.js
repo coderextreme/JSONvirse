@@ -8,7 +8,12 @@ Player.prototype = {
 	},
 	serverpublish: function(msg) {
 		console.log("Receiving publish", msg)
-		loadJS("#scene", msg[0]);
+		// if Prompt begins with http, get it
+		if (msg[0].startsWith("http://") || msg[0].startsWith("https://")) {
+			loadURL("#scene", msg[0]);
+		} else {
+			loadJS("#scene", msg[0]);
+		}
 	},
 	serverupdate: function(playernumber, position, orientation) {
 		if (typeof orientation[0] === 'string') {
@@ -57,10 +62,34 @@ Player.prototype = {
 		thisplayer = arguments[1];
 	}
 };
+async function sendData(socket, url) {
+  try {
+	if (url.startsWith("http")) {
+		// sent the link to the server to avoid CORS
+		socket.emit('clientpublish', url);
+	} else {
+		// Grab the JSON in the text area
+		socket.emit('clientpublish', $('#json').val().replace(/\n/g, ""));
+	}
+  } catch (error) {
+    console.error(error.message);
+  }
+}
       $('form').submit(function(){
-        socket.emit('clientmessage', $('#m').val());
+	let message = $('#m').val();
+        socket.emit('clientmessage', message);
         $('#m').val('');
-	socket.emit('clientpublish', $('#json').val());
+	  try {
+		if (message.startsWith("http")) {
+			// sent the link to the server to avoid CORS
+			socket.emit('clientpublish', message);
+		} else {
+			// Grab the JSON in the text area
+			socket.emit('clientpublish', $('#json').val().replace(/\n/g, ""));
+		}
+	  } catch (error) {
+	    console.error(error.message);
+	  }
         return false;
       });
   socket.on('servermessage', Player.prototype.servermessage);
