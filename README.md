@@ -6,6 +6,11 @@ Multiuser server/client
 Install nodejs
 Install git
 ```
+git clone https://github.com/coderextreme/Argonverse
+cd Argonverse
+npm install
+node app.js
+cd ..
 git clone https://github.com/coderextreme/JSONverse
 cd JSONverse
 npm install
