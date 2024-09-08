@@ -31,9 +31,38 @@ Player.prototype = {
 			players[playernumber].position = position;
 			players[playernumber].orientation = orientation;
 		}
+		// document.querySelector("field[name='"+position[0]+"']").setAttribute("value", orientation[0]);
+		console.log("position",position,"orientation",orientation);
+	        console.log(position[0]+" PlaneSensor[DEF='"+position[0]+"Sensor']");
+		let ps = X3D.getBrowser().currentScene.getNamedNode(position[0] + "Sensor");
+		let t = X3D.getBrowser().currentScene.getNamedNode(position[0] + "Transform");
+		let shader = X3D.getBrowser().currentScene.getNamedNode('x_iteShader');
+		if (shader) {
+		    console.log("old", shader.getField(position[0]).getValue());
+		    let mult = 1;
+		    if ('a' == position || 'b' == position) {
+			    mult = 30;
+		    } else if ('c' == position || 'd' == position) {
+			    mult = 5;
+		    }
+		    shader.getField(position[0]).setValue(orientation[0] * mult);
+		    console.log("new", shader.getField(position[0]).getValue());
+		} else {
+		    console.error('ComposedShader not found');
+		}
+		if (ps) {
+			ps.offset = new X3D.SFVec3f(orientation[0], ps.offset[1], ps.offset[2]);
+		} else {
+			console.log("Not found", position[0] + "Sensor");
+		}
+		if (t) {
+			t.translation = new X3D.SFVec3f(orientation[0], t.translation[1], t.translation[2]);
+		} else {
+			console.log("Not found", position[0] + "Transform");
+		}
 		//onLocationfound = function(e){
 			for (var player in players) {
-				console.log("update "+player+" position "+players[player].position);
+				console.log("last update "+player+" position "+players[player].position+" orientation "+players[player].orientation);
 
 			}
 		//}
