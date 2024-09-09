@@ -12,6 +12,11 @@
 		"node-rest-client": "*",
 		"socket.io": "*"
 	},
+	"overrides": {
+	    "express": {
+		"path-to-regexp": "0.1.10"
+	    }
+	},
 	"scripts": {
 		"start": "node app.js"
 	}

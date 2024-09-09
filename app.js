@@ -165,6 +165,7 @@ Multiplayer.prototype = {
 };
 
 io.on('connection', function(socket){
+  console.log("Connection from", socket.client.id);
   socket.on('clientpublish', function() {
 	if (players[socket.client.id]) {
 		Multiplayer.prototype.clientpublish(socket, arguments);
