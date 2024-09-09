@@ -19,5 +19,4 @@ cd JSONverse
 npm install
 node app.js
 ```
-
-go to http://localhost:8088 or http://localhost:8090 in your browser
+Follow instructions to go to the right website
