@@ -4,7 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http, {
     maxHttpBufferSize: 1e8, pingTimeout: 60000
 });
-var metaServer = "http://localhost:8090";
+var metaServer = process.env.METASERVER || "http://localhost:8090";
 var Client = require('node-rest-client').Client;
 var client = new Client();
 app.use(express.static(__dirname + '/public'));
