@@ -6,6 +6,6 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 #messages { list-style-type: none; margin: 0; padding: 0; height:200px; overflow:auto; }
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
-#scene { width: 600px; height: 300px; position:absolute; left:0px; top:500px;}
-#json { width: 600px; height: 500px; position:absolute; left:0px; top:0px;}
+#scene { width: 600px; height: 300px; position:absolute; left:0px; top:0px;}
+#json { width: 600px; height: 500px; position:absolute; left:0px; top:300px;}
 #chat { width: 500px; height: 500px; position:absolute; left:600px; top:0px}
