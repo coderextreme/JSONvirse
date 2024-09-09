@@ -13,7 +13,7 @@ node app.js
 ```
 In another shell, or put previous command in background by finishing it with a &
 ```
-cd ..
+cd ..   # optional
 git clone https://github.com/coderextreme/JSONverse
 cd JSONverse
 npm install
