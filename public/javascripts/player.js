@@ -4,6 +4,7 @@ function Player() {
 Player.prototype = {
 	servermessage: function(msg) {
 		$('#messages').append($('<li>').text(msg));
+		console.log("message from server", msg);
 		scrollToBottom();
 	},
 	serverpublish: function(msg) {

@@ -8,13 +8,8 @@
 		"url": "git://github.com/coderextreme/JSONverse.git"
 	},
 	"dependencies": {
-		"debug": "*",
 		"express": "*",
-		"extend": "*",
-		"lodash": "*",
-		"mime": "*",
 		"node-rest-client": "*",
-		"qs": "*",
 		"socket.io": "*"
 	},
 	"scripts": {
