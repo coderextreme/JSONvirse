@@ -226,7 +226,7 @@ var defaultPort = 8088;
 
 http.listen(process.env.PORT || defaultPort);
 
-console.log('go to http://localhost:%s or http://localhost:8090 in your browser', process.env.PORT || defaultPort);
+console.log('go to http://localhost:%s or '+metaServer+' in your browser', process.env.PORT || defaultPort);
 
 
 http.on('error', function (e) {
