@@ -168,7 +168,7 @@
          like a HUD (heads up display) -->
     <LayoutLayer isPickable='true'>
       <!-- positioning the LayoutLayer -->
-      <Layout containerField='layout' align='"RIGHT","BOTTOM"' offset='0.0, 0.2' offsetUnits='"WORLD","WORLD"' scaleMode='"NONE","NONE"' size='0.4, 0.6' sizeUnits='"WORLD","WORLD"'/>
+      <Layout containerField='layout' align='"LEFT","BOTTOM"' offset='-0.2, 0.19' offsetUnits='"WORLD","WORLD"' scaleMode='"NONE","NONE"' size='0.4, 0.6' sizeUnits='"WORLD","WORLD"'/>
       <!-- clipping the LayoutLayer -->
       <Viewport containerField='viewport' clipBoundary='0, 1, 0, 1'/>
       <!-- the content (children) of the LayoutLayer -->
@@ -183,217 +183,148 @@
       </Transform>
         <!--  the plane sensors  -->
       <Transform DEF="aSlider" translation="0 0.7 0">
-        <Transform rotation="0 0 1 1.57">
-          <Shape >
-            <Appearance >
-              <Material >
-              </Material>
-            </Appearance>
-            <Cylinder radius=".05" height="2.5" />
-          </Shape>
-        </Transform>
         <Transform DEF="aTransform" translation="0 0 0.1">
-          <PlaneSensor DEF="aSensor" minPosition="-20 0" maxPosition="20 0"/>
+          <PlaneSensor DEF="aSensor" minPosition="0 0" maxPosition="1 0"/>
           <Transform translation="0 0.0 0">
             <TouchSensor DEF="aTS"/>
-            <Shape>
-              <Sphere radius="0.08"/>
-              <Appearance>
-                <Material diffuseColor="1 0 0"/>
-              </Appearance>
-            </Shape>
           </Transform>
+          <Transform rotation="0 0 1 0">
           <Shape>
-            <Cylinder radius="0.05" height="0.3" />
+            <Text DEF="aText" string='"a="'>
+	     	<FontStyle horizontal="TRUE" size="0.23"/>
+	    </Text>
             <Appearance>
               <Material/>
             </Appearance>
           </Shape>
-        </Transform>
-        <Transform rotation="0 0 1 1.57">
-          <Shape >
-            <Appearance >
-              <Material >
-              </Material>
-            </Appearance>
-            <Cylinder radius=".05" height="2.5" />
-          </Shape>
+          </Transform>
         </Transform>
       </Transform>
       <Transform DEF="bSlider" translation="0 0.4 0">
-        <Transform rotation="0 0 1 1.57">
-          <Shape >
-            <Appearance >
-              <Material >
-              </Material>
-            </Appearance>
-            <Cylinder radius=".05" height="2.5" />
-          </Shape>
-        </Transform>
         <Transform DEF="bTransform" translation="0 0 0.1">
-          <PlaneSensor DEF="bSensor" minPosition="-20 0" maxPosition="20 0"/>
+          <PlaneSensor DEF="bSensor" minPosition="0 0" maxPosition="1 0"/>
           <Transform translation="0 0.0 0">
             <TouchSensor DEF="bTS"/>
-            <Shape>
-              <Sphere radius="0.08"/>
-              <Appearance>
-                <Material diffuseColor="1 0 0"/>
-              </Appearance>
-            </Shape>
           </Transform>
+          <Transform rotation="0 0 1 0">
           <Shape>
-            <Cylinder radius="0.05" height="0.3" />
+            <Text DEF="bText" string='"b="'>
+	     	<FontStyle horizontal="TRUE" size="0.23"/>
+	    </Text>
             <Appearance>
               <Material/>
             </Appearance>
           </Shape>
+          </Transform>
         </Transform>
       </Transform>
       <Transform DEF="cSlider" translation="0 0.1 0">
-        <Transform rotation="0 0 1 1.57">
-          <Shape >
-            <Appearance >
-              <Material >
-              </Material>
-            </Appearance>
-            <Cylinder radius=".05" height="2.5" />
-          </Shape>
-        </Transform>
         <Transform DEF="cTransform" translation="0 0 0.1">
-          <PlaneSensor DEF="cSensor" minPosition="-20 0" maxPosition="20 0"/>
+          <PlaneSensor DEF="cSensor" minPosition="0 0" maxPosition="1 0"/>
           <Transform translation="0 0.0 0">
             <TouchSensor DEF="cTS"/>
-            <Shape>
-              <Sphere radius="0.08"/>
-              <Appearance>
-                <Material diffuseColor="1 0 0"/>
-              </Appearance>
-            </Shape>
           </Transform>
+          <Transform rotation="0 0 1 0">
           <Shape>
-            <Cylinder radius="0.05" height="0.3" />
+            <Text DEF="cText" string='"c="'>
+	     	<FontStyle horizontal="TRUE" size="0.23"/>
+	    </Text>
             <Appearance>
               <Material/>
             </Appearance>
           </Shape>
+          </Transform>
         </Transform>
       </Transform>
       <Transform DEF="dSlider" translation="0 -0.2 0">
-        <Transform rotation="0 0 1 1.57">
-          <Shape >
-            <Appearance >
-              <Material >
-              </Material>
-            </Appearance>
-            <Cylinder radius=".05" height="2.5" />
-          </Shape>
-        </Transform>
         <Transform DEF="dTransform" translation="0 0 0.1">
-          <PlaneSensor DEF="dSensor" minPosition="-20 0" maxPosition="20 0"/>
+          <PlaneSensor DEF="dSensor" minPosition="0 0" maxPosition="1 0"/>
           <Transform translation="0 0.0 0">
             <TouchSensor DEF="dTS"/>
-            <Shape>
-              <Sphere radius="0.08"/>
-              <Appearance>
-                <Material diffuseColor="1 0 0"/>
-              </Appearance>
-            </Shape>
           </Transform>
+          <Transform rotation="0 0 1 0">
           <Shape>
-            <Cylinder radius="0.05" height="0.3" />
+            <Text DEF="dText" string='"d="'>
+	     	<FontStyle horizontal="TRUE" size="0.23"/>
+	    </Text>
             <Appearance>
               <Material/>
             </Appearance>
           </Shape>
+          </Transform>
         </Transform>
       </Transform>
       <Transform DEF="pdeltaSlider" translation="0 -0.5 0">
-        <Transform rotation="0 0 1 1.57">
-          <Shape >
-            <Appearance >
-              <Material >
-              </Material>
-            </Appearance>
-            <Cylinder radius=".05" height="2.5" />
-          </Shape>
-        </Transform>
         <Transform DEF="pdeltaTransform" translation="0 0 0.1">
-          <PlaneSensor DEF="pdeltaSensor" minPosition="-20 0" maxPosition="20 0"/>
+          <PlaneSensor DEF="pdeltaSensor" minPosition="0 0" maxPosition="1 0"/>
           <Transform translation="0 0.0 0">
             <TouchSensor DEF="pdeltaTS"/>
-            <Shape>
-              <Sphere radius="0.08"/>
-              <Appearance>
-                <Material diffuseColor="1 0 0"/>
-              </Appearance>
-            </Shape>
           </Transform>
+          <Transform rotation="0 0 1 0">
           <Shape>
-            <Cylinder radius="0.05" height="0.3" />
+            <Text DEF="pdeltaText" string='"phi delta="'>
+	     	<FontStyle horizontal="TRUE" size="0.23"/>
+	    </Text>
             <Appearance>
               <Material/>
             </Appearance>
           </Shape>
+          </Transform>
         </Transform>
       </Transform>
       <Transform DEF="tdeltaSlider" translation="0 -0.8 0">
-        <Transform rotation="0 0 1 1.57">
-          <Shape >
-            <Appearance >
-              <Material >
-              </Material>
-            </Appearance>
-            <Cylinder radius=".05" height="2.5" />
-          </Shape>
-        </Transform>
         <Transform DEF="tdeltaTransform" translation="0 0 0.1">
-          <PlaneSensor DEF="tdeltaSensor" minPosition="-20 0" maxPosition="20 0"/>
+          <PlaneSensor DEF="tdeltaSensor" minPosition="0 0" maxPosition="1 0"/>
           <Transform translation="0 0.0 0">
             <TouchSensor DEF="tdeltaTS"/>
-            <Shape>
-              <Sphere radius="0.08"/>
-              <Appearance>
-                <Material diffuseColor="1 0 0"/>
-              </Appearance>
-            </Shape>
           </Transform>
+          <Transform rotation="0 0 1 0">
           <Shape>
-            <Cylinder radius="0.05" height="0.3" />
+            <Text DEF="tdeltaText" string='"theta delta="'>
+	     	<FontStyle horizontal="TRUE" size="0.23"/>
+	    </Text>
             <Appearance>
               <Material/>
             </Appearance>
           </Shape>
+          </Transform>
         </Transform>
       </Transform>
         <Script DEF='aValueTransformerScript' directOutput="true" mustEvaluate="true">
           <field accessType='inputOnly' name='newTranslation' type='SFVec3f' value='1.0 1.0 1.0'/>
           <field accessType='outputOnly' name='aValue_changed' type='SFFloat' value='1.0'/>
-	  <![CDATA[ecmascript: function newTranslation(Value) { aValue_changed = Value.x * 30; socket.emit("clientmove", ["a"],[Value.x]);}]]>
+          <field accessType='outputOnly' name='aText_changed' type='MFString' value='1.0'/>
+	  <![CDATA[ecmascript: function newTranslation(Value) { aValue_changed = Value.x * 30; aText_changed = new MFString('a='+aValue_changed.toFixed(2)); socket.emit("clientmove", ["a"],[Value.x]);}]]>
         </Script>
         <Script DEF='bValueTransformerScript' directOutput="true" mustEvaluate="true">
           <field accessType='inputOnly' name='newTranslation' type='SFVec3f' value='1.0 1.0 1.0'/>
           <field accessType='outputOnly' name='bValue_changed' type='SFFloat' value='1.0'/>
-	  <![CDATA[ecmascript: function newTranslation(Value) { bValue_changed = Value.x * 30; socket.emit("clientmove", ["b"],[Value.x]);}]]>
+          <field accessType='outputOnly' name='bText_changed' type='MFString' value='1.0'/>
+	  <![CDATA[ecmascript: function newTranslation(Value) { bValue_changed = Value.x * 30; bText_changed = new MFString('b='+bValue_changed.toFixed(2)); socket.emit("clientmove", ["b"],[Value.x]);}]]>
         </Script>
         <Script DEF='cValueTransformerScript' directOutput="true" mustEvaluate="true">
           <field accessType='inputOnly' name='newTranslation' type='SFVec3f' value='1.0 1.0 1.0'/>
           <field accessType='outputOnly' name='cValue_changed' type='SFFloat' value='1.0'/>
-	  <![CDATA[ecmascript: function newTranslation(Value) { cValue_changed = Value.x * 5; socket.emit("clientmove", ["c"],[Value.x]);}]]>
+          <field accessType='outputOnly' name='cText_changed' type='MFString' value='1.0'/>
+	  <![CDATA[ecmascript: function newTranslation(Value) { cValue_changed = Value.x * 20; cText_changed = new MFString('c='+cValue_changed.toFixed(2)); socket.emit("clientmove", ["c"],[Value.x]);}]]>
         </Script>
         <Script DEF='dValueTransformerScript' directOutput="true" mustEvaluate="true">
           <field accessType='inputOnly' name='newTranslation' type='SFVec3f' value='1.0 1.0 1.0'/>
           <field accessType='outputOnly' name='dValue_changed' type='SFFloat' value='1.0'/>
-	  <![CDATA[ecmascript: function newTranslation(Value) { dValue_changed = Value.x * 5; socket.emit("clientmove", ["d"],[Value.x]);}]]>
+          <field accessType='outputOnly' name='dText_changed' type='MFString' value='1.0'/>
+	  <![CDATA[ecmascript: function newTranslation(Value) { dValue_changed = Value.x * 20; dText_changed = new MFString('d='+dValue_changed.toFixed(2)); socket.emit("clientmove", ["d"],[Value.x]);}]]>
         </Script>
         <Script DEF='pdeltaValueTransformerScript' directOutput="true" mustEvaluate="true">
           <field accessType='inputOnly' name='newTranslation' type='SFVec3f' value='1.0 1.0 1.0'/>
           <field accessType='outputOnly' name='pdeltaValue_changed' type='SFFloat' value='1.0'/>
-	  <![CDATA[ecmascript: function newTranslation(Value) { pdeltaValue_changed = Value.x; socket.emit("clientmove", ["pdelta"],[Value.x]);}]]>
+          <field accessType='outputOnly' name='pdeltaText_changed' type='MFString' value='1.0'/>
+	  <![CDATA[ecmascript: function newTranslation(Value) { pdeltaValue_changed = Value.x; pdeltaText_changed = new MFString('phi delta='+pdeltaValue_changed.toFixed(2)); socket.emit("clientmove", ["pdelta"],[Value.x]);}]]>
         </Script>
         <Script DEF='tdeltaValueTransformerScript' directOutput="true" mustEvaluate="true">
           <field accessType='inputOnly' name='newTranslation' type='SFVec3f' value='1.0 1.0 1.0'/>
           <field accessType='outputOnly' name='tdeltaValue_changed' type='SFFloat' value='1.0'/>
-	  <![CDATA[ecmascript: function newTranslation(Value) { tdeltaValue_changed = Value.x; socket.emit("clientmove", ["tdelta"],[Value.x]);}]]>
+          <field accessType='outputOnly' name='tdeltaText_changed' type='MFString' value='1.0'/>
+	  <![CDATA[ecmascript: function newTranslation(Value) { tdeltaValue_changed = Value.x; tdeltaText_changed = new MFString('theta delta='+tdeltaValue_changed.toFixed(2)); socket.emit("clientmove", ["tdelta"],[Value.x]);}]]>
         </Script>
         <ROUTE fromField='translation_changed' fromNode='aSensor' toField='set_translation' toNode='aTransform'/>
         <ROUTE fromField='translation_changed' fromNode='bSensor' toField='set_translation' toNode='bTransform'/>
@@ -415,6 +346,12 @@
         <ROUTE fromField='dValue_changed' fromNode='dValueTransformerScript' toField='d' toNode='x_iteShader'/>
         <ROUTE fromField='pdeltaValue_changed' fromNode='pdeltaValueTransformerScript' toField='pdelta' toNode='x_iteShader'/>
         <ROUTE fromField='tdeltaValue_changed' fromNode='tdeltaValueTransformerScript' toField='tdelta' toNode='x_iteShader'/>
+        <ROUTE fromField='aText_changed' fromNode='aValueTransformerScript' toField='string' toNode='aText'/>
+        <ROUTE fromField='bText_changed' fromNode='bValueTransformerScript' toField='string' toNode='bText'/>
+        <ROUTE fromField='cText_changed' fromNode='cValueTransformerScript' toField='string' toNode='cText'/>
+        <ROUTE fromField='dText_changed' fromNode='dValueTransformerScript' toField='string' toNode='dText'/>
+        <ROUTE fromField='pdeltaText_changed' fromNode='pdeltaValueTransformerScript' toField='string' toNode='pdeltaText'/>
+        <ROUTE fromField='tdeltaText_changed' fromNode='tdeltaValueTransformerScript' toField='string' toNode='tdeltaText'/>
     </LayoutLayer>
   </LayerSet>
 </Scene>

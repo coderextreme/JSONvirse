@@ -44,7 +44,7 @@ Player.prototype = {
 		    if ('a' == position || 'b' == position) {
 			    mult = 30;
 		    } else if ('c' == position || 'd' == position) {
-			    mult = 5;
+			    mult = 20;
 		    }
 		    shader.getField(position[0]).setValue(orientation[0] * mult);
 		    console.log("new", shader.getField(position[0]).getValue());
