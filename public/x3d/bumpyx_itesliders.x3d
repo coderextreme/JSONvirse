@@ -117,7 +117,12 @@
 	    ></Background> 
 	<Transform>
 	<Shape>
+		<!--
 	  <Sphere radius='40'></Sphere>
+		-->
+                <IndexedFaceSet convex="false" DEF="Orbit" creaseAngle="0">
+                    <Coordinate DEF="OrbitCoordinates"/>
+                </IndexedFaceSet>
 	  <Appearance>
           <Material diffuseColor=".7 .7 .7" specularColor=".5 .5 .5" ></Material>
                 <ComposedCubeMapTexture DEF="texture">
@@ -153,6 +158,53 @@
 	</Shape>
       </Transform>
       </Transform>
+        <Script DEF="OrbitScript">
+            <field accessType="inputOutput" name="coordinates" type="MFVec3f"/>
+            <field accessType="outputOnly" name="coordIndexes" type="MFInt32"/>
+	    <field name='a' type='SFFloat' accessType='inputOutput' value='10'></field>
+	    <field name='b' type='SFFloat' accessType='inputOutput' value='10'></field>
+	    <field name='c' type='SFFloat' accessType='inputOutput' value='2'></field>
+	    <field name='d' type='SFFloat' accessType='inputOutput' value='2'></field>
+	    <field name='pdelta' type='SFFloat' accessType='inputOutput' value='0'></field>
+	    <field name='tdelta' type='SFFloat' accessType='inputOutput' value='0'></field>
+<![CDATA[ecmascript:
+function initialize() {
+     var resolution = 113;
+     var theta = 0.0;
+     var phi = 0.0;
+     var delta = (2 * 3.141592653) / (resolution-1);
+     var crds = [];
+     for ( i = 0; i < resolution; i++) {
+     	for ( j = 0; j < resolution; j++) {
+		var rho = a + b * Math.cos(c * theta + tdelta) * Math.cos(d * phi + pdelta);
+		crds.push(new SFVec3f(
+			rho * Math.cos(phi) * Math.cos(theta),
+			rho * Math.cos(phi) * Math.sin(theta),
+			rho * Math.sin(phi)
+		));
+		theta += delta;
+	}
+	phi += delta;
+     }
+     coordinates = new MFVec3f(...crds);
+     var cis = [];
+     for ( i = 0; i < resolution-1; i++) {
+     	for ( j = 0; j < resolution-1; j++) {
+	     cis.push(i*resolution+j);
+	     cis.push(i*resolution+j+1);
+	     cis.push((i+1)*resolution+j+1);
+	     cis.push((i+1)*resolution+j);
+	     cis.push(-1);
+	}
+    }
+    coordIndexes = new MFInt32(...cis);
+}
+
+      ]]></Script>
+        <ROUTE fromField="coordIndexes" fromNode="OrbitScript"
+               toField="set_coordIndex" toNode="Orbit"/>
+        <ROUTE fromField="coordinates" fromNode="OrbitScript"
+               toField="set_point" toNode="OrbitCoordinates"/>
       <!-- DIS multiuser facilities -->
       <DISEntityManager DEF='EntityManager' networkMode='networkReader' >
 	      <DISEntityTypeMapping category='77' specific='1' url='"Leif8Final.x3d"'/>
