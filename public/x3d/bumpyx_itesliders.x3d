@@ -181,6 +181,18 @@
             <Box size="100 100 0.02" />
           </Shape>
       </Transform>
+          <Transform DEF="equationTransform">
+          <Transform translation="0 0 -20" rotation="0 0 1 0">
+          <Shape>
+            <Text DEF="equation" string='"r = a + b * cos(c * theta + tdelta) * cos (d * phi + pdelta)"'>
+	     	<FontStyle horizontal="TRUE" size="0.09"/>
+	    </Text>
+            <Appearance>
+              <Material diffuseColor="1 1 0"/>
+            </Appearance>
+          </Shape>
+          </Transform>
+          </Transform>
         <!--  the plane sensors  -->
       <Transform DEF="aSlider" translation="0 0.7 0">
         <Transform DEF="aTransform" translation="0 0 0.1">
