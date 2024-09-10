@@ -37,17 +37,38 @@ Player.prototype = {
 	        console.log(position[0]+" PlaneSensor[DEF='"+position[0]+"Sensor']");
 		let ps = X3D.getBrowser().currentScene.getNamedNode(position[0] + "Sensor");
 		let t = X3D.getBrowser().currentScene.getNamedNode(position[0] + "Transform");
+		let txt = X3D.getBrowser().currentScene.getNamedNode(position[0] + "Text");
 		let shader = X3D.getBrowser().currentScene.getNamedNode('x_iteShader');
 		if (shader) {
 		    console.log("old", shader.getField(position[0]).getValue());
+		    let mult = 1;
+		    if ('a' == position[0] || 'b' == position[0]) {
+			    mult = 30;
+		    } else if ('c' == position[0] || 'd' == position[0]) {
+			    mult = 20;
+		    }
+		    shader.getField(position[0]).setValue(orientation[0] * mult);
+		    console.log("new", shader.getField(position[0]).getValue());
+		} else {
+		    console.error('ComposedShader not found');
+		}
+		if (txt) {
+		    let stringField = txt.getField("string");
+		    console.log("old", stringField.getValue());
 		    let mult = 1;
 		    if ('a' == position || 'b' == position) {
 			    mult = 30;
 		    } else if ('c' == position || 'd' == position) {
 			    mult = 20;
 		    }
-		    shader.getField(position[0]).setValue(orientation[0] * mult);
-		    console.log("new", shader.getField(position[0]).getValue());
+		    let label = position[0];
+		    if (label == "pdelta") {
+			    label = "phi delta";
+		    } else if (label == "tdelta") {
+			    label = "theta delta";
+		    }
+		    stringField.setValue(new X3D.MFString(label+"="+(orientation[0] * mult).toFixed(2)));
+		    console.log("new", stringField.getValue());
 		} else {
 		    console.error('ComposedShader not found');
 		}
