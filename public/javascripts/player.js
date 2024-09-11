@@ -34,53 +34,56 @@ Player.prototype = {
 		}
 		// document.querySelector("field[name='"+position[0]+"']").setAttribute("value", orientation[0]);
 		console.log("position",position,"orientation",orientation);
-	        console.log(position[0]+" PlaneSensor[DEF='"+position[0]+"Sensor']");
-		let ps = X3D.getBrowser().currentScene.getNamedNode(position[0] + "Sensor");
-		let t = X3D.getBrowser().currentScene.getNamedNode(position[0] + "Transform");
-		let txt = X3D.getBrowser().currentScene.getNamedNode(position[0] + "Text");
-		let shader = X3D.getBrowser().currentScene.getNamedNode('x_iteShader');
-		if (shader) {
-		    console.log("old", shader.getField(position[0]).getValue());
-		    let mult = 1;
-		    if ('a' == position[0] || 'b' == position[0]) {
-			    mult = 30;
-		    } else if ('c' == position[0] || 'd' == position[0]) {
-			    mult = 20;
-		    }
-		    shader.getField(position[0]).setValue(orientation[0] * mult);
-		    console.log("new", shader.getField(position[0]).getValue());
-		} else {
-		    console.error('ComposedShader not found');
-		}
-		if (txt) {
-		    let stringField = txt.getField("string");
-		    console.log("old", stringField.getValue());
-		    let mult = 1;
-		    if ('a' == position || 'b' == position) {
-			    mult = 30;
-		    } else if ('c' == position || 'd' == position) {
-			    mult = 20;
-		    }
-		    let label = position[0];
-		    if (label == "pdelta") {
-			    label = "phi delta";
-		    } else if (label == "tdelta") {
-			    label = "theta delta";
-		    }
-		    stringField.setValue(new X3D.MFString(label+"="+(orientation[0] * mult).toFixed(2)));
-		    console.log("new", stringField.getValue());
-		} else {
-		    console.error('ComposedShader not found');
-		}
-		if (ps) {
-			ps.offset = new X3D.SFVec3f(orientation[0], ps.offset[1], ps.offset[2]);
-		} else {
-			console.log("Not found", position[0] + "Sensor");
-		}
-		if (t) {
-			t.translation = new X3D.SFVec3f(orientation[0], t.translation[1], t.translation[2]);
-		} else {
-			console.log("Not found", position[0] + "Transform");
+		if (position[0] == 'a' || position[0] == 'b' ||position[0] == 'c' || position[0] == 'd' ||position[0] == 'tdelta' || position[0] == 'pdelta') {
+			orientation[0] = parseFloat(orientation[0]);
+			console.log(position[0]+" PlaneSensor[DEF='"+position[0]+"Sensor']");
+			let ps = X3D.getBrowser().currentScene.getNamedNode(position[0] + "Sensor");
+			let t = X3D.getBrowser().currentScene.getNamedNode(position[0] + "Transform");
+			let txt = X3D.getBrowser().currentScene.getNamedNode(position[0] + "Text");
+			let shader = X3D.getBrowser().currentScene.getNamedNode('x_iteShader');
+			if (shader) {
+			    console.log("old", shader.getField(position[0]).getValue());
+			    let mult = 1;
+			    if ('a' == position[0] || 'b' == position[0]) {
+				    mult = 30;
+			    } else if ('c' == position[0] || 'd' == position[0]) {
+				    mult = 20;
+			    }
+			    shader.getField(position[0]).setValue(orientation[0] * mult);
+			    console.log("new", shader.getField(position[0]).getValue());
+			} else {
+			    console.error('ComposedShader not found');
+			}
+			if (txt) {
+			    let stringField = txt.getField("string");
+			    console.log("old", stringField.getValue());
+			    let mult = 1;
+			    if ('a' == position || 'b' == position) {
+				    mult = 30;
+			    } else if ('c' == position || 'd' == position) {
+				    mult = 20;
+			    }
+			    let label = position[0];
+			    if (label == "pdelta") {
+				    label = "phi delta";
+			    } else if (label == "tdelta") {
+				    label = "theta delta";
+			    }
+			    stringField.setValue(new X3D.MFString(label+"="+(orientation[0] * mult).toFixed(2)));
+			    console.log("new", stringField.getValue());
+			} else {
+			    console.error('ComposedShader not found');
+			}
+			if (ps) {
+				ps.offset = new X3D.SFVec3f(orientation[0], ps.offset[1], ps.offset[2]);
+			} else {
+				console.log("Not found", position[0] + "Sensor");
+			}
+			if (t) {
+				t.translation = new X3D.SFVec3f(orientation[0], t.translation[1], t.translation[2]);
+			} else {
+				console.log("Not found", position[0] + "Transform");
+			}
 		}
 		//onLocationfound = function(e){
 			for (var player in players) {
