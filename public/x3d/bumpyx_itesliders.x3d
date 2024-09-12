@@ -169,11 +169,11 @@
 	    <field name='tdelta' type='SFFloat' accessType='inputOutput' value='0'></field>
 <![CDATA[ecmascript:
 function initialize() {
-     var resolution = 113;
+     var resolution = 200;
      var theta = 0.0;
      var phi = 0.0;
      var delta = (2 * 3.141592653) / (resolution-1);
-     var crds = [];
+     var crds = new MFVec3f();
      for ( i = 0; i < resolution; i++) {
      	for ( j = 0; j < resolution; j++) {
 		var rho = a + b * Math.cos(c * theta + tdelta) * Math.cos(d * phi + pdelta);
@@ -186,18 +186,20 @@ function initialize() {
 	}
 	phi += delta;
      }
-     coordinates = new MFVec3f(...crds);
-     var cis = [];
+     coordinates = crds;
+
+
+     var cis = new MFInt32();
      for ( i = 0; i < resolution-1; i++) {
      	for ( j = 0; j < resolution-1; j++) {
-	     cis.push(i*resolution+j);
-	     cis.push(i*resolution+j+1);
-	     cis.push((i+1)*resolution+j+1);
-	     cis.push((i+1)*resolution+j);
-	     cis.push(-1);
+	     cis.push(new X3D.SFInt32(i*resolution+j));
+	     cis.push(new X3D.SFInt32(i*resolution+j+1));
+	     cis.push(new X3D.SFInt32((i+1)*resolution+j+1));
+	     cis.push(new X3D.SFInt32((i+1)*resolution+j));
+	     cis.push(new X3D.SFInt32(-1));
 	}
     }
-    coordIndexes = new MFInt32(...cis);
+    coordIndexes = cis;
 }
 
       ]]></Script>

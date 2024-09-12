@@ -4,9 +4,11 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http, {
     maxHttpBufferSize: 1e8, pingTimeout: 60000
 });
-var metaServer = process.env.METASERVER || "http://localhost:8090";
-var Client = require('node-rest-client').Client;
-var client = new Client();
+var metaServer = process.env.METASERVER || "";
+if (metaServer != "") {
+	var Client = require('node-rest-client').Client;
+	var client = new Client();
+}
 app.use(express.static(__dirname + '/public'));
 var router = express.Router();
 var cardsTaken = {};
@@ -14,10 +16,12 @@ router.route('/servers')
         .get(function(req, res) {
 			// console.log(res);
 		try {
-			client.get(metaServer+"/api/servers/", function(gameServers, response){
-				console.log(gameServers);
-				res.json(JSON.parse(gameServers));
-			});
+			if (metaServer != "") {
+				client.get(metaServer+"/api/servers/", function(gameServers, response){
+					console.log(gameServers);
+					res.json(JSON.parse(gameServers));
+				});
+			}
 		} catch (e) {
 			console.error("Start meta server first.");
 			console.log(e);
@@ -57,11 +61,13 @@ function reportPlayers(socket) {
 		}
 		var args = { path:{"host": host, port: port, players: numPlayers}};
 		try {
-			console.log("Connecting to meta server at ", metaServer+"/api/servers/"+host+"/"+port+"/"+numPlayers);
-			client.get(metaServer+"/api/servers/${host}/${port}/${players}", args, function(data, response){
+			if (metaServer != "") {
+				console.log("Connecting to meta server at ", metaServer+"/api/servers/"+host+"/"+port+"/"+numPlayers);
+				client.get(metaServer+"/api/servers/${host}/${port}/${players}", args, function(data, response){
 				// console.log(data);
 				// console.log(response);
-			});
+				});
+			}
 		} catch (e) {
 			console.log(e);
 		}
