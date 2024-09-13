@@ -14,5 +14,5 @@ To run put the following in the bash prompt (or do the equivalent in zsh, comman
 export X3DJSONPORT=8088  # or 80 or whatever you like
 npx x3d-jsonverse@latest   # or any version you like, or leave of @version, if you dare
 ```
-go to http://localhost:8088   # or whatever replaced 8088 above
-Type CTRL-C to exit in the terminal window you started npx in 
+go to http://localhost:8088   # or whatever replaced 8088 above.
+Type CTRL-C to exit in the terminal window you started npx in.
