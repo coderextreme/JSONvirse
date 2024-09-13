@@ -1,25 +1,10 @@
-JSONverse
+X3DJSONverse
 ==============
 
-Multiuser server/client
+Multiuser server/client for X3D
 
-Install nodejs
-Install git
+To run:
 ```
-git clone https://github.com/coderextreme/Argonverse
-cd Argonverse
-npm install
-export METASERVER="http://localhost:8090"
-node app.js
+export X3DJSONPORT=8088  # or 80 if you have permissions
+npx X3DJSONVerse@latest   # or any version you like, or leave of @version
 ```
-In another shell, or put previous command in background by finishing it with a &
-```
-cd ..   # optional
-git clone https://github.com/coderextreme/JSONverse
-cd JSONverse
-npm install
-export PORT=8088
-export METASERVER="http://localhost:8090"
-node app.js
-```
-Follow instructions to go to the right website

@@ -1,15 +1,16 @@
 {
-	"name": "JSONverse",
-	"version": "0.0.1",
-	"description": "JSON messaging system and and multiuser X3D browsing, authoring and publishing",
-	"main": "app.js",
+	"name": "X3DJSONverse",
+        "author": "John Carlson, Yottzumm, coderextreme",
+  	"license": "BSD 2-Clause License",
+	"version": "1.0.0",
+	"description": "X3DJSONVerse -- npx X3D Server",
+	"main": "index.js",
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/coderextreme/JSONverse.git"
 	},
 	"dependencies": {
 		"express": "*",
-		"node-rest-client": "*",
 		"socket.io": "*"
 	},
 	"overrides": {
@@ -18,6 +19,17 @@
 	    }
 	},
 	"scripts": {
-		"start": "node app.js"
-	}
+		"start": "node index.js"
+	},
+	"bin": {
+	    "X3DJSONverse": "index.js"
+	},
+	"scripts": {
+	    "postinstall": "node ./index.js",
+	    "publish": "npm publish --access public"
+	},
+	"bugs": {
+	    "url": "https://github.com/coderextreme/JSONverse/issues"
+	},
+	"homepage": "https://www.npmjs.com/package/X3DJSONverse"
 }

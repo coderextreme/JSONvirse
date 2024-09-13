@@ -229,11 +229,11 @@ io.on('connection', function(socket){
   });
 });
 
-var defaultPort = 8088;
+var defaultPort = 80;
 
-http.listen(process.env.PORT || defaultPort);
+http.listen(process.env.X3DJSONPORT || defaultPort);
 
-console.log('go to http://localhost:%s or '+metaServer+' in your browser', process.env.PORT || defaultPort);
+console.log('go to http://localhost:%s or '+metaServer+' in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt', process.env.X3DJSONPORT || defaultPort);
 
 
 http.on('error', function (e) {
