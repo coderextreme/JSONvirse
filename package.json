@@ -2,7 +2,7 @@
 	"name": "x3d-jsonverse",
         "author": "John Carlson, Yottzumm, coderextreme",
   	"license": "BSD 2-Clause License",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "X3DJSONVerse -- npx X3D Server",
 	"main": "index.js",
 	"repository": {
@@ -19,14 +19,11 @@
 	    }
 	},
 	"scripts": {
-		"start": "node index.js"
+		"start": "node index.js",
+	    	"publish": "npm publish --access public"
 	},
 	"bin": {
 	    "x3d-jsonverse": "index.js"
-	},
-	"scripts": {
-	    "postinstall": "node ./index.js",
-	    "publish": "npm publish --access public"
 	},
 	"bugs": {
 	    "url": "https://github.com/coderextreme/JSONverse/issues"
