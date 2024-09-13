@@ -86,7 +86,7 @@
           },
           {
             "@name":"license",
-            "@content":"../license.html"
+            "@content":"https://www.web3d.org/x3d/content/examples/Basic/license.html"
           },
           {
             "@name":"translated",
