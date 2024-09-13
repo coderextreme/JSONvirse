@@ -9,7 +9,7 @@ Download nodejs/npm/npx.  On Windows they come in the nodejs package.
 
 AFAIK, this does not work on Windows Subsystem for Linux WSLlg or WSL2. Assistance Welcome
 
-To run put the following in the bash prompt (or do the equivalent in xsh, command prompt or powershell)
+To run put the following in the bash prompt (or do the equivalent in zsh, command prompt or powershell)
 ```
 export X3DJSONPORT=8088  # or 80 or whatever you like
 npx x3d-jsonverse@latest   # or any version you like, or leave of @version, if you dare
