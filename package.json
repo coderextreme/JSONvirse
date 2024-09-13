@@ -1,5 +1,5 @@
 {
-	"name": "X3DJSONverse",
+	"name": "x3d-jsonverse",
         "author": "John Carlson, Yottzumm, coderextreme",
   	"license": "BSD 2-Clause License",
 	"version": "1.0.0",
@@ -22,7 +22,7 @@
 		"start": "node index.js"
 	},
 	"bin": {
-	    "X3DJSONverse": "index.js"
+	    "x3d-jsonverse": "index.js"
 	},
 	"scripts": {
 	    "postinstall": "node ./index.js",
@@ -31,5 +31,5 @@
 	"bugs": {
 	    "url": "https://github.com/coderextreme/JSONverse/issues"
 	},
-	"homepage": "https://www.npmjs.com/package/X3DJSONverse"
+	"homepage": "https://www.npmjs.com/package/x3d-jsonverse"
 }
