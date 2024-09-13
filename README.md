@@ -7,7 +7,7 @@ First:
 
 Download nodejs/npm/npx.  On Windows they come in the nodejs package.
 
-AFAIK, this does not work on Windows Subsystem for Linux WSLlg or WSL2. Assistance Welcome
+AFAIK, this does not work on Windows Subsystem for Linux WSLg or WSL2. Assistance Welcome
 
 To run put the following in the bash prompt (or do the equivalent in zsh, command prompt or powershell)
 ```
