@@ -1,9 +1,14 @@
 var express = require('express');
 var app = express();
-var http = require('http').Server(app);
-import { Server } from 'socket.io';
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
-const io = new Server({
+var http = require('http').Server(app);
+var io = require('socket.io')(http, {
     maxHttpBufferSize: 1e8, pingTimeout: 60000
 });
 
@@ -220,22 +225,13 @@ io.on('connection', function(socket){
 });
 
 var defaultPort = 8088;
-var defaultWSPort = 8090;
 
 http.listen(process.env.X3DJSONPORT || defaultPort);
-io.listen(process.env.X3DJSONWSPORT || defaultWSPort);
 
 console.log('go to http://localhost:%s or '+metaServer+' in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt', process.env.X3DJSONPORT || defaultPort);
 
 
 http.on('error', function (e) {
-  if (e.code == 'EADDRINUSE') {
-    console.log('Address in use, exiting...');
-  }
-});
-
-
-io.on('error', function (e) {
   if (e.code == 'EADDRINUSE') {
     console.log('Address in use, exiting...');
   }
