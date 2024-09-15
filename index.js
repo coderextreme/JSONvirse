@@ -42,7 +42,7 @@ function reportPlayers(socket) {
 	for (var p in players) {
 		numPlayers++;
 	}
-	io.emit('servermessage', "The dwelling has "+numPlayers+" resident"+(numPlayers > 1 ? "s." : "."));
+	io.emit('servermessage', "The server has "+numPlayers+" resident"+(numPlayers > 1 ? "s." : "."));
 	var uri = socket.handshake.headers.referer;
 	if (typeof uri !== 'undefined') {
 		var hostIndex = uri.indexOf("//")+2;
