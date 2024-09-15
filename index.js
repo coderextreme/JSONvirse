@@ -9,7 +9,8 @@ app.use((req, res, next) => {
 
 var http = require('http').Server(app);
 var io = require('socket.io')(http, {
-    maxHttpBufferSize: 1e8, pingTimeout: 60000
+    maxHttpBufferSize: 1e8, pingTimeout: 60000,
+    transports: ["polling", "websocket", "webtransport"] // WebTransport is not enabled by default
 });
 
 var metaServer = process.env.METASERVER || "";
