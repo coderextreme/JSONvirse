@@ -134,13 +134,6 @@ Multiplayer.prototype = {
 			}
 		}
 	},
-	clientshoot: function() {console.log(arguments);},
-	clientslash: function() {console.log(arguments);},
-	clientpowerplay: function() {console.log(arguments);},
-	clientcounter: function() {console.log(arguments);},
-	clientquit: function() {console.log(arguments);},
-	clientturnbegin: function() {console.log(arguments);},
-	clientturnend: function() {console.log(arguments);},
 	clientrejoin: function(socket, msg) {
 		var i = msg[0].indexOf("?");
 		if (i >= 0) {
@@ -192,13 +185,6 @@ io.on('connection', function(socket){
 		Multiplayer.prototype.clientmove(socket, arguments[0], arguments[1]);
 	}
   });
-  socket.on('clientshoot', Multiplayer.prototype.clientshoot);
-  socket.on('clientslash', Multiplayer.prototype.clientslash);
-  socket.on('clientpowerplay', Multiplayer.prototype.clientpowerplay);
-  socket.on('clientcounter', Multiplayer.prototype.clientcounter);
-  socket.on('clientquit', Multiplayer.prototype.clientquit);
-  socket.on('clientturnbegin', Multiplayer.prototype.clientturnbegin);
-  socket.on('clientturnend', Multiplayer.prototype.clientturnend);
   socket.on('clientrejoin', function () {
 	if (players[socket.client.id]) {
 	} else {
@@ -229,7 +215,7 @@ io.on('connection', function(socket){
   });
 });
 
-var defaultPort = 80;
+var defaultPort = 8088;
 
 http.listen(process.env.X3DJSONPORT || defaultPort);
 
