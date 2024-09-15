@@ -11,12 +11,8 @@
 	},
 	"dependencies": {
 		"express": "*",
-		"socket.io": "*"
-	},
-	"overrides": {
-		"express": {
-			"path-to-regexp": "0.1.10"
-		}
+		"socket.io": "*",
+		"socket.io-client": "*"
 	},
 	"scripts": {
 		"start": "node ./index.js",
