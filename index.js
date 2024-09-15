@@ -10,6 +10,7 @@ if (metaServer != "") {
 	var client = new Client();
 }
 app.use(express.static(__dirname + '/jsonverse'));
+app.use(express.static(__dirname));
 var router = express.Router();
 var cardsTaken = {};
 router.route('/servers')
