@@ -9,7 +9,7 @@ if (metaServer != "") {
 	var Client = require('node-rest-client').Client;
 	var client = new Client();
 }
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/jsonverse'));
 var router = express.Router();
 var cardsTaken = {};
 router.route('/servers')
