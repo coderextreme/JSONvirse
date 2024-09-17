@@ -322,9 +322,9 @@ function initialize() {
 				    console.log("old", stringField.getValue());
 				    let label = protoParameterName;
 				    if (protoParameterName == "pdelta") {
-					    label = "phi delta";
+					    label = "pdelta";
 				    } else if (protoParameterName == "tdelta") {
-					    label = "theta delta";
+					    label = "tdelta";
 				    }
 				    stringField.setValue(new MFString(label+"="+(orientation[0] * protoScale).toFixed(2)));
 				    console.log("new", stringField.getValue());

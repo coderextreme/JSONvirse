@@ -84,39 +84,76 @@ function reportPlayers(socket) {
 	}
 }
 
+function getPlayer(socket) {
+	return players[socket.client.id];
+}
+
+function getRoomSend(socket) {
+	return io.to(getPlayer(socket).room);
+}
+
+function sendRoomMessage(socket, msg) {
+	getRoomSend(socket).emit('servermessage', msg);
+}
+
 Multiplayer.prototype = {
+	clientsdp: function(socket, sdp) {
+		console.log(sdp);
+		var oldusername = getPlayer(socket).username;
+		var oldroom = getPlayer(socket).room;
+		getPlayer(socket).username = sdp['0']['o'][0];
+		getPlayer(socket).room = sdp['0']['s'];
+		if (oldroom !== getPlayer(socket).room) {
+			if (oldroom) {
+				io.to(oldroom).emit('servermessage', oldusername+"#"+getPlayer(socket).playernumber+" left.");
+				socket.leave(oldroom);
+			}
+			if (getPlayer(socket).room) {
+				socket.join(getPlayer(socket).room);
+				sendRoomMessage(socket, getPlayer(socket).username+"#"+getPlayer(socket).playernumber+"@"+getPlayer(socket).room+" joined.");
+			}
+		}
+	},
 	clientmessage: function(socket, msg) {
-		io.emit('servermessage', "<"+players[socket.client.id].playernumber+"> "+msg[0]);
+		if (msg[0]) {
+			if (getPlayer(socket).room) {
+				sendRoomMessage(socket, "<"+getPlayer(socket).username+"#"+getPlayer(socket).playernumber+"> "+msg[0]);
+			}
+		}
 	},
 	clientpublish: function(socket, msg) {
 		console.log("publishing to all", msg);
-		io.emit('serverpublish', msg);
+		if (getPlayer(socket).room) {
+			getRoomSend(socket).emit('serverpublish', msg);
+		}
 	},
 	clientmove: function(socket, position, orientation) {
 		console.log(position);
 		console.log(orientation);
-		if (typeof players[socket.client.id].position !== 'undefined') {
+		if (typeof getPlayer(socket).position !== 'undefined') {
 			var newposition = position;
-			var oldposition = players[socket.client.id].position;
+			var oldposition = getPlayer(socket).position;
 			var delta = [newposition[0] - oldposition[0], 
 				newposition[1] - oldposition[1], 
 				newposition[2] - oldposition[2]];
 			var distance = Math.sqrt(delta[0]*delta[0]+delta[1]*delta[1]+delta[2]*delta[2]);
 			if (distance > 1) { // maximum distance player can travel
 				delta = [delta[0]/distance, delta[1]/distance, delta[2]/distance];
-				players[socket.client.id].position = [oldposition[0]+delta[0],
+				getPlayer(socket).position = [oldposition[0]+delta[0],
 					oldposition[1]+delta[1],
 					oldposition[2]+delta[2]];
 			} else {
-				players[socket.client.id].position = newposition;
+				getPlayer(socket).position = newposition;
 			}
-			players[socket.client.id].orientation = orientation;
+			getPlayer(socket).orientation = orientation;
 		} else {
-			players[socket.client.id].position = [0,0,0];
-			players[socket.client.id].orientation = orientation;
+			getPlayer(socket).position = [0,0,0];
+			getPlayer(socket).orientation = orientation;
 		}
-		// console.log('serverupdate', players[socket.client.id].playernumber, players[socket.client.id].position, players[socket.client.id].orientation);
-		io.emit('serverupdate', players[socket.client.id].playernumber, players[socket.client.id].position, players[socket.client.id].orientation);
+		// console.log('serverupdate', getPlayer(socket).playernumber, getPlayer(socket).position, getPlayer(socket).orientation);
+		if (getPlayer(socket).room) {
+			getRoomSend(socket).emit('serverupdate', getPlayer(socket).playernumber, getPlayer(socket).position, getPlayer(socket).orientation);
+		}
 		function close(v1, v2) {
 			return Math.abs(v1 - v2) < 0.01;
 		}
@@ -125,37 +162,42 @@ Multiplayer.prototype = {
 				close(p1.position[1], p2.position[1]) &&
 				close(p1.position[2], p2.position[2]));
 		}
+		/*
 		for (var player in players) {
 			// test collisions
 			if (player != socket.client.id) {
 				if (typeof players[player].position !== 'undefined') {
 					// player has moved
-					if (inRange(players[player], players[socket.client.id])) {
+					if (inRange(players[player], getPlayer(socket))) {
+						// COLLISION
 						// reset to beginning
 						players[player].position = [0,0,0];
-						players[socket.client.id].score++;
+						getPlayer(socket).score++;
 						if (typeof orientation[0] === 'number') {
 							//console.log('serverupdate', players[player].playernumber, players[player].position, players[player].orientation);
 							io.emit('serverupdate', players[player].playernumber, players[player].position, players[player].orientation);
 						}
-						io.emit('serverscore', players[socket.client.id].playernumber, players[socket.client.id].score);
+						io.emit('serverscore', getPlayer(socket).playernumber, getPlayer(socket).score);
 					}
 				}
 			}
 		}
+		*/
 	},
 	clientrejoin: function(socket, msg) {
 		var i = msg[0].indexOf("?");
 		if (i >= 0) {
 			var id = msg[0].substring(i+1);
 			if (typeof oldplayers[id] !== 'undefined') {
-				players[socket.client.id] = { playernumber: oldplayers[id].playernumber, id: socket.client.id, score: oldplayers[id].score };
+				players[socket.client.id] = { playernumber: oldplayers[id].playernumber, id: socket.client.id, score: oldplayers[id].score, username:oldplayers[id].username, room:oldplayers[id].room};
 				//socket.emit('servermessage', 'Your previous id was '+id);
 				//socket.emit('servermessage', 'Your current id is '+socket.client.id);
 				//console.log(players[socket.client.id]);
-				io.emit('servermessage', players[socket.client.id].playernumber+" joined.");
+				if (getPlayer(socket).room) {
+					sendRoomMessage(socket, getPlayer(socket).username+"#"+getPlayer(socket).playernumber+"@"+getPlayer(socket).room+" joined.");
+				}
 				reportPlayers(socket);
-				socket.emit('servercapability', players[socket.client.id], players[socket.client.id].playernumber);
+				socket.emit('servercapability', getPlayer(socket), getPlayer(socket).playernumber);
 			} else {
 				Multiplayer.prototype.clientjoin(socket);
 			}
@@ -164,45 +206,55 @@ Multiplayer.prototype = {
 		}
 	},
 	clientjoin: function(socket) {
-		players[socket.client.id] = {playernumber: maxplayers, id: socket.client.id, score:0};
+		players[socket.client.id] = {playernumber: maxplayers, id: socket.client.id, score:0, username:"newbee", room:"common"};
 		// console.log(players[socket.client.id]);
 		maxplayers++;
-		io.emit('servermessage', players[socket.client.id].playernumber+" joined.");
+		if (getPlayer(socket).room) {
+			socket.join(getPlayer(socket).room);
+			sendRoomMessage(socket, getPlayer(socket).playernumber+" joined.");
+		}
 		reportPlayers(socket);
-		socket.emit('servercapability', players[socket.client.id], players[socket.client.id].playernumber);
+		socket.emit('servercapability', getPlayer(socket), getPlayer(socket).playernumber);
 	}
 };
 
 io.on('connection', function(socket){
   console.log("Connection from", socket.client.id);
   socket.on('clientpublish', function() {
-	if (players[socket.client.id]) {
+	if (getPlayer(socket)) {
 		Multiplayer.prototype.clientpublish(socket, arguments);
 	} else {
 		socket.emit('servermessage', "You need to join before publishing documents");
 	}
   }),
+  socket.on('clientsdp', function() {
+	if (getPlayer(socket)) {
+		Multiplayer.prototype.clientsdp(socket, arguments);
+	} else {
+		socket.emit('servermessage', "You need to join before sending username and room");
+	}
+  });
   socket.on('clientmessage', function() {
-	if (players[socket.client.id]) {
+	if (getPlayer(socket)) {
 		Multiplayer.prototype.clientmessage(socket, arguments);
 	} else {
 		socket.emit('servermessage', "You need to join before sending messages");
 	}
   });
   socket.on('clientmove', function() {
-	if (players[socket.client.id]) { // if joined
+	if (getPlayer(socket)) { // if joined
 		// console.log(arguments);
 		Multiplayer.prototype.clientmove(socket, arguments[0], arguments[1]);
 	}
   });
   socket.on('clientrejoin', function () {
-	if (players[socket.client.id]) {
+	if (getPlayer(socket)) {
 	} else {
 		Multiplayer.prototype.clientrejoin(socket, arguments);
 	}
   });
   socket.on('clientjoin', function () {
-	if (players[socket.client.id]) {
+	if (getPlayer(socket)) {
 	} else {
 		Multiplayer.prototype.clientjoin(socket);
 	}
@@ -211,15 +263,18 @@ io.on('connection', function(socket){
 	console.log(e);
   });
   socket.on('disconnect', function(){
-	if (players[socket.client.id]) {
-		console.log('servermessage', players[socket.client.id].playernumber+" quit.");
-		io.emit('servermessage', players[socket.client.id].playernumber+" quit.");
-		oldplayers[socket.client.id] = players[socket.client.id];
-		for (var card in players[socket.client.id].cards) {
-			delete cardsTaken[card];
-			delete players[socket.client.id].cards[card];
+	if (getPlayer(socket)) {
+		socket.leave(getPlayer(socket).room);
+		console.log('servermessage', getPlayer(socket).playernumber+" quit.");
+		if (getPlayer(socket).room) {
+			sendRoomMessage(socket, getPlayer(socket).username+"#"+getPlayer(socket).playernumber+"@"+getPlayer(socket).room+" quit.");
 		}
-		delete players[socket.client.id];
+		oldplayers[socket.client.id] = getPlayer(socket);
+		for (var card in getPlayer(socket).cards) {
+			delete cardsTaken[card];
+			delete getPlayer(socket).cards[card];
+		}
+		delete getPlayer(socket);
 		reportPlayers(socket);
 	}
   });

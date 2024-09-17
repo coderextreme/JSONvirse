@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="stylesheets/style.css" />
     <script defer type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script defer type="text/javascript" src="./javascripts/motion.js"></script>
-    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script defer type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/x_ite@10.5.1/dist/x_ite.min.js"></script>
   </head>
   <body>
@@ -19,7 +19,10 @@
     <ul id="messages"></ul>
     <ul id="score"></ul>
     <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
+      User name: <input id="username" value="newbee"/>
+      Room: <input id="room" value="common"/>
+      <button id="send">Send</button>
+      <input id="m" autocomplete="off" />
     </form>
     </div>
     Background Images by Paul Debevec. <a href="https://www.pauldebevec.com/Probes/">Light Probe Image Gallery</a>

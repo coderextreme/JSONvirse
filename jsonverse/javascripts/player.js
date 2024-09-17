@@ -78,13 +78,21 @@ async function sendData(socket, url) {
 }
       $('form').submit(function(){
 	let message = $('#m').val();
+	let username = $('#username').val();
+	let room = $('#room').val();
+        socket.emit('clientsdp', {
+"v":0,
+"o":[username, 3724394400, 3724394405, "IN","IP","lc-soc-lc.at"],
+"s":room,
+"c":["IN","IP4","lc-soc-lc.at"],
+"t":[3724394400, 3724398000, "Mon 8-Jan-2018 10:00-11:00 UTC"]});
         socket.emit('clientmessage', message);
         $('#m').val('');
 	  try {
 		if (message.startsWith("http")) {
 			// sent the link to the server to avoid CORS
 			socket.emit('clientpublish', message);
-		} else {
+		} else if ($('#json').val() !== "") {
 			// Grab the JSON in the text area
 			socket.emit('clientpublish', $('#json').val().replace(/\n/g, ""));
 		}
