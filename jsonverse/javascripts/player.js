@@ -16,6 +16,17 @@ Player.prototype = {
 			loadJS("#scene", msg[0]);
 		}
 	},
+	serverpeers: function(msg) {
+		$('#score').empty();
+		$('#score').append($('<li>').text("Room members:"));
+		if (typeof msg === 'object') {
+			for (m in msg) {
+				$('#score').append($('<li>').text(msg[m]));
+			}
+		} else {
+			$('#score').append($('<li>').text(msg));
+		}
+	},
 	serverupdate: function(playernumber, position, orientation) {
 		if (typeof orientation[0] === 'string') {
 			Player.prototype.servermessage(playernumber+" at "+position+" turns "+printCard(orientation[0].substr(4)));
@@ -103,6 +114,7 @@ async function sendData(socket, url) {
       });
   socket.on('servermessage', Player.prototype.servermessage);
   socket.on('serverpublish', Player.prototype.serverpublish);
+  socket.on('serverpeers', Player.prototype.serverpeers);
   socket.on('serverupdate', Player.prototype.serverupdate);
   socket.on('serverheal', Player.prototype.serverheal);
   socket.on('serverdamage', Player.prototype.serverdamage);

@@ -21,7 +21,6 @@ if (metaServer != "") {
 app.use(express.static(__dirname + '/jsonverse'));
 // app.use(express.static(__dirname));
 var router = express.Router();
-var cardsTaken = {};
 router.route('/servers')
         .get(function(req, res) {
 			// console.log(res);
@@ -50,7 +49,9 @@ var oldplayers = {};
 function reportPlayers(socket) {
 	var numPlayers = 0;
 	for (var p in players) {
-		numPlayers++;
+		if (players[p] != null) {
+			numPlayers++;
+		}
 	}
 	io.emit('servermessage', "The server has "+numPlayers+" resident"+(numPlayers > 1 ? "s." : "."));
 	var uri = socket.handshake.headers.referer;
@@ -88,8 +89,26 @@ function getPlayer(socket) {
 	return players[socket.client.id];
 }
 
+function sendPeers(socket) {
+	sendPeersTo(getPlayer(socket).room);
+}
+
+function sendPeersTo(room) {
+	let names = [];
+	for (var player in players) {
+		if (players[player] !== null && players[player].room === room) {
+			names.push(players[player].username+"#"+players[player].playernumber);
+		}
+	}
+	getRoomTo(room).emit('serverpeers', names);
+}
+
+function getRoomTo(room) {
+	return io.to(room);
+}
+
 function getRoomSend(socket) {
-	return io.to(getPlayer(socket).room);
+	return getRoomTo(getPlayer(socket).room);
 }
 
 function sendRoomMessage(socket, msg) {
@@ -98,19 +117,30 @@ function sendRoomMessage(socket, msg) {
 
 Multiplayer.prototype = {
 	clientsdp: function(socket, sdp) {
+		console.log(getPlayer(socket));
 		console.log(sdp);
-		var oldusername = getPlayer(socket).username;
-		var oldroom = getPlayer(socket).room;
+		let oldusername = getPlayer(socket).username;
+		let oldroom = getPlayer(socket).room;
 		getPlayer(socket).username = sdp['0']['o'][0];
+		if (oldusername !== getPlayer(socket).username) {
+			console.log(oldusername, "!==", getPlayer(socket).username);
+			io.to(oldroom).emit('servermessage', oldusername+"#"+getPlayer(socket).playernumber+" changed their name to "+getPlayer(socket).username+"#"+getPlayer(socket).playernumber+".");
+			sendPeersTo(oldroom);
+		} else {
+			console.log(oldusername, "===", getPlayer(socket).username);
+		}
+
 		getPlayer(socket).room = sdp['0']['s'];
 		if (oldroom !== getPlayer(socket).room) {
 			if (oldroom) {
-				io.to(oldroom).emit('servermessage', oldusername+"#"+getPlayer(socket).playernumber+" left.");
+				io.to(oldroom).emit('servermessage', oldusername+"#"+getPlayer(socket).playernumber+" left "+oldroom+".");
 				socket.leave(oldroom);
+				sendPeersTo(oldroom);
 			}
 			if (getPlayer(socket).room) {
 				socket.join(getPlayer(socket).room);
 				sendRoomMessage(socket, getPlayer(socket).username+"#"+getPlayer(socket).playernumber+"@"+getPlayer(socket).room+" joined.");
+				sendPeers(socket);
 			}
 		}
 	},
@@ -194,7 +224,8 @@ Multiplayer.prototype = {
 				//socket.emit('servermessage', 'Your current id is '+socket.client.id);
 				//console.log(players[socket.client.id]);
 				if (getPlayer(socket).room) {
-					sendRoomMessage(socket, getPlayer(socket).username+"#"+getPlayer(socket).playernumber+"@"+getPlayer(socket).room+" joined.");
+					sendRoomMessage(socket, getPlayer(socket).username+"#"+getPlayer(socket).playernumber+"@"+getPlayer(socket).room+" rejoined.");
+					sendPeers(socket);
 				}
 				reportPlayers(socket);
 				socket.emit('servercapability', getPlayer(socket), getPlayer(socket).playernumber);
@@ -212,6 +243,7 @@ Multiplayer.prototype = {
 		if (getPlayer(socket).room) {
 			socket.join(getPlayer(socket).room);
 			sendRoomMessage(socket, getPlayer(socket).playernumber+" joined.");
+			sendPeers(socket);
 		}
 		reportPlayers(socket);
 		socket.emit('servercapability', getPlayer(socket), getPlayer(socket).playernumber);
@@ -264,17 +296,14 @@ io.on('connection', function(socket){
   });
   socket.on('disconnect', function(){
 	if (getPlayer(socket)) {
-		socket.leave(getPlayer(socket).room);
 		console.log('servermessage', getPlayer(socket).playernumber+" quit.");
 		if (getPlayer(socket).room) {
 			sendRoomMessage(socket, getPlayer(socket).username+"#"+getPlayer(socket).playernumber+"@"+getPlayer(socket).room+" quit.");
 		}
 		oldplayers[socket.client.id] = getPlayer(socket);
-		for (var card in getPlayer(socket).cards) {
-			delete cardsTaken[card];
-			delete getPlayer(socket).cards[card];
-		}
+		socket.leave(getPlayer(socket).room);
 		delete getPlayer(socket);
+		players[socket.client.id] = null;
 		reportPlayers(socket);
 	}
   });
