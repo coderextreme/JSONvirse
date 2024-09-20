@@ -18,12 +18,43 @@
     <div id="chat">
     <ul id="messages"></ul>
     <ul id="score"></ul>
-    <form action="">
-      User name: <input id="username" value="newbee"/>
-      Room: <input id="room" value="common"/>
-      <button id="send">Send</button>
-      <input id="m" autocomplete="off" />
-    </form>
+	    <div>
+		    <span>User name: <input id="username" value="newbee"/></span><br>
+		    <input id="m" autocomplete="off" /><br>
+		    <span><button id="send">Send</button></span>
+	    </div>
+    <hr>
+	    <div>
+		    <span>Session name: <select id="group"><option value="common room"/></select></span><br>
+		    <span>Start Date/Time: <input type="datetime" id="from"/></span><br>
+		    <span>Stop Date/Time:   <input type="datetime" id="to"/></span><br>
+		    <span>Amount:   <input id="rate" value="0"/></span><br>
+		    <span>Amount unit:   <input id="currency" value="Bitcoin"/></span><br>
+		    <span>Period:   <input id="period" value="1"/></span><br>
+		    <span>Period unit: <select id="periodunit">
+				    <option value="year">year</option>
+				    <option value="month">month</option>
+				    <option value="fortnite">fortnite</option>
+				    <option value="week">week</option>
+				    <option value="day">day</option>
+				    <option value="hour">hour</option>
+				    <option value="minute">minute</option>
+				    <option value="second">second</option>
+				    <option value="millisecond">millisecond</option>
+				    <option value="nanosecond">nanosecond</option>
+				    <option value="picosecond">picosecond</option>
+				    <option value="femtosecond">femtosecond</option>
+		    </select></span><br>
+		    <span><button id="session">Update Session Info</button></span>
+		    <span><textarea id="sessionjson" rows="15" cols="80">[
+  {
+    "Group Petname": "yottzumm",
+    "Group Token": "Super Secret Password",
+    "Group Type": "Standards Development Organization",
+    "Group Link": null
+  }
+]</textarea></span><br>
+	    </div>
     </div>
     Background Images by Paul Debevec. <a href="https://www.pauldebevec.com/Probes/">Light Probe Image Gallery</a>
     <script defer type="text/javascript" src="javascripts/bottomscroll.js"></script>

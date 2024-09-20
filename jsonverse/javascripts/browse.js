@@ -1,4 +1,14 @@
-function loadJS(selector, json) {
+/*
+function updateURLsAndGroups(browser, groupsdescription) {
+	// set up the connection in the X3D browser
+	let script = browser.currentScene.getNamedNode("ConnectionScript");
+	if (script && groupsdescription) {
+		console.log("set", groupsdescription);
+		script.getField('set_sdps').setValue(JSON.stringify(groupsdescription));
+	}
+}
+*/
+function loadJS(selector, json, groupsdescription) {
         try {
 		let browser = X3D.getBrowser();
                 if (typeof browser !== 'undefined') {
@@ -7,6 +17,7 @@ function loadJS(selector, json) {
 			      .then(function(importedScene) {
 				 // Replace the current world with the imported scene
 				 browser.replaceWorld(importedScene);
+	        		 updateURLsAndGroups(browser, groupsdescription)
 			      })
 			      .catch(function(error) {
 				 console.error('Error importing X3D scene:', error);
@@ -20,7 +31,7 @@ function loadJS(selector, json) {
 	}
 }
 
-function loadURL(selector, url) {
+function loadURL(selector, url, groupsdescription) {
         try {
 		/*
 		document.querySelector("#scene").setAttribute("url", "\""+url+"\"");
@@ -32,6 +43,7 @@ function loadURL(selector, url) {
 			   browser.loadURL(new X3D.MFString (url))
 			      .then(() => {
 				 console.log('Success importing URL:', url);
+	        		 updateURLsAndGroups(browser, groupsdescription);
 			      })
 			      .catch(function(error) {
 				 console.error('Error importing URL:', error);

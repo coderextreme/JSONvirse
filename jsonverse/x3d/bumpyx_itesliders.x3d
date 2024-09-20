@@ -40,6 +40,43 @@
      It is assumed the reviewers (users) have a non-X3D voice channel (e.g. TeamSpeak)
      open for their "discussion about the teapot" -->
 <Scene>
+   <Script DEF='ConnectionScript' directOutput="true" mustEvaluate="true">
+	  <field name='reconnect' accessType='inputOnly' type='SFBool' value='true'></field>
+<![CDATA[ecmascript:
+function initialize() {
+	   reconnect();
+}
+function reconnect() {
+	     let UserGlobalGroups = Player.prototype.updateGroups();
+	     Browser.print("x3d_serverupdate connectionScript set", UserGlobalGroups);
+	     if (UserGlobalGroups && UserGlobalGroups.length > 0) {
+		     for (let g in UserGlobalGroups) {
+	     			let group = UserGlobalGroups[g];
+	     			let groupname = group['Group Petname'];
+	     			let grouptoken = group['Group Token'];
+	     			let grouplink = group['Group Link'];
+				if (grouplink !== null && typeof grouplink !== 'undefined') {
+					socket = io(grouplink, {
+						transports: ["polling", "websocket", "webtransport"]
+					   }
+					);
+	     			}
+				if (socket === null || typeof socket === 'undefined') {
+	     				socket = io({
+			          	transports: ["polling", "websocket", "webtransport"]
+				   });
+				}
+				sockets[groupname] = socket;
+				socket.emit("clientgroups", UserGlobalGroups);
+				socket.emit("clientactivegroup", grouptoken);
+	     			if (x3d_serverupdate != null) {
+	     				sockets[groupname].on('x3d_serverupdate', x3d_serverupdate);
+	    			}
+		     }
+	     }
+}
+
+      ]]></Script>
   <!-- LayerSet with two layers, navigation happens in layer 1 -->
   <LayerSet activeLayer='1' order='1 2' >
     <!-- the first Layer contains the main scenery - "The Review of the Flower (DIS Multiuser)" -->
@@ -261,7 +298,9 @@ function initialize() {
 	      <field accessType='inputOutput' name='textString' type='MFString' value='"a="'/>
 	      <field accessType='inputOutput' name='parameterScale' type='SFFloat' value='30'/>
 	      <field accessType='inputOutput' name='parameterName' type='SFString' value='a'/>
+	      <field accessType='inputOutput' name='petName' type='SFString' value= 'yottzumm'/>
 	      <field accessType='inputOutput' name='shaderNode' type='SFNode'/>
+	      <field accessType='inputOutput' name='connectionScript' type='SFNode'/>
 	  </ProtoInterface>
 	  <ProtoBody>
 	    <Group>
@@ -297,69 +336,78 @@ function initialize() {
 	      </Transform>
 	      <Script DEF='protoValueTransformerScript' directOutput="true" mustEvaluate="true">
 		  <field accessType='inputOnly' name='newTranslation' type='SFVec3f' value='1.0 1.0 1.0'/>
+		  <field accessType='inputOutput' name='petName' type='SFString' value='yottzumm'/>
 		  <field accessType='outputOnly' name='protoValue_changed' type='SFFloat' value='1.0'/>
 		  <field accessType='outputOnly' name='protoText_changed' type='MFString' value='1.0'/>
 		  <field accessType='inputOutput' name='protoScale' type='SFFloat' value='30'/>
 		  <field accessType='inputOutput' name='protoParameterName' type='SFString' value='a'/>
 		  <field accessType='inputOutput' name='shader' type='SFNode'/>
+		  <field accessType='inputOutput' name='connectionScript' type='SFNode'/>
 		  <![CDATA[ecmascript:
-		  function serverupdate(playernumber, position, orientation) {
-			console.log("position",position,"orientation",orientation);
+x3d_serverupdate =  function (playernumber, position, orientation) {
+			Browser.print("Called x3d_serverupdate with", playernumber, position, orientation);
+			Browser.print("position",position,"orientation",orientation);
 			if (position[0] ==  protoParameterName) {
 				orientation[0] = parseFloat(orientation[0]);
 				let ps = Browser.currentScene.getNamedNode("protoSensor");
 				let t = Browser.currentScene.getNamedNode("protoTransform");
 				let txt = Browser.currentScene.getNamedNode("protoText");
 				if (shader) {
-				    console.log("old", shader.getField(protoParameterName).getValue());
+				    Browser.print("old", shader.getField(protoParameterName).getValue());
 				    shader.getField(protoParameterName).setValue(orientation[0] * protoScale);
-				    console.log("new", shader.getField(protoParameterName).getValue());
+				    Browser.print("new", shader.getField(protoParameterName).getValue());
 				} else {
 				    console.error('ComposedShader not found');
 				}
 				if (txt) {
 				    let stringField = txt.getField("string");
-				    console.log("old", stringField.getValue());
+				    Browser.print("old", stringField.getValue());
 				    let label = protoParameterName;
-				    if (protoParameterName == "pdelta") {
-					    label = "pdelta";
-				    } else if (protoParameterName == "tdelta") {
-					    label = "tdelta";
-				    }
 				    stringField.setValue(new MFString(label+"="+(orientation[0] * protoScale).toFixed(2)));
-				    console.log("new", stringField.getValue());
+				    Browser.print("new", stringField.getValue());
 				} else {
 				    console.error('ComposedShader not found');
 				}
 				if (ps) {
 					ps.offset = new SFVec3f(orientation[0], ps.offset[1], ps.offset[2]);
 				} else {
-					console.log("Not found protoSensor");
+					Browser.print("Not found protoSensor");
 				}
 				if (t) {
 					t.translation = new SFVec3f(orientation[0], t.translation[1], t.translation[2]);
 				} else {
-					console.log("Not found protoTransform");
+					Browser.print("Not found protoTransform");
 				}
 			}
         	  }
 		  function initialize() {
-			if (typeof socket !== 'undefined') {
-  		  		socket.on('serverupdate', serverupdate);
+			Browser.print("Called intialize");
+			Browser.print("adding event handler server update", petName);
+			if (typeof sockets[petName] !== 'undefined') {
+				Browser.print("init socket is ", sockets[petName]);
+  		  		sockets[petName].on('x3d_serverupdate', x3d_serverupdate);
+			} else {
+				Browser.print("Can't find socket for petName", petName);
 			}
 		  }
 		  function newTranslation(Value) {
 			protoValue_changed = Value.x * protoScale;
 			protoText_changed = new MFString(protoParameterName+'='+protoValue_changed.toFixed(2));
-			if (typeof socket !== 'undefined') {
-				socket.emit("clientmove", [protoParameterName],[Value.x]);
+			Browser.print("update", petName, protoText_changed, protoValue_changed);
+			if (typeof sockets[petName] !== 'undefined') {
+				Browser.print("update socket info is", petName, [protoParameterName],[Value.x]);
+			  // 	sockets[petName].off('x3d_serverupdate');
+	     			sockets[petName].on('x3d_serverupdate', x3d_serverupdate);
+				sockets[petName].emit("clientmove", [protoParameterName],[Value.x]);
 			}
 		  }
 		  ]]>
 				<IS>
 					<connect nodeField="protoScale" protoField="parameterScale"/>
+					<connect nodeField="petName" protoField="petName"/>
 					<connect nodeField="protoParameterName" protoField="parameterName"/>
 					<connect nodeField="shader" protoField="shaderNode"/>
+					<connect nodeField="connectionScript" protoField="connectionScript"/>
 				</IS>
 	      </Script>
         <ROUTE fromField='translation_changed' fromNode='protoSensor' toField='set_translation' toNode='protoTransform'/>
@@ -376,8 +424,12 @@ function initialize() {
 	      <fieldValue name='textString' value='"a="'/>
 	      <fieldValue name='parameterScale' value='30'/>
 	      <fieldValue name='parameterName' value='a'/>
+	      <fieldValue name='petName' value= 'yottzumm'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
+	      </fieldValue>
+	      <fieldValue name='connectionScript'>
+		      <Script USE="ConnectionScript"/>
 	      </fieldValue>
       </ProtoInstance>
 
@@ -388,8 +440,12 @@ function initialize() {
 	      <fieldValue name='textString' value='"b="'/>
 	      <fieldValue name='parameterScale' value='30'/>
 	      <fieldValue name='parameterName' value='b'/>
+	      <fieldValue name='petName' value= 'yottzumm'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
+	      </fieldValue>
+	      <fieldValue name='connectionScript'>
+		      <Script USE="ConnectionScript"/>
 	      </fieldValue>
       </ProtoInstance>
       <ProtoInstance DEF="cPI" name="SliderProto">
@@ -399,8 +455,12 @@ function initialize() {
 	      <fieldValue name='textString' value='"c="'/>
 	      <fieldValue name='parameterScale' value='20'/>
 	      <fieldValue name='parameterName' value='c'/>
+	      <fieldValue name='petName' value= 'yottzumm'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
+	      </fieldValue>
+	      <fieldValue name='connectionScript'>
+		      <Script USE="ConnectionScript"/>
 	      </fieldValue>
       </ProtoInstance>
       <ProtoInstance DEF="dPI" name="SliderProto">
@@ -410,8 +470,12 @@ function initialize() {
 	      <fieldValue name='textString' value='"d="'/>
 	      <fieldValue name='parameterScale' value='20'/>
 	      <fieldValue name='parameterName' value='d'/>
+	      <fieldValue name='petName' value= 'yottzumm'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
+	      </fieldValue>
+	      <fieldValue name='connectionScript'>
+		      <Script USE="ConnectionScript"/>
 	      </fieldValue>
       </ProtoInstance>
       <ProtoInstance DEF="tdeltaPI" name="SliderProto">
@@ -421,8 +485,12 @@ function initialize() {
 	      <fieldValue name='textString' value='"tdelta="'/>
 	      <fieldValue name='parameterScale' value='1'/>
 	      <fieldValue name='parameterName' value='tdelta'/>
+	      <fieldValue name='petName' value= 'yottzumm'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
+	      </fieldValue>
+	      <fieldValue name='connectionScript'>
+		      <Script USE="ConnectionScript"/>
 	      </fieldValue>
       </ProtoInstance>
       <ProtoInstance DEF="pdeltaPI" name="SliderProto">
@@ -432,8 +500,12 @@ function initialize() {
 	      <fieldValue name='textString' value='"pdelta="'/>
 	      <fieldValue name='parameterScale' value='1'/>
 	      <fieldValue name='parameterName' value='pdelta'/>
+	      <fieldValue name='petName' value= 'yottzumm'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
+	      </fieldValue>
+	      <fieldValue name='connectionScript'>
+		      <Script USE="ConnectionScript"/>
 	      </fieldValue>
       </ProtoInstance>
     </LayoutLayer>

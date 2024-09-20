@@ -1,8 +1,6 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font: 13px Helvetica, Arial; }
-form { position: fixed; bottom:0; width: 100%; }
 #m { background: rgb(130, 224, 255); padding: 3px; border: 0; padding: 10px; margin-right: .5%; }
-form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
 #messages { list-style-type: none; margin: 0; padding: 0; height:200px; overflow:auto; }
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
@@ -12,6 +10,3 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 #scene { width: 600px; height: 300px; position:absolute; left:0px; top:0px;}
 #json { width: 600px; height: 500px; position:absolute; left:0px; top:300px;}
 #chat { width: 500px; height: 200px; position:absolute; left:600px; top:0px}
-#username { left:650px; top:450px}
-#room { left:700px; top:450px}
-#send { left:750px; top:450px}

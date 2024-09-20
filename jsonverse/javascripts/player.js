@@ -2,6 +2,18 @@ function Player() {
 }
 
 Player.prototype = {
+	updateGroups: function() {
+		let groupsdescription = $('#sessionjson').val();
+		socket.emit('clientgroups', groupsdescription);
+		try {
+			let UserGlobalGroups = JSON.parse(groupsdescription);
+			// updateURLsAndGroups(X3D.getBrowser(), UserGlobalGroups);
+			return UserGlobalGroups;
+		} catch (e) {
+			console.log(e);
+			alert(e);
+		}
+	},
 	servermessage: function(msg) {
 		$('#messages').append($('<li>').text(msg));
 		console.log("message from server", msg);
@@ -9,16 +21,32 @@ Player.prototype = {
 	},
 	serverpublish: function(msg) {
 		console.log("Receiving publish", msg)
+		UserGlobalGroups = Player.prototype.updateGroups();
 		// if Prompt begins with http, get it
 		if (msg[0].startsWith("http://") || msg[0].startsWith("https://")) {
-			loadURL("#scene", msg[0]);
+			loadURL("#scene", msg[0], UserGlobalGroups);
 		} else {
-			loadJS("#scene", msg[0]);
+			loadJS("#scene", msg[0], UserGlobalGroups);
+		}
+	},
+	servergroups: function(msg) {
+		$('#group').empty();
+		let groups = msg;
+		console.log(groups);
+		for (let g in groups) {
+			let group = groups[g];
+			console.log(group);
+			let option = $("<option>", {
+			  value: group['Group Petname'],  // could be token
+			  text: group['Group Petname'] 
+			});
+
+			$('#group').append(option);
 		}
 	},
 	serverpeers: function(msg) {
 		$('#score').empty();
-		$('#score').append($('<li>').text("Room members:"));
+		$('#score').append($('<li>').text("Group members:"));
 		if (typeof msg === 'object') {
 			for (m in msg) {
 				$('#score').append($('<li>').text(msg[m]));
@@ -87,16 +115,18 @@ async function sendData(socket, url) {
     console.error(error.message);
   }
 }
-      $('form').submit(function(){
+      $('#send').click(function(){
 	let message = $('#m').val();
 	let username = $('#username').val();
-	let room = $('#room').val();
+        socket.emit('clientactivename', username);
+	      /*
         socket.emit('clientsdp', {
 "v":0,
 "o":[username, 3724394400, 3724394405, "IN","IP","lc-soc-lc.at"],
-"s":room,
+"s":"common room",
 "c":["IN","IP4","lc-soc-lc.at"],
 "t":[3724394400, 3724398000, "Mon 8-Jan-2018 10:00-11:00 UTC"]});
+	*/
         socket.emit('clientmessage', message);
         $('#m').val('');
 	  try {
@@ -112,9 +142,20 @@ async function sendData(socket, url) {
 	  }
         return false;
       });
+
+      $('#session').click(function() {
+	    Player.prototype.updateGroups();
+      });
+
+     $(document).on('change','#group',function(){
+	    let group = $(this).val();
+	    socket.emit('clientactivegroup', group);
+      });
+
   socket.on('servermessage', Player.prototype.servermessage);
   socket.on('serverpublish', Player.prototype.serverpublish);
   socket.on('serverpeers', Player.prototype.serverpeers);
+  socket.on('servergroups', Player.prototype.servergroups);
   socket.on('serverupdate', Player.prototype.serverupdate);
   socket.on('serverheal', Player.prototype.serverheal);
   socket.on('serverdamage', Player.prototype.serverdamage);

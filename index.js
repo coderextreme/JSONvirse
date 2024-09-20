@@ -1,5 +1,10 @@
 var express = require('express');
+const bodyParser = require('body-parser');
+
+var fs = require('fs');
 var app = express();
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -36,6 +41,56 @@ router.route('/servers')
 			console.log(e);
 		}
         });
+router.route('/group')
+  .post(function(req, res) {
+    try {
+      res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      });
+      const visit = req.body;
+      // console.log(req.body);
+      res.json(visit);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "An error occurred" });
+    }
+  });
+router.route('/petnames')
+  .post(function(req, res) {
+    try {
+      // console.log("receiving", req.body);
+      res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      });
+      // console.log("receiving2", req.body);
+      let data = JSON.parse(fs.readFileSync(__dirname + "/jsonverse/javascripts/petnames.json"));
+      // console.log("reading", data);
+      const from = req.body[0];
+      const relationship = req.body[1];
+      const to = req.body[2];
+      // console.log(from, relationship, to);
+
+      if (from && relationship && to) {
+        let sanitizedFrom = from.replace(/[<>&]/g, " ");
+        let sanitizedRelationship = relationship.replace(/[<>&]/g, " ");
+        let sanitizedTo = to.replace(/[<>&]/g, " ");
+
+        data.push([sanitizedFrom, sanitizedRelationship, sanitizedTo]);
+        // console.log("writing", data);
+        fs.writeFileSync(__dirname + "/jsonverse/javascripts/petnames.json", JSON.stringify(data));
+      }
+
+      // console.log("sending", data);
+      res.json(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "An error occurred" });
+    }
+  });
 app.use('/api', router);
 
 
@@ -45,6 +100,7 @@ function Multiplayer() {
 var maxplayers = 0;
 var players = {};
 var oldplayers = {};
+var links = [];
 
 function reportPlayers(socket) {
 	var numPlayers = 0;
@@ -104,6 +160,7 @@ function sendPeersTo(room) {
 }
 
 function getRoomTo(room) {
+	console.log("Sending info to", room);
 	return io.to(room);
 }
 
@@ -116,33 +173,80 @@ function sendRoomMessage(socket, msg) {
 }
 
 Multiplayer.prototype = {
-	clientsdp: function(socket, sdp) {
-		console.log(getPlayer(socket));
-		console.log(sdp);
-		let oldusername = getPlayer(socket).username;
-		let oldroom = getPlayer(socket).room;
-		getPlayer(socket).username = sdp['0']['o'][0];
-		if (oldusername !== getPlayer(socket).username) {
-			console.log(oldusername, "!==", getPlayer(socket).username);
-			io.to(oldroom).emit('servermessage', oldusername+"#"+getPlayer(socket).playernumber+" changed their name to "+getPlayer(socket).username+"#"+getPlayer(socket).playernumber+".");
-			sendPeersTo(oldroom);
-		} else {
-			console.log(oldusername, "===", getPlayer(socket).username);
+	clientgroups: function(socket, msg) {
+		let oldgroups = getPlayer(socket).groups;
+		// console.log("old", oldgroups);
+		for (let g in oldgroups) {
+			let group = oldgroups[g];
+			// console.log("old", group);
+			let name = group["Group Petname"];
+			let token = group["Group Token"];
+			// console.log("old token", token);
+			getRoomTo(token).emit('servermessage', getPlayer(socket).username+"#"+getPlayer(socket).playernumber+" left "+name+".");
+			socket.leave(token);
+			sendPeersTo(token);
 		}
 
-		getPlayer(socket).room = sdp['0']['s'];
+		// console.log("new groups", msg[0]);
+		try {
+			getPlayer(socket).groups = JSON.parse(msg[0]);
+		} catch (e) {
+			console.error("Problems parsing", msg[0]);
+		}
+		let newgroups = getPlayer(socket).groups;
+		// console.log("new", newgroups);
+		for (let g in newgroups) {
+			let group = newgroups[g];
+			// console.log("new group", group);
+			let name = group["Group Petname"];
+			let token = group["Group Token"];
+			// console.log("new token", token);
+			let type = group["Group Type"];
+			let link = group["Group Link"];
+			socket.join(token);
+			getRoomTo(token).emit('servermessage', getPlayer(socket).username+"#"+getPlayer(socket).playernumber+"@"+name+" joined.");
+			sendPeersTo(token);
+		}
+		socket.emit("servergroups", newgroups);
+	},
+	clientactivegroup: function(socket, msg) {
+		let oldroom = getPlayer(socket).room;
+		getPlayer(socket).room = msg[0];
 		if (oldroom !== getPlayer(socket).room) {
 			if (oldroom) {
-				io.to(oldroom).emit('servermessage', oldusername+"#"+getPlayer(socket).playernumber+" left "+oldroom+".");
+				io.to(oldroom).emit('servermessage', getPlayer(socket).username+"#"+getPlayer(socket).playernumber+" went idle.");
 				socket.leave(oldroom);
 				sendPeersTo(oldroom);
 			}
 			if (getPlayer(socket).room) {
 				socket.join(getPlayer(socket).room);
-				sendRoomMessage(socket, getPlayer(socket).username+"#"+getPlayer(socket).playernumber+"@"+getPlayer(socket).room+" joined.");
-				sendPeers(socket);
+				let grouptoken = getPlayer(socket).room
+				let room = "unknown";
+				for (let g in getPlayer(socket).groups) {
+					if (getPlayer(socket).groups[g]['Group Token'] === grouptoken) {
+						room = getPlayer(socket).groups[g]['Group Petname'];
+					}
+				}
+				sendRoomMessage(socket, getPlayer(socket).username+"#"+getPlayer(socket).playernumber+"@"+room+" became active.");
+				console.log(getPlayer(socket).username+"#"+getPlayer(socket).playernumber+"@"+room+" became active.");
 			}
 		}
+		sendPeers(socket);
+	},
+	clientactivename: function(socket, msg) {
+		let oldusername = getPlayer(socket).username;
+		getPlayer(socket).username = msg[0];
+		if (oldusername !== getPlayer(socket).username) {
+			// console.log(oldusername, "!==", getPlayer(socket).username);
+			sendRoomMessage(socket, oldusername+"#"+getPlayer(socket).playernumber+" changed their name to "+getPlayer(socket).username+"#"+getPlayer(socket).playernumber+".");
+			sendPeers(socket);
+		} else {
+			// console.log(oldusername, "===", getPlayer(socket).username);
+		}
+	},
+	clientsdp: function(socket, sdp) {
+		Multiplayer.prototype.clientactivegroup(socket, [sdp['0']['s']]);
+		Multiplayer.prototype.clientactivename(socket, [sdp['0']['o'][0]]);
 	},
 	clientmessage: function(socket, msg) {
 		if (msg[0]) {
@@ -158,8 +262,8 @@ Multiplayer.prototype = {
 		}
 	},
 	clientmove: function(socket, position, orientation) {
-		console.log(position);
-		console.log(orientation);
+		console.log("clientmove position", position);
+		console.log("clientmove orientation", orientation);
 		if (typeof getPlayer(socket).position !== 'undefined') {
 			var newposition = position;
 			var oldposition = getPlayer(socket).position;
@@ -182,7 +286,11 @@ Multiplayer.prototype = {
 		}
 		// console.log('serverupdate', getPlayer(socket).playernumber, getPlayer(socket).position, getPlayer(socket).orientation);
 		if (getPlayer(socket).room) {
+			console.log("sending server update to room", getPlayer(socket).room, getPlayer(socket).username, getPlayer(socket).playernumber, getPlayer(socket).position, getPlayer(socket).orientation);
 			getRoomSend(socket).emit('serverupdate', getPlayer(socket).playernumber, getPlayer(socket).position, getPlayer(socket).orientation);
+			getRoomSend(socket).emit('x3d_serverupdate', getPlayer(socket).playernumber, getPlayer(socket).position, getPlayer(socket).orientation);
+		} else {
+			console.log("warning, room does not exsit", getPlayer(socket).room, getPlayer(socket).playernumber, getPlayer(socket).room);
 		}
 		function close(v1, v2) {
 			return Math.abs(v1 - v2) < 0.01;
@@ -237,7 +345,7 @@ Multiplayer.prototype = {
 		}
 	},
 	clientjoin: function(socket) {
-		players[socket.client.id] = {playernumber: maxplayers, id: socket.client.id, score:0, username:"newbee", room:"common"};
+		players[socket.client.id] = {playernumber: maxplayers, id: socket.client.id, score:0, username:"newbee", room:"object"};
 		// console.log(players[socket.client.id]);
 		maxplayers++;
 		if (getPlayer(socket).room) {
@@ -259,9 +367,37 @@ io.on('connection', function(socket){
 		socket.emit('servermessage', "You need to join before publishing documents");
 	}
   }),
+  socket.on('clientactivename', function() {
+	if (getPlayer(socket)) {
+		Multiplayer.prototype.clientactivename(socket, arguments);
+	} else {
+		socket.emit('servermessage', "You need to join before sending username and room");
+	}
+  });
+  socket.on('clientactivegroup', function() {
+	if (getPlayer(socket)) {
+		Multiplayer.prototype.clientactivegroup(socket, arguments);
+	} else {
+		socket.emit('servermessage', "You need to join before sending username and room");
+	}
+  });
+  socket.on('clientgroups', function() {
+	if (getPlayer(socket)) {
+		Multiplayer.prototype.clientgroups(socket, arguments);
+	} else {
+		socket.emit('servermessage', "You need to join before sending username and room");
+	}
+  });
   socket.on('clientsdp', function() {
 	if (getPlayer(socket)) {
 		Multiplayer.prototype.clientsdp(socket, arguments);
+	} else {
+		socket.emit('servermessage', "You need to join before sending username and room");
+	}
+  });
+  socket.on('clientmap', function() {
+	if (getPlayer(socket)) {
+		Multiplayer.prototype.clientmap(socket, arguments);
 	} else {
 		socket.emit('servermessage', "You need to join before sending username and room");
 	}
@@ -313,7 +449,9 @@ var defaultPort = 8088;
 
 http.listen(process.env.X3DJSONPORT || defaultPort);
 
-console.log('go to http://localhost:%s or '+metaServer+' in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt', process.env.X3DJSONPORT || defaultPort);
+console.log('go to http://localhost:%s/ or '+metaServer+' in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt', process.env.X3DJSONPORT || defaultPort);
+console.log('go to http://localhost:%s/jsonverse/apache.html or '+metaServer+' in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt', process.env.X3DJSONPORT || defaultPort);
+console.log('go to http://localhost:%s/petnames.html or '+metaServer+' in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt', process.env.X3DJSONPORT || defaultPort);
 
 
 http.on('error', function (e) {
