@@ -33,6 +33,12 @@ Player.prototype = {
 		$('#group').empty();
 		let groups = msg;
 		console.log(groups);
+		let noop = $("<option>", {
+		  value: "Not connected",  // could be token
+		  text: "Not connected"
+		});
+		$('#group').append(noop);
+
 		for (let g in groups) {
 			let group = groups[g];
 			console.log(group);
