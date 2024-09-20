@@ -22,35 +22,28 @@ class Multiplayer {
 			if (mp.getPlayer(socket)) {
 				mp.clientactivename(socket, arguments);
 			} else {
-				socket.emit('servermessage', "You need to join before sending username and room");
+				socket.emit('servermessage', "You need to join before sending username");
 			}
 		  });
 		  socket.on('clientactivegroup', function() {
 			if (mp.getPlayer(socket)) {
 				mp.clientactivegroup(socket, arguments);
 			} else {
-				socket.emit('servermessage', "You need to join before sending username and room");
+				socket.emit('servermessage', "You need to join before sending room");
 			}
 		  });
 		  socket.on('clientgroups', function() {
 			if (mp.getPlayer(socket)) {
 				mp.clientgroups(socket, arguments);
 			} else {
-				socket.emit('servermessage', "You need to join before sending username and room");
+				socket.emit('servermessage', "You need to join before sending groups");
 			}
 		  });
 		  socket.on('clientsdp', function() {
 			if (mp.getPlayer(socket)) {
 				mp.clientsdp(socket, arguments);
 			} else {
-				socket.emit('servermessage', "You need to join before sending username and room");
-			}
-		  });
-		  socket.on('clientmap', function() {
-			if (mp.getPlayer(socket)) {
-				mp.clientmap(socket, arguments);
-			} else {
-				socket.emit('servermessage', "You need to join before sending username and room");
+				socket.emit('servermessage', "You need to join before sending SDP");
 			}
 		  });
 		  socket.on('clientmessage', function() {
@@ -64,16 +57,20 @@ class Multiplayer {
 			if (mp.getPlayer(socket)) { // if joined
 				// console.log(arguments);
 				mp.clientmove(socket, arguments[0], arguments[1]);
+			} else {
+				// ignore movement for now
 			}
 		  });
 		  socket.on('clientrejoin', function () {
 			if (mp.getPlayer(socket)) {
+				socket.emit('servermessage', "You're already joined, not rejoining");
 			} else {
 				mp.clientrejoin(socket, arguments);
 			}
 		  });
 		  socket.on('clientjoin', function () {
 			if (mp.getPlayer(socket)) {
+				socket.emit('servermessage', "You're already joined");
 			} else {
 				mp.clientjoin(socket);
 			}
@@ -85,7 +82,7 @@ class Multiplayer {
 			if (mp.getPlayer(socket)) {
 				mp.disconnect(socket, arguments);
 			} else {
-				socket.emit('servermessage', "You need to join before sending messages");
+				socket.emit('servermessage', "You need to connect before disconnecting");
 			}
 		  });
 		});
