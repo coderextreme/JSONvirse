@@ -41,13 +41,14 @@
      open for their "discussion about the teapot" -->
 <Scene>
    <Script DEF='ConnectionScript' directOutput="true" mustEvaluate="true">
-	  <field name='reconnect' accessType='inputOnly' type='SFBool' value='true'></field>
+	  <field name='reconnect' accessType='inputOnly' type='SFBool'></field>
 <![CDATA[ecmascript:
 function initialize() {
 	   reconnect();
 }
 function reconnect() {
-	     let UserGlobalGroups = Player.prototype.updateGroups();
+	     console.log("Reconnecting");
+	     UserGlobalGroups = Player.prototype.updateGroups();
 	     Browser.print("x3d_serverupdate connectionScript set", UserGlobalGroups);
 	     if (UserGlobalGroups && UserGlobalGroups.length > 0) {
 		     for (let g in UserGlobalGroups) {
@@ -55,6 +56,7 @@ function reconnect() {
 	     			let groupname = group['Group Petname'];
 	     			let grouptoken = group['Group Token'];
 	     			let grouplink = group['Group Link'];
+		  		let socket = null;
 				if (grouplink !== null && typeof grouplink !== 'undefined') {
 					socket = io(grouplink, {
 						transports: ["polling", "websocket", "webtransport"]
@@ -66,12 +68,18 @@ function reconnect() {
 			          	transports: ["polling", "websocket", "webtransport"]
 				   });
 				}
-				sockets[groupname] = socket;
-				socket.emit("clientgroups", UserGlobalGroups);
-				socket.emit("clientactivegroup", grouptoken);
-	     			if (x3d_serverupdate != null) {
-	     				sockets[groupname].on('x3d_serverupdate', x3d_serverupdate);
-	    			}
+		  		if (socket !== null) {
+					sockets[groupname] = socket;
+  					socket.emit('clientjoin');
+					socket.emit("clientgroups", UserGlobalGroups);
+					socket.emit("clientactivegroup", grouptoken);
+					if (x3d_serverupdate !== null) {
+			  			Browser.print("Found x3d_serverupdate", groupname, grouptoken, UserGlobalGroups);
+						sockets[groupname].on('x3d_serverupdate', x3d_serverupdate);
+			  		} else {
+			  			Browser.print("reconnect Can't service x3d_serverupdate", groupname, grouptoken);
+					}
+		 		}
 		     }
 	     }
 }
@@ -298,7 +306,7 @@ function initialize() {
 	      <field accessType='inputOutput' name='textString' type='MFString' value='"a="'/>
 	      <field accessType='inputOutput' name='parameterScale' type='SFFloat' value='30'/>
 	      <field accessType='inputOutput' name='parameterName' type='SFString' value='a'/>
-	      <field accessType='inputOutput' name='petName' type='SFString' value= 'yottzumm'/>
+	      <field accessType='inputOutput' name='petNames' type='MFString'/>
 	      <field accessType='inputOutput' name='shaderNode' type='SFNode'/>
 	      <field accessType='inputOutput' name='connectionScript' type='SFNode'/>
 	  </ProtoInterface>
@@ -336,7 +344,7 @@ function initialize() {
 	      </Transform>
 	      <Script DEF='protoValueTransformerScript' directOutput="true" mustEvaluate="true">
 		  <field accessType='inputOnly' name='newTranslation' type='SFVec3f' value='1.0 1.0 1.0'/>
-		  <field accessType='inputOutput' name='petName' type='SFString' value='yottzumm'/>
+		  <field accessType='inputOutput' name='petNames' type='MFString'/>
 		  <field accessType='outputOnly' name='protoValue_changed' type='SFFloat' value='1.0'/>
 		  <field accessType='outputOnly' name='protoText_changed' type='MFString' value='1.0'/>
 		  <field accessType='inputOutput' name='protoScale' type='SFFloat' value='30'/>
@@ -344,10 +352,10 @@ function initialize() {
 		  <field accessType='inputOutput' name='shader' type='SFNode'/>
 		  <field accessType='inputOutput' name='connectionScript' type='SFNode'/>
 		  <![CDATA[ecmascript:
-x3d_serverupdate =  function (playernumber, position, orientation) {
-			Browser.print("Called x3d_serverupdate with", playernumber, position, orientation);
-			Browser.print("position",position,"orientation",orientation);
-			if (position[0] ==  protoParameterName) {
+x3d_serverupdate =  function (playernumber, position, orientation, allowedToken) {
+			Browser.print("Called x3d_serverupdate with", playernumber, position, orientation, allowedToken);
+			  console.log("Relevant extra info", allowedToken, token_test(allowedToken));
+		  	if (position !== null && orientation !== null && token_test(allowedToken) && position[0] ===  protoParameterName) {
 				orientation[0] = parseFloat(orientation[0]);
 				let ps = Browser.currentScene.getNamedNode("protoSensor");
 				let t = Browser.currentScene.getNamedNode("protoTransform");
@@ -380,31 +388,57 @@ x3d_serverupdate =  function (playernumber, position, orientation) {
 				}
 			}
         	  }
+		  function token_test(test_token) {
+		     if (UserGlobalGroups && UserGlobalGroups.length > 0) {
+			     for (let g in UserGlobalGroups) {
+					let group = UserGlobalGroups[g];
+					let grouptoken = group['Group Token'];
+					if (test_token === grouptoken) {
+						return true;
+					}
+			     }
+			     socket.emit("clientgroups", UserGlobalGroups);
+		     } else {
+			Browser.print("UserGlobalGroups is not set right", UserGlobaGroups);
+		     }
+		     return false;
+		  }
 		  function initialize() {
 			Browser.print("Called intialize");
-			Browser.print("adding event handler server update", petName);
-			if (typeof sockets[petName] !== 'undefined') {
-				Browser.print("init socket is ", sockets[petName]);
-  		  		sockets[petName].on('x3d_serverupdate', x3d_serverupdate);
-			} else {
-				Browser.print("Can't find socket for petName", petName);
+			for (let p in petNames) {
+				let petName = petNames[p];
+				Browser.print("adding event handler server update", petName, protoParameterName);
+				if (typeof sockets[petName] !== 'undefined') {
+					Browser.print("init socket is ", sockets[petName]);
+					if (x3d_serverupdate !== null) {
+						sockets[petName].on('x3d_serverupdate', x3d_serverupdate);
+			  		} else {
+			  			Browser.print("init Can't service x3d_serverupdate", petName);
+			  		}
+				} else {
+					Browser.print("Can't find socket for petName", petName);
+				}
 			}
 		  }
 		  function newTranslation(Value) {
-			protoValue_changed = Value.x * protoScale;
-			protoText_changed = new MFString(protoParameterName+'='+protoValue_changed.toFixed(2));
-			Browser.print("update", petName, protoText_changed, protoValue_changed);
-			if (typeof sockets[petName] !== 'undefined') {
-				Browser.print("update socket info is", petName, [protoParameterName],[Value.x]);
-			  // 	sockets[petName].off('x3d_serverupdate');
-	     			sockets[petName].on('x3d_serverupdate', x3d_serverupdate);
-				sockets[petName].emit("clientmove", [protoParameterName],[Value.x]);
-			}
+			Browser.print("newTranslation", petNames);
+			for (let p in petNames) {
+				let petName = petNames[p];
+				Browser.print("update", petName, protoText_changed, protoValue_changed);
+				if (sockets[petName] !== null && typeof sockets[petName] !== 'undefined') {
+					Browser.print("update socket info is", petName, [protoParameterName],[Value.x]);
+					protoValue_changed = Value.x * protoScale;
+					protoText_changed = new MFString(protoParameterName+'='+protoValue_changed.toFixed(2));
+					sockets[petName].emit("clientmove", [protoParameterName],[Value.x]);
+				  } else {
+			  		Browser.print("No socket for ", petName);
+				  }
+			  }
 		  }
 		  ]]>
 				<IS>
 					<connect nodeField="protoScale" protoField="parameterScale"/>
-					<connect nodeField="petName" protoField="petName"/>
+					<connect nodeField="petNames" protoField="petNames"/>
 					<connect nodeField="protoParameterName" protoField="parameterName"/>
 					<connect nodeField="shader" protoField="shaderNode"/>
 					<connect nodeField="connectionScript" protoField="connectionScript"/>
@@ -424,7 +458,7 @@ x3d_serverupdate =  function (playernumber, position, orientation) {
 	      <fieldValue name='textString' value='"a="'/>
 	      <fieldValue name='parameterScale' value='30'/>
 	      <fieldValue name='parameterName' value='a'/>
-	      <fieldValue name='petName' value= 'yottzumm'/>
+	      <fieldValue name='petNames' value='"yottzumm"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>
@@ -440,7 +474,7 @@ x3d_serverupdate =  function (playernumber, position, orientation) {
 	      <fieldValue name='textString' value='"b="'/>
 	      <fieldValue name='parameterScale' value='30'/>
 	      <fieldValue name='parameterName' value='b'/>
-	      <fieldValue name='petName' value= 'yottzumm'/>
+	      <fieldValue name='petNames' value='"yottzumm"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>
@@ -455,7 +489,7 @@ x3d_serverupdate =  function (playernumber, position, orientation) {
 	      <fieldValue name='textString' value='"c="'/>
 	      <fieldValue name='parameterScale' value='20'/>
 	      <fieldValue name='parameterName' value='c'/>
-	      <fieldValue name='petName' value= 'yottzumm'/>
+	      <fieldValue name='petNames' value='"yottzumm"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>
@@ -470,7 +504,7 @@ x3d_serverupdate =  function (playernumber, position, orientation) {
 	      <fieldValue name='textString' value='"d="'/>
 	      <fieldValue name='parameterScale' value='20'/>
 	      <fieldValue name='parameterName' value='d'/>
-	      <fieldValue name='petName' value= 'yottzumm'/>
+	      <fieldValue name='petNames' value='"yottzumm"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>
@@ -485,7 +519,7 @@ x3d_serverupdate =  function (playernumber, position, orientation) {
 	      <fieldValue name='textString' value='"tdelta="'/>
 	      <fieldValue name='parameterScale' value='1'/>
 	      <fieldValue name='parameterName' value='tdelta'/>
-	      <fieldValue name='petName' value= 'yottzumm'/>
+	      <fieldValue name='petNames' value='"yottzumm2"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>
@@ -500,7 +534,7 @@ x3d_serverupdate =  function (playernumber, position, orientation) {
 	      <fieldValue name='textString' value='"pdelta="'/>
 	      <fieldValue name='parameterScale' value='1'/>
 	      <fieldValue name='parameterName' value='pdelta'/>
-	      <fieldValue name='petName' value= 'yottzumm'/>
+	      <fieldValue name='petNames' value='"yottzumm2"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>

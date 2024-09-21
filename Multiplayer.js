@@ -58,7 +58,7 @@ class Multiplayer {
 				// console.log(arguments);
 				mp.clientmove(socket, arguments[0], arguments[1]);
 			} else {
-				// ignore movement for now
+				socket.emit('servermessage', "Something wrong with socket or player");
 			}
 		  });
 		  socket.on('clientrejoin', function () {
@@ -88,13 +88,14 @@ class Multiplayer {
 		});
 	}
 	disconnect(socket, args) {
-		if (this.getPlayer(socket)) {
-			console.log('servermessage', this.getPlayer(socket).playernumber+" quit.");
-			if (this.getPlayer(socket).room) {
-				this.sendRoomMessage(socket, this.getPlayer(socket).username+"#"+this.getPlayer(socket).playernumber+"@"+this.getPlayer(socket).room+" quit.");
+		let player = this.getPlayer(socket);
+		if (player) {
+			console.log('servermessage', player.playernumber+" quit.");
+			if (player.room) {
+				this.sendRoomMessage(player, player.username+"#"+player.playernumber+"@"+player.room+" quit.");
 			}
-			this.oldplayers[socket.client.id] = this.getPlayer(socket);
-			socket.leave(this.getPlayer(socket).room);
+			this.oldplayers[socket.client.id] = player;
+			socket.leave(player.room);
 			delete this.getPlayer(socket);
 			this.players[socket.client.id] = null;
 			this.reportPlayers(socket);
@@ -110,26 +111,28 @@ class Multiplayer {
 		this.getRoomTo(room).emit('serverpeers', names);
 	}
 	clientgroups(socket, msg) {
-		let oldgroups = this.getPlayer(socket).groups;
+		let player = this.getPlayer(socket);
+		let oldgroups = player.groups;
 		// console.log("old", oldgroups);
 		for (let g in oldgroups) {
 			let group = oldgroups[g];
 			// console.log("old", group);
 			let name = group["Group Petname"];
 			let token = group["Group Token"];
+			group["Group Active?"] = false;
 			// console.log("old token", token);
-			this.getRoomTo(token).emit('servermessage', this.getPlayer(socket).username+"#"+this.getPlayer(socket).playernumber+" left "+name+".");
+			this.getRoomTo(token).emit('servermessage', player.username+"#"+player.playernumber+" left "+name+".");
 			socket.leave(token);
 			this.sendPeersTo(token);
 		}
 
 		// console.log("new groups", msg[0]);
 		try {
-			this.getPlayer(socket).groups = JSON.parse(msg[0]);
+			player.groups = msg[0];
 		} catch (e) {
-			console.error("Problems parsing", msg[0]);
+			console.error(e, msg[0]);
 		}
-		let newgroups = this.getPlayer(socket).groups;
+		let newgroups = player.groups;
 		// console.log("new", newgroups);
 		for (let g in newgroups) {
 			let group = newgroups[g];
@@ -139,45 +142,62 @@ class Multiplayer {
 			// console.log("new token", token);
 			let type = group["Group Type"];
 			let link = group["Group Link"];
+			group["Group Active?"] = true;
 			socket.join(token);
-			this.getRoomTo(token).emit('servermessage', this.getPlayer(socket).username+"#"+this.getPlayer(socket).playernumber+"@"+name+" joined.");
+			this.getRoomTo(token).emit('servermessage', player.username+"#"+player.playernumber+"@"+name+" joined.");
 			this.sendPeersTo(token);
 		}
 		socket.emit("servergroups", newgroups);
 	}
 	clientactivegroup(socket, msg) {
 		let newroom = "unknown";
-		let oldroom = this.getPlayer(socket).room;
-		this.getPlayer(socket).room = this.getRoom(socket, msg[0]);
-		if (oldroom !== this.getPlayer(socket).room) {
-			if (oldroom) {
-				this.io.to(oldroom).emit('servermessage', this.getPlayer(socket).username+"#"+this.getPlayer(socket).playernumber+" went idle.");
+		let player = this.getPlayer(socket);
+		let oldroom = player.room;
+		player.room = this.getRoom(player, msg[0]);
+		if (player && player.room) {
+			console.log("player", player.username, player.room);
+		} else {
+			console.log("Couldn't find player (not connected?)", player.username, player.room);
+		}
+		if (oldroom !== player.room) {
+			if (this.getPetName(oldroom)) {
+				this.io.to(oldroom).emit('servermessage', player.username+"#"+player.playernumber+"@"+this.getPetName(oldroom)+" went idle in", oldroom);
 				socket.leave(oldroom);
 				this.sendPeersTo(oldroom);
+			} else {
+				console.log("Room", oldroom, "doesn't have a petname")
 			}
-			if (this.getPlayer(socket).room) {
-				socket.join(this.getPlayer(socket).room);
-				for (let g in this.getPlayer(socket).groups) {
-					console.log("tokens", this.getPlayer(socket).groups[g]['Group Token'], this.getPlayer(socket).room);
-					if (this.getPlayer(socket).groups[g]['Group Token'] === this.getPlayer(socket).room) {
-						newroom = this.getPlayer(socket).groups[g]['Group Petname'];
+			if (!player.room) {
+				console.log("Oops", player.username+"#"+player.playernumber, "doesn't have a room setting to", msg[0]);
+				player.room = msg[0];
+			}
+			if (player.room) {
+				socket.join(player.room);
+				for (let g in player.groups) {
+					console.log("tokens", player.groups[g]['Group Token'], player.room);
+					if (player.groups[g]['Group Token'] === player.room) {
+						newroom = player.groups[g]['Group Petname'];
+						player.groups[g]['Group Active?'] = true;
+					} else {
+						player.groups[g]['Group Active?'] = false;
 					}
 				}
-				this.sendRoomMessage(socket, this.getPlayer(socket).username+"#"+this.getPlayer(socket).playernumber+"@"+newroom+" became active.");
-				console.log(this.getPlayer(socket).username+"#"+this.getPlayer(socket).playernumber+"@"+newroom+" became active.");
+				this.sendRoomMessage(player, player.username+"#"+player.playernumber+"@"+newroom+" became active.");
+				console.log(player.username+"#"+player.playernumber+"@"+newroom+" became active.");
 			}
 		}
-		this.sendPeers(socket);
+		this.sendPeers(player);
 	}
 	clientactivename(socket, msg) {
-		let oldusername = this.getPlayer(socket).username;
-		this.getPlayer(socket).username = msg[0];
-		if (oldusername !== this.getPlayer(socket).username) {
-			// console.log(oldusername, "!==", this.getPlayer(socket).username);
-			this.sendRoomMessage(socket, oldusername+"#"+this.getPlayer(socket).playernumber+" changed their name to "+this.getPlayer(socket).username+"#"+this.getPlayer(socket).playernumber+".");
-			this.sendPeers(socket);
+		let player = this.getPlayer(socket);
+		let oldusername = player.username;
+		player.username = msg[0];
+		if (oldusername !== player.username) {
+			// console.log(oldusername, "!==", player.username);
+			this.sendRoomMessage(player, oldusername+"#"+player.playernumber+" changed their name to "+player.username+"#"+player.playernumber+".");
+			this.sendPeers(player);
 		} else {
-			// console.log(oldusername, "===", this.getPlayer(socket).username);
+			// console.log(oldusername, "===", player.username);
 		}
 	}
 	clientsdp(socket, sdp) {
@@ -186,47 +206,60 @@ class Multiplayer {
 	}
 	clientmessage(socket, msg) {
 		if (msg[0]) {
-			if (this.getPlayer(socket).room) {
-				this.sendRoomMessage(socket, "<"+this.getPlayer(socket).username+"#"+this.getPlayer(socket).playernumber+"> "+msg[0]);
+			let player = this.getPlayer(socket);
+			if (player.room) {
+				this.sendRoomMessage(player, "<"+player.username+"#"+player.playernumber+"> "+msg[0]);
 			}
 		}
 	}
 	clientpublish(socket, msg) {
 		console.log("publishing to all", msg);
-		if (this.getPlayer(socket).room) {
-			this.getRoomSend(socket).emit('serverpublish', msg);
+		let player = this.getPlayer(socket);
+		if (player.room) {
+			this.getRoomSend(player).emit('serverpublish', msg);
 		}
 	}
 	clientmove(socket, position, orientation) {
 		console.log("clientmove position", position);
 		console.log("clientmove orientation", orientation);
-		if (typeof this.getPlayer(socket).position !== 'undefined') {
+		let player = this.getPlayer(socket);
+		if (!player) {
+			console.log("Couldn't find player on this socket");
+			return;
+		} else {
+			player.position = position;
+			player.orientation = orientation;
+			console.log("Could find player on this socket");
+		}
+		/*
+		if (typeof player.position !== 'undefined') {
 			var newposition = position;
-			var oldposition = this.getPlayer(socket).position;
+			var oldposition = player.position;
 			var delta = [newposition[0] - oldposition[0], 
 				newposition[1] - oldposition[1], 
 				newposition[2] - oldposition[2]];
 			var distance = Math.sqrt(delta[0]*delta[0]+delta[1]*delta[1]+delta[2]*delta[2]);
 			if (distance > 1) { // maximum distance player can travel
 				delta = [delta[0]/distance, delta[1]/distance, delta[2]/distance];
-				this.getPlayer(socket).position = [oldposition[0]+delta[0],
+				player.position = [oldposition[0]+delta[0],
 					oldposition[1]+delta[1],
 					oldposition[2]+delta[2]];
 			} else {
-				this.getPlayer(socket).position = newposition;
+				player.position = newposition;
 			}
-			this.getPlayer(socket).orientation = orientation;
+			player.orientation = orientation;
 		} else {
-			this.getPlayer(socket).position = [0,0,0];
-			this.getPlayer(socket).orientation = orientation;
+			player.position = [0,0,0];
+			player.orientation = orientation;
 		}
-		// console.log('serverupdate', this.getPlayer(socket).playernumber, this.getPlayer(socket).position, this.getPlayer(socket).orientation);
-		if (this.getPlayer(socket).room) {
-			console.log("sending server update to room", this.getPlayer(socket).room, this.getPlayer(socket).username, this.getPlayer(socket).playernumber, this.getPlayer(socket).position, this.getPlayer(socket).orientation);
-			this.getRoomSend(socket).emit('serverupdate', this.getPlayer(socket).playernumber, this.getPlayer(socket).position, this.getPlayer(socket).orientation);
-			this.getRoomSend(socket).emit('x3d_serverupdate', this.getPlayer(socket).playernumber, this.getPlayer(socket).position, this.getPlayer(socket).orientation);
+		// console.log('serverupdate', player);
+		*/
+		if (player.room) {
+			console.log("sending server update to room", player.room, player.username, player.playernumber, player.position, player.orientation);
+			this.getRoomSend(player).emit('serverupdate', player);
+			this.getRoomSend(player).emit('x3d_serverupdate', player.playernumber, player.position, player.orientation, player.room);
 		} else {
-			console.log("warning, room does not exsit", this.getPlayer(socket).room, this.getPlayer(socket).playernumber, this.getPlayer(socket).room);
+			console.log("warning, room does not exist", player.username, "#", player.playernumber, "@", player.room);
 		}
 		function close(v1, v2) {
 			return Math.abs(v1 - v2) < 0.01;
@@ -237,21 +270,21 @@ class Multiplayer {
 				close(p1.position[2], p2.position[2]));
 		}
 		/*
-		for (var player in this.players) {
+		for (var p in this.players) {
 			// test collisions
-			if (player != socket.client.id) {
-				if (typeof this.players[player].position !== 'undefined') {
+			if (p != socket.client.id) {
+				if (typeof this.players[p].position !== 'undefined') {
 					// player has moved
-					if (inRange(this.players[player], this.getPlayer(socket))) {
+					if (inRange(this.players[p], player)) {
 						// COLLISION
 						// reset to beginning
-						this.players[player].position = [0,0,0];
-						this.getPlayer(socket).score++;
+						this.players[p].position = [0,0,0];
+						player.score++;
 						if (typeof orientation[0] === 'number') {
-							//console.log('serverupdate', this.players[player].playernumber, this.players[player].position, this.players[player].orientation);
-							this.io.emit('serverupdate', this.players[player].playernumber, this.players[player].position, this.players[player].orientation);
+							//console.log('serverupdate', this.players[p]);
+							this.io.emit('serverupdate', this.players[p]);
 						}
-						this.io.emit('serverscore', this.getPlayer(socket).playernumber, this.getPlayer(socket).score);
+						this.io.emit('serverscore', player.playernumber, player.score);
 					}
 				}
 			}
@@ -272,12 +305,13 @@ class Multiplayer {
 				//socket.emit('servermessage', 'Your previous id was '+id);
 				//socket.emit('servermessage', 'Your current id is '+socket.client.id);
 				//console.log(this.players[socket.client.id]);
-				if (this.getPlayer(socket).room) {
-					this.sendRoomMessage(socket, this.getPlayer(socket).username+"#"+this.getPlayer(socket).playernumber+"@"+this.getPlayer(socket).room+" rejoined.");
-					this.sendPeers(socket);
+				let player = this.getPlayer(socket);
+				if (player.room) {
+					this.sendRoomMessage(player, player.username+"#"+player.playernumber+"@"+player.room+" rejoined.");
+					this.sendPeers(player);
 				}
 				this.reportPlayers(socket);
-				socket.emit('servercapability', this.getPlayer(socket), this.getPlayer(socket).playernumber);
+				socket.emit('servercapability', player, player.playernumber);
 			} else {
 				this.clientjoin(socket);
 			}
@@ -290,13 +324,14 @@ class Multiplayer {
 		this.players[socket.client.id] = {playernumber: this.maxplayers, id: socket.client.id, score:0, username:"newbee", room:"common room"};
 		// console.log(this.players[socket.client.id]);
 		this.maxplayers++;
-		if (this.getPlayer(socket).room) {
-			socket.join(this.getPlayer(socket).room);
-			this.sendRoomMessage(socket, this.getPlayer(socket).playernumber+" joined.");
-			this.sendPeers(socket);
+		let player = this.getPlayer(socket);
+		if (player.room) {
+			socket.join(player.room);
+			this.sendRoomMessage(player, player.playernumber+" joined.");
+			this.sendPeers(player);
 		}
 		this.reportPlayers(socket);
-		socket.emit('servercapability', this.getPlayer(socket), this.getPlayer(socket).playernumber);
+		socket.emit('servercapability', player, player.playernumber);
 	}
 
 	reportPlayers(socket) {
@@ -342,8 +377,8 @@ class Multiplayer {
 		return this.players[socket.client.id];
 	}
 
-	sendPeers(socket) {
-		this.sendPeersTo(this.getPlayer(socket).room);
+	sendPeers(player) {
+		this.sendPeersTo(player.room);
 	}
 
 	getRoomTo(room) {
@@ -351,19 +386,28 @@ class Multiplayer {
 		return this.io.to(room);
 	}
 
-	getRoomSend(socket) {
-		return this.getRoomTo(this.getPlayer(socket).room);
+	getRoomSend(player) {
+		return this.getRoomTo(player.room);
 	}
 
-	sendRoomMessage(socket, msg) {
-		this.getRoomSend(socket).emit('servermessage', msg);
+	sendRoomMessage(player, msg) {
+		this.getRoomSend(player).emit('servermessage', msg);
 	}
-	getRoom(socket, petName) {
-		for (let g in this.getPlayer(socket).groups) {
-			if (this.getPlayer(socket).groups[g]['Group Petname'] === petName) {
-				return this.getPlayer(socket).groups[g]['Group Token'];
+	getRoom(player, petName) {
+		for (let g in player.groups) {
+			if (player.groups[g]['Group Petname'] === petName) {
+				return player.groups[g]['Group Token'];
 			}
 		}
+	}
+	getPetName(player, token) {
+		for (let g in player.groups) {
+			if (player.groups[g]['Group Token'] === token) {
+				console.log("returing petname", player.groups[g]['Group Petname']);
+				return player.groups[g]['Group Petname'];
+			}
+		}
+		console.log("couldn't find room", token);
 	}
 }
 

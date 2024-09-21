@@ -3,10 +3,9 @@ function Player() {
 
 Player.prototype = {
 	updateGroups: function() {
-		let groupsdescription = $('#sessionjson').val();
-		socket.emit('clientgroups', groupsdescription);
 		try {
-			let UserGlobalGroups = JSON.parse(groupsdescription);
+			let UserGlobalGroups = JSON.parse($('#sessionjson').val());
+			socket.emit('clientgroups', UserGlobalGroups);
 			// updateURLsAndGroups(X3D.getBrowser(), UserGlobalGroups);
 			return UserGlobalGroups;
 		} catch (e) {
@@ -34,7 +33,7 @@ Player.prototype = {
 		let groups = msg;
 		console.log(groups);
 		let noop = $("<option>", {
-		  value: "Not connected",  // could be token
+		  value: "Not connected",
 		  text: "Not connected"
 		});
 		$('#group').append(noop);
@@ -61,29 +60,9 @@ Player.prototype = {
 			$('#score').append($('<li>').text(msg));
 		}
 	},
-	serverupdate: function(playernumber, position, orientation) {
-		if (typeof orientation[0] === 'string') {
-			Player.prototype.servermessage(playernumber+" at "+position+" turns "+printCard(orientation[0].substr(4)));
-		} else {
-			Player.prototype.servermessage(playernumber+" at "+position+" turns "+orientation);
-		}
-		// orientation: stack, number, card, visibility
-		if (typeof players[playernumber] === 'undefined') {
-			players[playernumber] = {
-				position: position,
-				orientation: orientation,
-			};
-		} else {
-			players[playernumber].position = position;
-			players[playernumber].orientation = orientation;
-		}
-		//onLocationfound = function(e){
-			for (var player in players) {
-				console.log("last update "+player+" position "+players[player].position+" orientation "+players[player].orientation);
-
-			}
-		//}
-        },
+	serverupdate: function(player) {
+		Player.prototype.servermessage(player.username+"#"+player.playernumber+"@"+player.room+" at "+player.position+" turns "+player.orientation);
+	},
 	serverheal: function() { console.log(arguments);},
 	serverdamage: function() { console.log(arguments);},
 	servercollision: function() { console.log(arguments);},
@@ -155,7 +134,9 @@ async function sendData(socket, url) {
 
      $(document).on('change','#group',function(){
 	    let group = $(this).val();
-	    socket.emit('clientactivegroup', group);
+	    if (group !== "common room" && group !== "Not connected") {
+	    	socket.emit('clientactivegroup', group);
+	    }
       });
 
   socket.on('servermessage', Player.prototype.servermessage);
@@ -179,5 +160,5 @@ async function sendData(socket, url) {
   socket.on('servercapability', Player.prototype.servercapability);
   socket.on('serverdeal', Player.prototype.serverdeal);
   socket.emit('clientrejoin', location.href);
-  socket.emit('clientmove', [0,0,0], [0,0,0]);
+  // socket.emit('clientmove', [0,0,0], [0,0,0]);
   // socket.emit('clientjoin');

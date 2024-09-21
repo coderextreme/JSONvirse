@@ -5,7 +5,7 @@ var sockets = {};
 var nameToToken = {};
 var players = [];
 var thisplayer = -1;
-var x3d_serverupdate =  function (playernumber, position, orientation) {
-	console.log("oops!", playernumber, position, orientation);
+var x3d_serverupdate =  function (playernumber, position, orientation, petName) {
+	console.log("oops!", playernumber, position, orientation, petName);
 }
 var UserGlobalGroups = null;
