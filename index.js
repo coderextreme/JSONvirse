@@ -112,10 +112,6 @@ console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/index.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzumm.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzumm2.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/petnames.html', 8443);
-console.log('\thttps://lc-soc-lc.at:%s/jsonverse/index.html', 8443);
-console.log('\thttps://lc-soc-lc.at:%s/jsonverse/yottzumm.html', 8443);
-console.log('\thttps://lc-soc-lc.at:%s/jsonverse/yottzumm2.html', 8443);
-console.log('\thttps://lc-soc-lc.at:%s/jsonverse/petnames.html', 8443);
 if (metaServer === null) {
 	console.log('You may wish to type $ export METASERVER=8088 # at your terminal prompt to atttach to the metaserver after launching the meta server');
 } else {
