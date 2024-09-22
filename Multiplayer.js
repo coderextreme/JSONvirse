@@ -205,7 +205,7 @@ class Multiplayer {
             newgroup["Group Active?"] = false;
             socket.join(newtoken);
             this.sendPeersTo(newtoken);
-	    if (newoldname) {
+	    if (newname) {
             	this.sendApiMessageToRoom('servermessage', player.username+"#"+player.playernumber+"@"+newname+" joined.", newtoken);
             }
         }
