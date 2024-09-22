@@ -2,7 +2,7 @@
 	"name": "x3d-jsonverse",
 	"author": "John Carlson, Yottzumm, coderextreme",
 	"license": "BSD 2-Clause License",
-	"version": "3.0.3",
+	"version": "3.0.4",
 	"description": "X3DJSONVerse -- npx X3D Server",
 	"main": "index.js",
 	"repository": {
@@ -11,7 +11,8 @@
 	},
 	"dependencies": {
 		"express": "*",
-		"socket.io": "*"
+		"socket.io": "*",
+		"socket.io-client": "^4.8.0"
 	},
 	"scripts": {
 		"start": "node ./index.js",

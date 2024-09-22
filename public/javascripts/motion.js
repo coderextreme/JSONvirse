@@ -1,10 +1,14 @@
-var socket = io({
+var io = require('socket.io-client');
+
+var socket = io("https://localhost:8080/yottzumm/socket.io", {
     maxHttpBufferSize: 1e9, pingTimeout: 60000,
     transports: [ "polling", "websocket" ]
 });
 
 if (socket === null) {
-	console.log("Oops, didn't connect!");
+	console.log("Didn't connect!");
+} else {
+	console.log("Connect!");
 }
 
 var nameToToken = {};
