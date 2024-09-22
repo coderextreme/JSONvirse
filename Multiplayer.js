@@ -138,7 +138,7 @@ class Multiplayer {
         if (player) {
             console.log('servermessage', player.playernumber+" quit.");
             if (player.room) {
-                this.sendRoomMessage(player, player.username+"#"+player.playernumber+"@"+player.room+" quit.");
+                this.sendRoomMessage(player, player.username+"#"+player.playernumber+" quit.");
             }
             this.oldplayers[socket.client.id] = player;
             socket.leave(player.room);
