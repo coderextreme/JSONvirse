@@ -27,7 +27,7 @@ if (metaServer != null) {
 }
 new Multiplayer(io, metaServer);
 
-app.use(express.static(__dirname + '/jsonverse'));
+app.use(express.static(__dirname + '/public'));
 // app.use(express.static(__dirname));
 var router = express.Router();
 router.route('/servers')
@@ -71,7 +71,7 @@ router.route('/petnames')
         'Expires': '0'
       });
       // console.log("receiving2", req.body);
-      let data = JSON.parse(fs.readFileSync(__dirname + "/jsonverse/javascripts/petnames.json"));
+      let data = JSON.parse(fs.readFileSync(__dirname + "/public/javascripts/petnames.json"));
       // console.log("reading", data);
       const from = req.body[0];
       const relationship = req.body[1];
@@ -85,7 +85,7 @@ router.route('/petnames')
 
         data.push([sanitizedFrom, sanitizedRelationship, sanitizedTo]);
         // console.log("writing", data);
-        fs.writeFileSync(__dirname + "/jsonverse/javascripts/petnames.json", JSON.stringify(data));
+        fs.writeFileSync(__dirname + "/public/javascripts/petnames.json", JSON.stringify(data));
       }
 
       // console.log("sending", data);
@@ -108,10 +108,10 @@ console.log('\thttp://localhost:%s/', port);
 console.log('\thttp://localhost:%s/yottzumm.html', port);
 console.log('\thttp://localhost:%s/yottzumm2.html', port);
 console.log('\thttp://localhost:%s/petnames.html', port);
-console.log('\thttps://lc-soc-lc.at:%s/jsonverse/apache.html', 8443);
-console.log('\thttps://lc-soc-lc.at:%s/jsonverse/yottzummapache.html', 8443);
-console.log('\thttps://lc-soc-lc.at:%s/jsonverse/yottzumm2apache.html', 8443);
-console.log('\thttps://lc-soc-lc.at:%s/jsonverse/petnames.html', 8443);
+console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/apache.html', 8443);
+console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzummapache.html', 8443);
+console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzumm2apache.html', 8443);
+console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/petnames.html', 8443);
 if (metaServer === null) {
 	console.log('You may wish to type $ export METASERVER=8088 # at your terminal prompt to atttach to the metaserver after launching the meta server');
 } else {
