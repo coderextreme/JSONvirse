@@ -61,7 +61,7 @@ Player.prototype = {
 		}
 	},
 	serverupdate: function(player) {
-		Player.prototype.servermessage(player.username+"#"+player.playernumber+"@"+player.room+" at "+player.position+" turns "+player.orientation);
+		Player.prototype.servermessage(player.username+"#"+player.playernumber+" at "+player.position+" turns "+player.orientation);
 	},
 	serverheal: function() { console.log(arguments);},
 	serverdamage: function() { console.log(arguments);},
