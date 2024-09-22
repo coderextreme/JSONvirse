@@ -17,7 +17,7 @@ function loadJS(selector, json, groupsdescription) {
 			      .then(function(importedScene) {
 				 // Replace the current world with the imported scene
 				 browser.replaceWorld(importedScene);
-	        		 updateURLsAndGroups(browser, groupsdescription)
+	        		 // updateURLsAndGroups(browser, groupsdescription)
 			      })
 			      .catch(function(error) {
 				 console.error('Error importing X3D scene:', error);
@@ -43,7 +43,7 @@ function loadURL(selector, url, groupsdescription) {
 			   browser.loadURL(new X3D.MFString (url))
 			      .then(() => {
 				 console.log('Success importing URL:', url);
-	        		 updateURLsAndGroups(browser, groupsdescription);
+	        		 // updateURLsAndGroups(browser, groupsdescription);
 			      })
 			      .catch(function(error) {
 				 console.error('Error importing URL:', error);

@@ -1,1 +1,2 @@
 https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb
+https://www.web3d.org/x3d/content/examples/Basic/StudentProjects/PinballTable.json
