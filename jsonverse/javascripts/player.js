@@ -1,6 +1,10 @@
 function Player() {
 }
 
+const LOG = function() {
+    // Browser.print('BROWSER', ...arguments);
+};
+
 Player.prototype = {
 	updateGroups: function() {
 		try {
@@ -9,17 +13,17 @@ Player.prototype = {
 			// updateURLsAndGroups(X3D.getBrowser(), UserGlobalGroups);
 			return UserGlobalGroups;
 		} catch (e) {
-			console.log(e);
+			LOG(e);
 			alert(e);
 		}
 	},
 	servermessage: function(msg) {
 		$('#messages').append($('<li>').text(msg));
-		console.log("message from server", msg);
+		LOG("message from server", msg);
 		scrollToBottom();
 	},
 	serverpublish: function(msg) {
-		console.log("Receiving publish", msg)
+		LOG("Receiving publish", msg)
 		UserGlobalGroups = Player.prototype.updateGroups();
 		// if Prompt begins with http, get it
 		if (msg[0].startsWith("http://") || msg[0].startsWith("https://")) {
@@ -31,7 +35,7 @@ Player.prototype = {
 	servergroups: function(msg) {
 		$('#group').empty();
 		let groups = msg;
-		console.log(groups);
+		LOG(groups);
 		let noop = $("<option>", {
 		  value: "Not connected",
 		  text: "Not connected"
@@ -40,7 +44,7 @@ Player.prototype = {
 
 		for (let g in groups) {
 			let group = groups[g];
-			console.log(group);
+			LOG(group);
 			let option = $("<option>", {
 			  value: group['Group Petname'],  // could be token
 			  text: group['Group Petname'] 
@@ -61,20 +65,20 @@ Player.prototype = {
 		}
 	},
 	serverupdate: function(player) {
-		Player.prototype.servermessage(player.username+"#"+player.playernumber+" at "+player.position+" turns "+player.orientation);
+		// Player.prototype.servermessage(player.username+"#"+player.playernumber+" at "+player.position+" turns "+player.orientation);
 	},
-	serverheal: function() { console.log(arguments);},
-	serverdamage: function() { console.log(arguments);},
-	servercollision: function() { console.log(arguments);},
-	serverorderchange: function() { console.log(arguments);},
-	serverdie: function() { console.log(arguments);},
-	servererror: function() { console.log(arguments);},
-	serverroompurge: function() { console.log(arguments);},
-	serverroomready: function() { console.log(arguments);},
-	serverpowerplay: function() { console.log(arguments);},
-	servercounter: function() { console.log(arguments);},
-	serverturnbegin: function() { console.log(arguments);},
-	serverturnend: function() { console.log(arguments);},
+	serverheal: function() { LOG(arguments);},
+	serverdamage: function() { LOG(arguments);},
+	servercollision: function() { LOG(arguments);},
+	serverorderchange: function() { LOG(arguments);},
+	serverdie: function() { LOG(arguments);},
+	servererror: function() { LOG(arguments);},
+	serverroompurge: function() { LOG(arguments);},
+	serverroomready: function() { LOG(arguments);},
+	serverpowerplay: function() { LOG(arguments);},
+	servercounter: function() { LOG(arguments);},
+	serverturnbegin: function() { LOG(arguments);},
+	serverturnend: function() { LOG(arguments);},
 	servercapability: function() {
 		if ( history.pushState ) {
 			var href = location.href;

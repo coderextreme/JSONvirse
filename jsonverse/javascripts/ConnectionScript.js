@@ -1,7 +1,7 @@
 let sockets = {};
 
 const LOG = function() {
-    Browser.print('BROWSER', ...arguments);
+    // Browser.print('BROWSER', ...arguments);
 };
 
 const reconnect = function () {

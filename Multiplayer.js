@@ -44,6 +44,11 @@ if (!Set.prototype.union) {
     return unionSet;
   };
 }
+
+const LOG = function() {
+    // Browser.print('BROWSER', ...arguments);
+};
+
 class Multiplayer {
     constructor(io, metaServer) {
         let mp = this;
@@ -51,12 +56,12 @@ class Multiplayer {
             this.players = {};
             this.oldplayers = {};
         if (io === null) {
-            console.log("Couldn't start socket.io server, can't connect clients");
+            LOG("Couldn't start socket.io server, can't connect clients");
         }
         this.io = io;
         this.metaServer = metaServer;
         io.on('connection', function(socket) {
-          console.log("Connection from", socket.client.id);
+          LOG("Connection from", socket.client.id);
           socket.on('clientpublish', function() {
             if (mp.getPlayer(socket)) {
                 mp.clientpublish(socket, arguments);
@@ -100,7 +105,7 @@ class Multiplayer {
             }
           });
           socket.on('clientmove', function() {
-            console.log(...arguments);
+            LOG(...arguments);
             if (mp.getPlayer(socket)) { // if joined
                 mp.clientmove(socket, arguments[0], arguments[1]);
             } else {
@@ -122,7 +127,7 @@ class Multiplayer {
             }
           });
           socket.on('error', function(e){
-            console.log(e);
+            LOG(e);
           });
           socket.on('disconnect', function(){
             if (mp.getPlayer(socket)) {
@@ -136,7 +141,7 @@ class Multiplayer {
     disconnect(socket, args) {
         let player = this.getPlayer(socket);
         if (player) {
-            console.log('servermessage', player.playernumber+" quit.");
+            LOG('servermessage', player.playernumber+" quit.");
             if (player.room) {
                 this.sendRoomMessage(player, player.username+"#"+player.playernumber+" quit.");
             }
@@ -160,7 +165,7 @@ class Multiplayer {
     clientgroups(socket, msg) {
         let player = this.getPlayer(socket);
         let oldgroups = player.groups;
-        // console.log("old group", oldgroups);
+        // LOG("old group", oldgroups);
         try {
             player.groups = msg[0];
         } catch (e) {
@@ -183,11 +188,13 @@ class Multiplayer {
     
         for (let og in toremove) {
             let oldgroup = toremove[og];
-            // console.log("old", group);
+            // LOG("old", group);
             let oldname = oldgroup["Group Petname"];
             let oldtoken = oldgroup["Group Token"];
             oldgroup["Group Active?"] = false;
-            this.sendApiMessageToRoom('servermessage', player.username+"#"+player.playernumber+" left "+oldname+".", oldtoken);
+	    if (oldname) {
+            	this.sendApiMessageToRoom('servermessage', player.username+"#"+player.playernumber+" left "+oldname+".", oldtoken);
+	    }
             socket.leave(oldtoken);
             this.sendPeersTo(oldtoken);
         }
@@ -198,7 +205,9 @@ class Multiplayer {
             newgroup["Group Active?"] = false;
             socket.join(newtoken);
             this.sendPeersTo(newtoken);
-            this.sendApiMessageToRoom('servermessage', player.username+"#"+player.playernumber+"@"+newname+" joined.", newtoken);
+	    if (newoldname) {
+            	this.sendApiMessageToRoom('servermessage', player.username+"#"+player.playernumber+"@"+newname+" joined.", newtoken);
+            }
         }
         socket.emit("servergroups", newgroups);
     }
@@ -208,9 +217,9 @@ class Multiplayer {
         let oldroom = player.room;
         player.room = this.getRoom(player, msg[0]);
         if (player && player.room) {
-            console.log("player", player.username, player.room);
+            LOG("player", player.username, player.room);
         } else {
-            console.log("Couldn't find player (not connected?)", player.username, player.room);
+            LOG("Couldn't find player (not connected?)", player.username, player.room);
         }
         if (oldroom !== player.room) {
             if (this.getPetName(oldroom)) {
@@ -218,17 +227,17 @@ class Multiplayer {
                 socket.leave(oldroom);
                 this.sendPeersTo(oldroom);
             } else {
-                console.log("Room", oldroom, "doesn't have a petname");
+                LOG("Room", oldroom, "doesn't have a petname");
             }
             if (!player.room) {
-                console.log("Oops", player.username+"#"+player.playernumber, "doesn't have a room setting to", msg[0]);
+                LOG("Oops", player.username+"#"+player.playernumber, "doesn't have a room setting to", msg[0]);
                 player.room = msg[0];
             }
             if (player.room) {
                 socket.join(player.room);
-                    this.sendPeersTo(player.room);
+                this.sendPeersTo(player.room);
                 for (let g in player.groups) {
-                    console.log("tokens", player.groups[g]['Group Token'], player.room);
+                    LOG("tokens", player.groups[g]['Group Token'], player.room);
                     if (player.groups[g]['Group Token'] === player.room) {
                         newroom = player.groups[g]['Group Petname'];
                         player.groups[g]['Group Active?'] = true;
@@ -237,10 +246,10 @@ class Multiplayer {
                     }
                 }
                 this.sendRoomMessage(player, player.username+"#"+player.playernumber+"@"+newroom+" became active.");
-                console.log(player.username+"#"+player.playernumber+"@"+newroom+" became active.");
+                LOG(player.username+"#"+player.playernumber+"@"+newroom+" became active.");
             }
         } else {
-            console.log(oldroom, '===', player.room);
+            LOG(oldroom, '===', player.room);
         }
     }
     clientactivename(socket, msg) {
@@ -248,11 +257,11 @@ class Multiplayer {
         let oldusername = player.username;
         player.username = msg[0];
         if (oldusername !== player.username) {
-            // console.log(oldusername, "!==", player.username);
+            // LOG(oldusername, "!==", player.username);
             this.sendRoomMessage(player, oldusername+"#"+player.playernumber+" changed their name to "+player.username+"#"+player.playernumber+".");
             this.sendPeersTo(player.room);
         } else {
-            // console.log(oldusername, "===", player.username);
+            // LOG(oldusername, "===", player.username);
         }
     }
     clientsdp(socket, sdp) {
@@ -268,23 +277,23 @@ class Multiplayer {
         }
     }
     clientpublish(socket, msg) {
-        console.log("publishing to all", msg);
+        LOG("publishing to all", msg);
         let player = this.getPlayer(socket);
         if (player.room) {
             this.sendApiMessageToPlayerRoom('serverpublish', msg, player);
         }
     }
     clientmove(socket, position, orientation) {
-        console.log("clientmove position", position);
-        console.log("clientmove orientation", orientation);
+        LOG("clientmove position", position);
+        LOG("clientmove orientation", orientation);
         let player = this.getPlayer(socket);
         if (!player) {
-            console.log("Couldn't find player on this socket");
+            LOG("Couldn't find player on this socket");
             return;
         } else {
             player.position = position;
             player.orientation = orientation;
-            console.log("Could find player on this socket");
+            LOG("Could find player on this socket");
         }
         /*
         if (typeof player.position !== 'undefined') {
@@ -307,14 +316,14 @@ class Multiplayer {
             player.position = [0,0,0];
             player.orientation = orientation;
         }
-        // console.log('serverupdate', player);
+        // LOG('serverupdate', player);
         */
         if (player.room) {
-            console.log("sending server update to room", player.room, player.username, player.playernumber, player.position, player.orientation);
+            LOG("sending server update to room", player.room, player.username, player.playernumber, player.position, player.orientation);
             this.sendApiMessageToPlayerRoom('serverupdate', player, player);
             this.getRoomSend(player).emit('x3d_serverupdate', player.playernumber, player.position, player.orientation, player.room);
         } else {
-            console.log("warning, room does not exist", player.username, "#", player.playernumber, "@", player.room);
+            LOG("warning, room does not exist", player.username, "#", player.playernumber, "@", player.room);
         }
         function close(v1, v2) {
             return Math.abs(v1 - v2) < 0.01;
@@ -336,7 +345,7 @@ class Multiplayer {
                         this.players[p].position = [0,0,0];
                         player.score++;
                         if (typeof orientation[0] === 'number') {
-                            //console.log('serverupdate', this.players[p]);
+                            //LOG('serverupdate', this.players[p]);
                             this.io.emit('serverupdate', this.players[p]);
                         }
                         this.io.emit('serverscore', player.playernumber, player.score);
@@ -359,7 +368,7 @@ class Multiplayer {
                     room:this.oldplayers[id].room};
                 //socket.emit('servermessage', 'Your previous id was '+id);
                 //socket.emit('servermessage', 'Your current id is '+socket.client.id);
-                //console.log(this.players[socket.client.id]);
+                //LOG(this.players[socket.client.id]);
                 let player = this.getPlayer(socket);
                 if (player.room) {
                     socket.join(player.room);
@@ -378,7 +387,7 @@ class Multiplayer {
     clientjoin(socket) {
         // TODO reconnect SDP
         this.players[socket.client.id] = {playernumber: this.maxplayers, id: socket.client.id, score:0, username:"newbee", room:"common room"};
-        // console.log(this.players[socket.client.id]);
+        // LOG(this.players[socket.client.id]);
         this.maxplayers++;
         let player = this.getPlayer(socket);
         if (player.room) {
@@ -417,14 +426,14 @@ class Multiplayer {
             var args = { path:{"host": host, port: port, players: numPlayers}};
             try {
                 if (this.metaServer != null) {
-                    console.log("Connecting to meta server at ", this.metaServer+"/api/servers/"+host+"/"+port+"/"+numPlayers);
+                    LOG("Connecting to meta server at ", this.metaServer+"/api/servers/"+host+"/"+port+"/"+numPlayers);
                     client.get(this.metaServer+"/api/servers/${host}/${port}/${players}", args, function(data, response){
-                    // console.log(data);
-                    // console.log(response);
+                    // LOG(data);
+                    // LOG(response);
                     });
                 }
             } catch (e) {
-                console.log(e);
+                LOG(e);
             }
         }
     }
@@ -434,17 +443,17 @@ class Multiplayer {
     }
 
     getRoomTo(room) {
-        console.log("1. Sending info to", room);
+        LOG("1. Sending info to", room);
         return this.io.to(room);
     }
 
     getRoomSend(player) {
-        console.log("2. Sending", player.username, "@", player.room);
+        LOG("2. Sending", player.username, "@", player.room);
         return this.getRoomTo(player.room);
     }
 
     sendRoomMessage(player, msg) {
-        console.log("3. Sending servermessage '", msg, "' to", player.username);
+        LOG("3. Sending servermessage '", msg, "' to", player.username);
         this.sendApiMessageToPlayerRoom('servermessage', msg, player);
     }
     getRoom(player, petName) {
@@ -457,22 +466,22 @@ class Multiplayer {
     getPetName(player, token) {
         for (let g in player.groups) {
             if (player.groups[g]['Group Token'] === token) {
-                console.log("returing petname", player.groups[g]['Group Petname']);
+                LOG("returing petname", player.groups[g]['Group Petname']);
                 return player.groups[g]['Group Petname'];
             }
         }
-        console.log("couldn't find room", token);
+        LOG("couldn't find room", token);
     }
     sendApiMessageToRoom(api, msg, room) {
-        console.log("4. Sending", api, "'", msg, "'", "@", room);
+        LOG("4. Sending", api, "'", msg, "'", "@", room);
         this.getRoomTo(room).emit(api, msg);
     }
     sendApiMessageToPlayerRoom(api, msg, player) {
         if (player.room) {
-            console.log("5. Sending", api, "'", msg, "'", player, "@", player.room);
+            LOG("5. Sending", api, "'", msg, "'", player, "@", player.room);
             this.getRoomSend(player).emit(api, msg);
         } else {
-            console.log("Attempted to send", msg, "to ", player.username, "but player is not in room");
+            LOG("Attempted to send", msg, "to ", player.username, "but player is not in room");
         }
     }
 }
