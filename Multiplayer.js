@@ -1,3 +1,15 @@
+if (!Set.prototype.difference) {
+  Set.prototype.difference = function(otherSet) {
+    const differenceSet = new Set();
+    for (const element of this) {
+      if (!otherSet.has(element)) {
+        differenceSet.add(element);
+      }
+    }
+    return differenceSet;
+  };
+}
+
 class Multiplayer {
     constructor(io, metaServer) {
         let mp = this;
