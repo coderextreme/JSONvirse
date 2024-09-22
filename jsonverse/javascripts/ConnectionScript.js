@@ -30,7 +30,7 @@ const reconnect = function () {
                         LOG(e);
                     }
                 } else {
-                    LOG('Group Link must be specificed in Session Description for scene collaboration');
+                    // LOG('Group Link must be specificed in Session Description for scene collaboration');
                 }
                 if (socket === null || typeof socket === 'undefined') {
 		    try {
