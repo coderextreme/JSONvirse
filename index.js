@@ -107,10 +107,11 @@ console.log('go to the following in your browser or restart after typing $ expor
 console.log('\thttp://localhost:%s/', port);
 console.log('\thttp://localhost:%s/yottzumm.html', port);
 console.log('\thttp://localhost:%s/yottzumm2.html', port);
-console.log('\thttp://localhost:%s/jsonverse/yottzummapache.html', port);
-console.log('\thttp://localhost:%s/jsonverse/yottzumm2apache.html', port);
-console.log('\thttp://localhost:%s/jsonverse/apache.html', port);
 console.log('\thttp://localhost:%s/petnames.html', port);
+console.log('\thttps://lc-soc-lc.at:%s/jsonverse/apache.html', 8443);
+console.log('\thttps://lc-soc-lc.at:%s/jsonverse/yottzummapache.html', 8443);
+console.log('\thttps://lc-soc-lc.at:%s/jsonverse/yottzumm2apache.html', 8443);
+console.log('\thttps://lc-soc-lc.at:%s/jsonverse/petnames.html', 8443);
 if (metaServer === null) {
 	console.log('You may wish to type $ export METASERVER=8088 # at your terminal prompt to atttach to the metaserver after launching the meta server');
 } else {
