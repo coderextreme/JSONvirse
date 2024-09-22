@@ -122,28 +122,34 @@ class Multiplayer {
         }
         let newgroups = player.groups;
 
-		let oldset = new Set(oldgroups);
-		let newset = new Set(newgroups);
-		let diff = newset.difference(oldset);
-		let inter = newset.intersection(oldset);
-		let onlynew = diff.union(inter);
-		let toremove = oldset.difference(newset);
-	
+        let oldset = new Set(oldgroups);
+		if (!oldset) {
+			oldset = new Set([]);
+		}
+        let newset = new Set(newgroups);
+		if (!newset) {
+			newset = new Set([]);
+		}
+        let diff = newset.difference(oldset);
+        let inter = newset.intersection(oldset);
+        let onlynew = diff.union(inter);
+        let toremove = oldset.difference(newset);
+    
         for (let og in toremove) {
             let oldgroup = toremove[og];
             // console.log("old", group);
             let oldname = oldgroup["Group Petname"];
             let oldtoken = oldgroup["Group Token"];
             oldgroup["Group Active?"] = false;
-	    	this.sendApiMessageToRoom('servermessage', player.username+"#"+player.playernumber+" left "+oldname+".", oldtoken);
-	    	socket.leave(oldtoken);
-	    	this.sendPeersTo(oldtoken);
-		}
-		for (let ng in onlynew) {
-			let newgroup = onlynew[ng];
-			let newname = newgroup["Group Petname"];
-			let newtoken = newgroup["Group Token"];
-			newgroup["Group Active?"] = false;
+            this.sendApiMessageToRoom('servermessage', player.username+"#"+player.playernumber+" left "+oldname+".", oldtoken);
+            socket.leave(oldtoken);
+            this.sendPeersTo(oldtoken);
+        }
+        for (let ng in onlynew) {
+            let newgroup = onlynew[ng];
+            let newname = newgroup["Group Petname"];
+            let newtoken = newgroup["Group Token"];
+            newgroup["Group Active?"] = false;
             socket.join(newtoken);
             this.sendPeersTo(newtoken);
             this.sendApiMessageToRoom('servermessage', player.username+"#"+player.playernumber+"@"+newname+" joined.", newtoken);
