@@ -1,4 +1,5 @@
-// From Google AI
+// Polyfill fixed in Node.js 22
+// Polyfill From Google AI
 if (!Set.prototype.difference) {
   Set.prototype.difference = function(otherSet) {
     const differenceSet = new Set();
@@ -11,7 +12,7 @@ if (!Set.prototype.difference) {
   };
 }
 
-// From Claude  AI
+// Polyfill From Claude AI
 if (!Set.prototype.intersection) {
   Set.prototype.intersection = function(...sets) {
     // Convert all arguments to Sets, in case they aren't already
@@ -27,6 +28,22 @@ if (!Set.prototype.intersection) {
   };
 }
 
+// Polyfill From Claude AI
+if (!Set.prototype.union) {
+  Set.prototype.union = function(...sets) {
+    // Create a new Set with all elements from this Set
+    const unionSet = new Set(this);
+
+    // Add all elements from the other Sets
+    for (const set of sets) {
+      for (const elem of set) {
+        unionSet.add(elem);
+      }
+    }
+
+    return unionSet;
+  };
+}
 class Multiplayer {
     constructor(io, metaServer) {
         let mp = this;
