@@ -23,7 +23,7 @@ const reconnect = function () {
                     try {
                         socket = io(grouplink, {
                             maxHttpBufferSize: 1e8, pingTimeout: 60000,
-                            transports: ["polling"]
+                            transports: [ "polling", "websocket" ]
                         });
                         LOG('Connected to remote scene server', grouplink);
                     } catch (e) {
@@ -36,7 +36,7 @@ const reconnect = function () {
 		    try {
                         socket = io({
                             maxHttpBufferSize: 1e8, pingTimeout: 60000,
-                            transports: ["polling"]
+                            transports: [ "polling", "websocket" ]
                         });
                         LOG('Connected to chat server');
                     } catch (e) {

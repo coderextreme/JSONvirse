@@ -1,6 +1,6 @@
 var socket = io({
     maxHttpBufferSize: 1e9, pingTimeout: 60000,
-    transports: ["polling"]
+    transports: [ "polling", "websocket" ]
 });
 
 if (socket === null) {

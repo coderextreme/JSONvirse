@@ -3,19 +3,19 @@ const bodyParser = require('body-parser');
 
 var fs = require('fs');
 var app = express();
-app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
 var http = require('http').Server(app);
 var io = require('socket.io')(http, {
     maxHttpBufferSize: 1e9, pingTimeout: 60000,
-    transports: ["polling"]
+    transports: [ "polling", "websocket" ]
 });
 
 let Multiplayer = require("./Multiplayer")
@@ -107,6 +107,8 @@ console.log('go to the following in your browser or restart after typing $ expor
 console.log('\thttp://localhost:%s/', port);
 console.log('\thttp://localhost:%s/yottzumm.html', port);
 console.log('\thttp://localhost:%s/yottzumm2.html', port);
+console.log('\thttp://localhost:%s/jsonverse/yottzummapache.html', port);
+console.log('\thttp://localhost:%s/jsonverse/yottzumm2apache.html', port);
 console.log('\thttp://localhost:%s/jsonverse/apache.html', port);
 console.log('\thttp://localhost:%s/petnames.html', port);
 if (metaServer === null) {
