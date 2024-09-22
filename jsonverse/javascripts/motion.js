@@ -1,7 +1,12 @@
 var socket = io({
-  transports: ["polling", "websocket", "webtransport"]
+    maxHttpBufferSize: 1e9, pingTimeout: 60000,
+    transports: ["polling"]
 });
-var sockets = {};
+
+if (socket === null) {
+	console.log("Oops, didn't connect!");
+}
+
 var nameToToken = {};
 var players = [];
 var thisplayer = -1;

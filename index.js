@@ -14,8 +14,8 @@ app.use((req, res, next) => {
 
 var http = require('http').Server(app);
 var io = require('socket.io')(http, {
-    maxHttpBufferSize: 1e8, pingTimeout: 60000,
-    transports: ["polling", "websocket", "webtransport"] // WebTransport is not enabled by default
+    maxHttpBufferSize: 1e9, pingTimeout: 60000,
+    transports: ["polling"]
 });
 
 let Multiplayer = require("./Multiplayer")
@@ -99,11 +99,21 @@ app.use('/api', router);
 
 var defaultPort = 8088;
 
-http.listen(process.env.X3DJSONPORT || defaultPort);
+var port = process.env.X3DJSONPORT || defaultPort;
 
-console.log('go to http://localhost:%s/ or '+metaServer+' in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt', process.env.X3DJSONPORT || defaultPort);
-console.log('go to http://localhost:%s/jsonverse/apache.html or '+metaServer+' in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt', process.env.X3DJSONPORT || defaultPort);
-console.log('go to http://localhost:%s/petnames.html or '+metaServer+' in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt', process.env.X3DJSONPORT || defaultPort);
+http.listen(port);
+
+console.log('go to the following in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt:');
+console.log('\thttp://localhost:%s/', port);
+console.log('\thttp://localhost:%s/yottzumm.html', port);
+console.log('\thttp://localhost:%s/yottzumm2.html', port);
+console.log('\thttp://localhost:%s/jsonverse/apache.html', port);
+console.log('\thttp://localhost:%s/petnames.html', port);
+if (metaServer === null) {
+	console.log('You may wish to type $ export METASERVER=8088 # at your terminal prompt to atttach to the metaserver after launching the meta server');
+} else {
+	console.log('\t'+metaServer);
+}
 
 
 http.on('error', function (e) {
