@@ -29,3 +29,6 @@ Shaders have their own copyright
 Chat based on socket.io chat.  Files affected are Multiplayer.js and jsonverse/javascripts/player.js
 
 bumpyx_itesliders.x3d has it's own license
+
+
+Folders in bin are likely copied from Holger Seelig's x3d-tidy/bin or sunrize/bin
