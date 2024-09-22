@@ -1,3 +1,4 @@
+// From Google AI
 if (!Set.prototype.difference) {
   Set.prototype.difference = function(otherSet) {
     const differenceSet = new Set();
@@ -7,6 +8,22 @@ if (!Set.prototype.difference) {
       }
     }
     return differenceSet;
+  };
+}
+
+// From Claude  AI
+if (!Set.prototype.intersection) {
+  Set.prototype.intersection = function(...sets) {
+    // Convert all arguments to Sets, in case they aren't already
+    const otherSets = sets.map(s => s instanceof Set ? s : new Set(s));
+
+    // Create a new Set with elements that exist in this Set
+    // and all other Sets
+    return new Set(
+      [...this].filter(element =>
+        otherSets.every(set => set.has(element))
+      )
+    );
   };
 }
 
