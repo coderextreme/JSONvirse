@@ -176,12 +176,12 @@ const reconnect = function () {
 						// LOG('Group Link must be specificed in Session Description for scene collaboration');
 					}
 					if (socket === null || typeof socket === 'undefined') {
-				try {
-							socket = io({
-								maxHttpBufferSize: 1e8, pingTimeout: 60000,
-								transports: [ "polling", "websocket" ]
-							});
-							LOG('Connected to chat server');
+				             try {
+					         socket = io({
+							maxHttpBufferSize: 1e8, pingTimeout: 60000,
+							transports: [ "polling", "websocket" ]
+						});
+						LOG('Connected to chat server');
 						} catch (e) {
 							LOG(e);
 						}
