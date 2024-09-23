@@ -1,3 +1,4 @@
+// NOTE: Not used.  See ConnectionScript.js
 var io = require('socket.io-client');
 
 var socket = io("https://localhost:8080/yottzumm/socket.io", {

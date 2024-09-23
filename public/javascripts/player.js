@@ -1,3 +1,4 @@
+// NOTE: Not used.  See ConnectionScript.js
 function Player() {
 }
 
