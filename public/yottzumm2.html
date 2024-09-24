@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<title>JV (JSONverse Node.js Yottzumm 2 Demo Page)</title>
+	<title>Yottzumm 2 (JSONverse Node.js Demo Page)</title>
     <link rel="stylesheet" href="stylesheets/style.css" />
     <script defer type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script defer type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/x_ite@10.5.1/dist/x_ite.min.js"></script>
     <script defer type="text/javascript" src="javascripts/bottomscroll.js"></script>
     <script defer type="text/javascript" src="javascripts/edit.js"></script>
+    <!--
     <script defer type="text/javascript" src="javascripts/browse.js"></script>
+    -->
+    <script defer type="text/javascript" src="javascripts/HTMLUser.js"></script>
   </head>
   <body>
 	  <!--
@@ -16,18 +19,19 @@
     -->
     <x3d-canvas id="scene" url='"x3d/bumpyx_itesliders.x3d"'>
     </x3d-canvas>
-    <textarea id="json" rows="15" cols="80"></textarea><br>
+    <textarea id="x3d" rows="15" cols="80"></textarea><br>
     <div id="chat">
     <ul id="messages"></ul>
     <ul id="score"></ul>
 	    <div>
-		    <span>User name: <input id="username" value="newbee"/></span><br>
+		    <span>User name: <input id="username"/></span><br>
 		    <input id="m" autocomplete="off" /><br>
-		    <span><button id="send">Send</button></span>
 	    </div>
     <hr>
 	    <div>
-		    <span>Session name: <select id="group"><option value="common room"/></select></span><br>
+		    <span><button id="sessionbutton">Update Session Info</button></span>
+		    <span>Session name: <select id="session"><option value="common room">common room</option></select></span><br>
+		    <span><button id="disconnectbutton">Disconnect All Sessions</button></span><br>
 		    <span>Start Date/Time: <input type="datetime" id="from"/></span><br>
 		    <span>Stop Date/Time:   <input type="datetime" id="to"/></span><br>
 		    <span>Amount:   <input id="rate" value="0"/></span><br>
@@ -47,8 +51,13 @@
 				    <option value="picosecond">picosecond</option>
 				    <option value="femtosecond">femtosecond</option>
 		    </select></span><br>
-		    <span><button id="session">Update Session Info</button></span>
 		    <span><textarea id="sessionjson" rows="15" cols="80">[
+  {
+    "Group Petname": "yottzumm",
+    "Group Token": "Unique Super Secret Password",
+    "Group Type": "Testing Group",
+    "Group Link": null
+  },
   {
     "Group Petname": "yottzumm2",
     "Group Token": "Unique Super Secret Password2",

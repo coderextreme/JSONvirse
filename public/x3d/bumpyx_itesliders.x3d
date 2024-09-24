@@ -296,7 +296,7 @@ function initialize() {
 		  </Transform>
 		</Transform>
 	      </Transform>
-	      <Script url='"../javascripts/ConnectionScript.js"' DEF='protoValueTransformerScript' directOutput="true" mustEvaluate="true">
+	      <Script url='"../javascripts/X3DUser.js"' DEF='protoValueTransformerScript' directOutput="true" mustEvaluate="true">
 		  <field accessType='inputOutput' name='protoScale' type='SFFloat' value='30'/>
 		  <field accessType='inputOutput' name='petNames' type='MFString'/>
 		  <field accessType='inputOutput' name='protoParameterName' type='SFString' value='a'/>
@@ -351,7 +351,7 @@ function initialize() {
 	      <fieldValue name='textString' value='"c="'/>
 	      <fieldValue name='parameterScale' value='20'/>
 	      <fieldValue name='parameterName' value='c'/>
-	      <fieldValue name='petNames' value='"yottzumm"'/>
+	      <fieldValue name='petNames' value='"yottzumm" "yottzumm2"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>
@@ -363,7 +363,7 @@ function initialize() {
 	      <fieldValue name='textString' value='"d="'/>
 	      <fieldValue name='parameterScale' value='20'/>
 	      <fieldValue name='parameterName' value='d'/>
-	      <fieldValue name='petNames' value='"yottzumm"'/>
+	      <fieldValue name='petNames' value='"yottzumm" "yottzumm2"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>
@@ -373,7 +373,7 @@ function initialize() {
 	      <fieldValue name='transformTranslation' value='0 0 0.1'/>
 	      <fieldValue name='sensorTranslation' value='0 0 0.0'/>
 	      <fieldValue name='textString' value='"tdelta="'/>
-	      <fieldValue name='parameterScale' value='1'/>
+	      <fieldValue name='parameterScale' value='6.28'/>
 	      <fieldValue name='parameterName' value='tdelta'/>
 	      <fieldValue name='petNames' value='"yottzumm2"'/>
 	      <fieldValue name='shaderNode'>
@@ -385,7 +385,7 @@ function initialize() {
 	      <fieldValue name='transformTranslation' value='0 0 0.1'/>
 	      <fieldValue name='sensorTranslation' value='0 0 0.0'/>
 	      <fieldValue name='textString' value='"pdelta="'/>
-	      <fieldValue name='parameterScale' value='1'/>
+	      <fieldValue name='parameterScale' value='6.28'/>
 	      <fieldValue name='parameterName' value='pdelta'/>
 	      <fieldValue name='petNames' value='"yottzumm2"'/>
 	      <fieldValue name='shaderNode'>

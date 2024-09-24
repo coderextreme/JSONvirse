@@ -8,5 +8,5 @@ body { font: 13px Helvetica, Arial; }
 #score li { padding: 5px 10px; }
 #score li:nth-child(odd) { background: #eee; }
 #scene { width: 600px; height: 300px; position:absolute; left:0px; top:0px;}
-#json { width: 600px; height: 500px; position:absolute; left:0px; top:300px;}
+#x3d { width: 600px; height: 500px; position:absolute; left:0px; top:300px;}
 #chat { width: 500px; height: 200px; position:absolute; left:600px; top:0px}
