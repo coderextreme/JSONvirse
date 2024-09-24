@@ -111,6 +111,7 @@ console.log('\thttp://localhost:%s/petnames.html', port);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/index.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzumm.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzumm2.html', 8443);
+console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/lc-soc-lc.html', 8443);
 /*
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/petnames.html', 8443);
 */
