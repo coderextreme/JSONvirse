@@ -26,7 +26,7 @@ Background Images by Paul Debevec. <a href="https://www.pauldebevec.com/Probes/"
 
 Shaders have their own copyright
 
-Chat based on socket.io chat.  Files affected are Multiplayer.js and public/javascripts/player.js
+Chat based on socket.io chat.  Files affected are Multiplayer.js and public/javascripts/*.js.  Mostly look and feel though.
 
 bumpyx_itesliders.x3d has it's own license
 
