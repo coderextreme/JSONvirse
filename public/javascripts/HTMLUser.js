@@ -20,6 +20,8 @@ class HTMLUser {
 	      this._sockets = {};
 	      this.sessions = sessions;
 	      this._sockets = sessions._sockets;
+	      user._sessions = sessions;
+	      user._sockets = sessions._sockets;
 	      HTMLUser.LOG("Creating HTMLUser Event handlers");
 	      $('#sessionbutton').click(function() {
 		    user.reconnect();
@@ -100,8 +102,8 @@ class HTMLUser {
 
 	}
 	emit(api, message) {
-		for (let sn in this._sockets) {
-			let socket = this._sockets[sn];
+		for (let sn in usersessions._sockets) {
+			let socket = usersessions._sockets[sn];
 			if (socket !== null) {
         			socket.emit(api, message);
 			} else {
