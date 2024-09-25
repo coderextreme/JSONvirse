@@ -145,14 +145,14 @@ class Multiplayer {
             if (mp.getPlayer(socket)) {
                 socket.emit('servermessage', "You're already joined");
             } else {
-                mp.clientjoin(socket);
+                mp.clientjoin(socket, "x3dbot");
             }
           });
           socket.on('clientjoin', function () {
             if (mp.getPlayer(socket)) {
                 socket.emit('servermessage', "You're already joined");
             } else {
-                mp.clientjoin(socket);
+                mp.clientjoin(socket, "htmlbot");
             }
           });
           socket.on('error', function(e){
@@ -415,15 +415,16 @@ class Multiplayer {
                 this.reportPlayers(socket);
                 socket.emit('servercapability', player, player.playernumber);
             } else {
-                this.clientjoin(socket);
+                this.clientjoin(socket, getPlayer(socket).username);
             }
         } else {
+            this.clientjoin(socket, getPlayer(socket).username);
             this.clientjoin(socket);
         }
     }
-    clientjoin(socket) {
+    clientjoin(socket, username) {
         // TODO reconnect SDP
-        this.players[socket.client.id] = {playernumber: this.maxplayers, id: socket.client.id, score:0, username:"x3dbot", room:"common room"};
+        this.players[socket.client.id] = {playernumber: this.maxplayers, id: socket.client.id, score:0, username:username, room:"common room"};
         // LOG(this.players[socket.client.id]);
         this.maxplayers++;
         let player = this.getPlayer(socket);

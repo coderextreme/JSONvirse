@@ -108,7 +108,9 @@ class HTMLUser {
 		$('#score').append($('<li>').text("Session members:"));
 		if (typeof msg === 'object') {
 			for (let m in msg) {
-				$('#score').append($('<li>').text(msg[m]));
+				if (!msg[m].startsWith("x3dbot#")) {
+					$('#score').append($('<li>').text(msg[m]));
+				}
 			}
 		} else {
 			$('#score').append($('<li>').text(msg));
