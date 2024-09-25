@@ -28,7 +28,6 @@ if (metaServer != null) {
 new Multiplayer(io, metaServer);
 
 app.use(express.static(__dirname + '/public'));
-// app.use(express.static(__dirname));
 var router = express.Router();
 router.route('/servers')
         .get(function(req, res) {

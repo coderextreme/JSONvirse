@@ -18,13 +18,12 @@ class HTMLUser {
     		  if (e.key === 'Enter' || e.keyCode === 13) {
 				  try {
 					  let username = $('#username').val();
-					  if (username.trim() === "") {
-						alert("Please specify  a username")
-						return null;
-					  } else {
-						user.usersocket.emit('clientactivename', username);
-		    				user.usersocket = user.reconnect();
+					  while (username.trim() === "") {
+						username = prompt("Please specify a username:");
+						$('#username').val(username);
 					  }
+					  user.usersocket.emit('clientactivename', username);
+		    			  user.usersocket = user.reconnect();
 			  	  } catch (error) {
 		      		LOG(error.message);
 		            alert(error.message);
@@ -51,12 +50,12 @@ class HTMLUser {
     		}
 	      });
 
-	      $(document).on('change','#session',function(){
-		    let session = $(this).val();
-		    if (session !== "common room") {
-			user.usersocket = user.reconnect();
-		    }
-	      });
+             $(document).on('change','#session',function(){
+                   let session = $(this).val();
+                   if (session !== "common room") {
+                       user.usersocket = user.reconnect();
+                   }
+             });
 	      user.usersocket = user.reconnect();
 
 	}
@@ -147,15 +146,18 @@ class HTMLUser {
 	    'use strict';
 		try {
 			let username = $('#username').val();
-			if (username.trim() === "") {
-				alert("Please specify  a username")
-				return null;
+			while (username.trim() === "") {
+				username = prompt("Please specify a username:");
+				$('#username').val(username);
+				if (user && user.usersocket) {
+					user.usersocket.emit('clientactivename', username);
+					user.usersocket = user.reconnect();
+				}
 			}
 			let socket = user.usersocket;
 			let socketreturn = null;
 			LOG("Reconnecting");
 			let UserGlobalSessions = this.updateSessions();
-			let firstsession = UserGlobalSessions[0];
 			if (UserGlobalSessions !== null && (typeof UserGlobalSessions === 'object') && UserGlobalSessions.length > 0) {
 				for (let g in UserGlobalSessions) {
 					if (UserGlobalSessions.hasOwnProperty(g) && parseInt(g, 10) >= 0) {
@@ -189,11 +191,11 @@ class HTMLUser {
 							}
 						}
 						if (socket !== null) {
-							sockets[sessionname] = socket;
 							if (user.usersocket !== null) {
 		    						user.disconnect();
 								user.usersocket = null;
 							}
+							sockets[sessionname] = socket;
 							socketreturn = socket;
 							socket.on('servermessage', HTMLUser.prototype.servermessage);
 							socket.on('serverpeers', HTMLUser.prototype.serverpeers);
