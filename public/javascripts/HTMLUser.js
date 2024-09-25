@@ -88,9 +88,10 @@ class HTMLUser {
     		}
 	      });
 
-             $(document).on('change','#session',function(){
+             $('#session').on('change',function(){
                    let session = $(this).val();
                    if (session !== "common room") {
+		       let user = new HTMLUser(usersessions);
                        user.reconnect();
                    }
              });

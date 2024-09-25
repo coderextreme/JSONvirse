@@ -1,10 +1,22 @@
-let sockets = {};
+function LOG () {
+    Browser.print('X3D Scene', ...arguments);
+}
 
 class X3DUser {
 	static LOG () {
-	    Browser.print('X3D', ...arguments);
+	    Browser.print('X3D Browser', ...arguments);
 	}
-	constructor() {
+	get sockets() {
+	    return this._sockets;
+	}
+	set sockets(value) {
+	    this._sockets = value;
+	}
+	constructor(sessions) {
+	      let x3duser = this;
+	      this._x3duser = this;
+	      this._sessions = sessions;
+	      this._sockets = this._sessions._sockets;
 	}
 	emit(api, UserGlobalSessions) {
         	this.socket.emit(api, UserGlobalSessions);
@@ -61,13 +73,14 @@ class X3DUser {
 		}
 	}
 	serverpublish(msg) {
+		x3duser = new X3DUser(usersessions);
 		X3DUser.LOG("Receiving publish", msg);
 		if (msg[0].startsWith("http://") || msg[0].startsWith("https://")) {
-			user.loadURL("#scene", msg[0]);
+			x3duser.loadURL("#scene", msg[0]);
 		} else {
-			user.loadX3D("#scene", msg[0]);
+			x3duser.loadX3D("#scene", msg[0]);
 		}
-		reconnect();
+		reconnect(x3duser);
 	}
 	servercapability() {
 		if ( history.pushState ) {
@@ -80,8 +93,6 @@ class X3DUser {
 		}
 	}
 }
-
-let user = new X3DUser();
 
 
 const x3d_serverupdate =  function (usernumber, position, orientation, allowedToken) {
@@ -122,76 +133,42 @@ const x3d_serverupdate =  function (usernumber, position, orientation, allowedTo
     }
 };
 
-const reconnect = function () {
+const reconnect = function (x3duser) {
     'use strict';
 	try {
-		X3DUser.LOG("Reconnecting");
-		let UserGlobalSessions = user.updateSessions();
-		X3DUser.LOG("reconnect UGG", UserGlobalSessions);
-		for (let sn in sockets) {
-			// sockets[sn].disconnect();
-			sockets[sn] = null;
-		}
-		sockets = {};
-		if (UserGlobalSessions !== null && (typeof UserGlobalSessions === 'object') && UserGlobalSessions.length > 0) {
+	        x3duser._sockets = x3duser._sessions._sockets;
+		X3DUser.LOG("reconnect!");
+		let UserGlobalSessions = x3duser.updateSessions();
+		if (UserGlobalSessions && UserGlobalSessions.length > 0) {
 			for (let g in UserGlobalSessions) {
-				if (UserGlobalSessions.hasOwnProperty(g) && parseInt(g, 10) >= 0) {
-					let session = UserGlobalSessions[g];
-					let sessionname = session['Group Petname'];
-					let sessiontoken = session['Group Token'];
-					let sessionlink = session['Group Link'];
-					let socket = null;
-					if (sessionlink && typeof sessionlink === 'string') {
-						try {
-							socket = io(sessionlink, {
-								maxHttpBufferSize: 1e8, pingTimeout: 60000,
-								transports: [ "polling", "websocket" ]
-							});
-							X3DUser.LOG('Connected to remote scene server', sessionlink);
-						} catch (e) {
-							X3DUser.LOG(e);
-						}
+				let session = UserGlobalSessions[g];
+				let sessionname = session['Group Petname'];
+				let sessiontoken = session['Group Token'];
+				let socket = x3duser._sockets[sessionname];
+				LOG(".x3duser", x3duser);
+				LOG(".sessionname", sessionname);
+				LOG(".x3duser._sockets", x3duser._sockets);
+				LOG(".x3duser._sockets[petName]", x3duser._sockets[sessionname]);
+				if (socket !== null) {
+					socket.emit('x3d_clientjoin');
+					socket.emit("x3d_clientsessions", UserGlobalSessions);
+					socket.emit("x3d_clientactivesession", sessiontoken);
+					if (x3d_serverupdate !== null) {
+						X3DUser.LOG("Found x3d_serverupdate", sessionname, sessiontoken, UserGlobalSessions);
+						x3duser._sockets[sessionname].on('x3d_serverupdate', x3d_serverupdate);
 					} else {
-						// X3DUser.LOG('Group Link must be specificed in Session Description for scene collaboration');
+						X3DUser.LOG("reconnect Can't service x3d_serverupdate", sessionname, sessiontoken);
 					}
-					if (socket === null || typeof socket === 'undefined') {
-				             try {
-					         socket = io({
-							maxHttpBufferSize: 1e8, pingTimeout: 60000,
-							transports: [ "polling", "websocket" ]
-						});
-						X3DUser.LOG('Connected to chat server');
-						} catch (e) {
-							X3DUser.LOG(e);
-						}
-					}
-					if (socket !== null) {
-						X3DUser.LOG("Connect!");
-						sockets[sessionname] = socket;
-						socket.emit('x3d_clientjoin');
-						socket.emit("x3d_clientsessions", UserGlobalSessions);
-						socket.emit("x3d_clientactivesession", sessiontoken);
-						if (x3d_serverupdate !== null) {
-							X3DUser.LOG("Found x3d_serverupdate", sessionname, sessiontoken, UserGlobalSessions);
-							sockets[sessionname].on('x3d_serverupdate', x3d_serverupdate);
-						} else {
-							X3DUser.LOG("reconnect Can't service x3d_serverupdate", sessionname, sessiontoken);
-						}
-						$(document).on('change','#session',function(){
-							let session = $(this).val();
-							if (session !== "common room" && session !== "Not connected") {
-								socket.emit('x3d_clientactivesession', session);
-							}
-							reconnect();
-						 });
-						 socket.on('serverpublish', X3DUser.prototype.serverpublish);
-						 socket.on('servercapability', X3DUser.prototype.servercapability);
-						 socket.emit('clientrejoin', location.href);
-						 // socket.emit('clientmove', [0,0,0], [0,0,0]);
-						 // socket.emit('clientjoin');
-					} else {
-						X3DUser.LOG("Couldn't connect to", sessionlink);
-					}
+					$('#session').on("change",function(){
+						reconnect(x3duser);
+					 });
+					 socket.on('serverpublish', X3DUser.prototype.serverpublish);
+					 socket.on('servercapability', X3DUser.prototype.servercapability);
+					 socket.emit('clientrejoin', location.href);
+					 // socket.emit('clientmove', [0,0,0], [0,0,0]);
+					 // socket.emit('clientjoin');
+				} else {
+					X3DUser.LOG("Couldn't connect to", sessionlink);
 				}
 			}
 		}
@@ -202,7 +179,7 @@ const reconnect = function () {
 
 const token_test = function(test_token) {
     'use strict';
-    let UserGlobalSessions = user.updateSessions();
+    let UserGlobalSessions = x3duser.updateSessions();
     if (UserGlobalSessions && UserGlobalSessions.length > 0) {
         for (let g in UserGlobalSessions) {
             let session = UserGlobalSessions[g];
@@ -211,7 +188,7 @@ const token_test = function(test_token) {
                 return true;
             }
         }
-	user.emit("x3d_clientsessions", UserGlobalSessions);
+	x3duser.emit("x3d_clientsessions", UserGlobalSessions);
     } else {
         X3DUser.LOG("UserGlobalSessions is not set right", UserGlobaSessions);
     }
@@ -221,7 +198,7 @@ const token_test = function(test_token) {
 const initialize = function () {
     'use strict';
     X3DUser.LOG("Called intialize");
-    reconnect();
+    reconnect(x3duser);
 };
 
 const newTranslation = function(Value) {
@@ -229,14 +206,22 @@ const newTranslation = function(Value) {
     X3DUser.LOG("newTranslation", petNames);
     for (let p in petNames) {
         let petName = petNames[p];
-        if (sockets[petName] !== null && typeof sockets[petName] !== 'undefined') {
+	LOG("x3duser", x3duser);
+	LOG("petName", petName);
+	LOG("x3duser._sockets", x3duser._sockets);
+	LOG("x3duser._sockets[petName]", x3duser._sockets[petName]);
+        if (x3duser._sockets[petName] !== null && typeof x3duser._sockets[petName] !== 'undefined') {
             protoValue_changed = Value.x * protoScale;
             protoText_changed = new MFString(protoParameterName+'='+protoValue_changed.toFixed(2));
             X3DUser.LOG("update", petName, protoText_changed, protoValue_changed);
             X3DUser.LOG("x3d_clientmove", petName, [protoParameterName],[Value.x]);
-            sockets[petName].emit("x3d_clientmove", [protoParameterName],[Value.x]);
+            x3duser._sockets[petName].emit("x3d_clientmove", [protoParameterName],[Value.x]);
         } else {
             X3DUser.LOG("No socket for ", petName);
         }
     }
 };
+
+let x3duser = new X3DUser(usersessions);
+reconnect(x3duser);
+

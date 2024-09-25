@@ -123,7 +123,7 @@ class Multiplayer {
             if (mp.getPlayer(socket)) { // if joined
                 mp.clientmove(socket, arguments[0], arguments[1]);
             } else {
-                socket.emit('servermessage', "Something wrong with socket or player");
+                socket.emit('servermessage', "Something wrong with socket or player are you in a session?");
             }
           });
           socket.on('x3d_clientmove', function() {
@@ -131,7 +131,7 @@ class Multiplayer {
             if (mp.getPlayer(socket)) { // if joined
                 mp.clientmove(socket, arguments[0], arguments[1]);
             } else {
-                socket.emit('servermessage', "Something wrong with socket or player");
+                socket.emit('servermessage', "Something wrong with socket or player are you in a session?");
             }
           });
           socket.on('clientrejoin', function () {
@@ -178,7 +178,7 @@ class Multiplayer {
             	socket.leave(player.room);
             	this.sendPeersTo(player.room);
             } else {
-		    console.log("No room");
+		    LOG("No room");
 	    }
             this.oldplayers[socket.client.id] = player;
             delete this.players[socket.client.id];
@@ -202,7 +202,7 @@ class Multiplayer {
         try {
             player.sessions = msg[0];
         } catch (e) {
-            console.error(e, msg[0]);
+            LOG(e, msg[0]);
         }
         let newsessions = player.sessions;
 
@@ -307,14 +307,14 @@ class Multiplayer {
     clientmessage(socket, msg) {
         let player = this.getPlayer(socket);
 	if (player && msg[0] && player.room) {
-	    console.log("Sending", player.username, msg);
+	    LOG("Sending", player.username, msg);
             this.sendRoomMessage(player, "<"+player.username+"#"+player.playernumber+"> "+msg[0]);
         } else if (player && player.room) {
-	    console.log("No message to send", msg);
+	    LOG("No message to send", msg);
         } else if (!player.room) {
-	    console.log("can't get player message through to room", player.username, msg);
+	    LOG("can't get player message through to room", player.username, msg);
 	} else {
-	    console.log("can't get message through to socket", socket, msg);
+	    LOG("can't get message through to socket", socket, msg);
 	}
     }
     clientpublish(socket, msg) {
