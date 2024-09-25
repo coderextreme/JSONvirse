@@ -1,10 +1,9 @@
 let sockets = {};
 
-const LOG = function() {
-    console.log('X3D', ...arguments);
-};
-
 class X3DUser {
+	static LOG () {
+	    Browser.print('X3D', ...arguments);
+	}
 	constructor() {
 	}
 	emit(api, UserGlobalSessions) {
@@ -15,7 +14,7 @@ class X3DUser {
 			let UserGlobalSessions = JSON.parse($('#sessionjson').val());
 			return UserGlobalSessions;
 		} catch (e) {
-			LOG(e);
+			X3DUser.LOG(e);
 		}
 	}
 	loadX3D(selector, x3d) {
@@ -28,14 +27,14 @@ class X3DUser {
 					   Browser.replaceWorld(importedScene);
 			       })
 			       .catch(function(error) {
-				 	   LOG('Error importing X3D scene:', error);
+				 	   X3DUser.LOG('Error importing X3D scene:', error);
 			       });
 			} else {
 				alert("X_ITE could not replaceWorld in loadX3D()");
-				LOG("X_ITE could not replaceWorld in loadX3D()", selector, x3d);
+				X3DUser.LOG("X_ITE could not replaceWorld in loadX3D()", selector, x3d);
 			}
 		} catch (e) {
-			LOG(e);
+			X3DUser.LOG(e);
 		}
 	}
 
@@ -46,23 +45,23 @@ class X3DUser {
 			*/
 			if (typeof Browser !== 'undefined') {
 				   // Import the X3D scene and handle the Promise
-				   LOG("url type", typeof url, url);
+				   X3DUser.LOG("url type", typeof url, url);
 				   Browser.loadURL(new X3D.MFString (url))
 				       .then(() => {
-					       LOG('Success importing URL:', url);
+					       X3DUser.LOG('Success importing URL:', url);
 					   })
 					   .catch(function(error) {
-					       LOG('Error importing URL:', error);
+					       X3DUser.LOG('Error importing URL:', error);
 					   });
 			} else {
-				LOG("X_ITE could not load URL in loadURL()", selector, url);
+				X3DUser.LOG("X_ITE could not load URL in loadURL()", selector, url);
 			}
 		} catch (e) {
-			LOG(e);
+			X3DUser.LOG(e);
 		}
 	}
 	serverpublish(msg) {
-		LOG("Receiving publish", msg);
+		X3DUser.LOG("Receiving publish", msg);
 		if (msg[0].startsWith("http://") || msg[0].startsWith("https://")) {
 			user.loadURL("#scene", msg[0]);
 		} else {
@@ -87,38 +86,38 @@ let user = new X3DUser();
 
 const x3d_serverupdate =  function (usernumber, position, orientation, allowedToken) {
     'use strict';
-    LOG("Called x3d_serverupdate with", usernumber, position, orientation, allowedToken);
-    LOG("Relevant extra info", allowedToken, token_test(allowedToken));
+    X3DUser.LOG("Called x3d_serverupdate with", usernumber, position, orientation, allowedToken);
+    X3DUser.LOG("Relevant extra info", allowedToken, token_test(allowedToken));
     if (position !== null && orientation !== null && token_test(allowedToken) && position[0] ===  protoParameterName) {
         orientation[0] = parseFloat(orientation[0]);
         let ps = Browser.currentScene.getNamedNode("protoSensor");
         let t = Browser.currentScene.getNamedNode("protoTransform");
         let txt = Browser.currentScene.getNamedNode("protoText");
         if (shader) {
-            LOG("old", shader.getField(protoParameterName).getValue());
+            X3DUser.LOG("old", shader.getField(protoParameterName).getValue());
             shader.getField(protoParameterName).setValue(orientation[0] * protoScale);
-            LOG("new", shader.getField(protoParameterName).getValue());
+            X3DUser.LOG("new", shader.getField(protoParameterName).getValue());
         } else {
-            LOG('ComposedShader not found');
+            X3DUser.LOG('ComposedShader not found');
         }
         if (txt) {
             let stringField = txt.getField("string");
-            LOG("old", stringField.getValue());
+            X3DUser.LOG("old", stringField.getValue());
             let label = protoParameterName;
             stringField.setValue(new MFString(label+"="+(orientation[0] * protoScale).toFixed(2)));
-            LOG("new", stringField.getValue());
+            X3DUser.LOG("new", stringField.getValue());
         } else {
-            LOG('ComposedShader not found');
+            X3DUser.LOG('ComposedShader not found');
         }
         if (ps) {
             ps.offset = new SFVec3f(orientation[0], ps.offset[1], ps.offset[2]);
         } else {
-            LOG("Not found protoSensor");
+            X3DUser.LOG("Not found protoSensor");
         }
         if (t) {
             t.translation = new SFVec3f(orientation[0], t.translation[1], t.translation[2]);
         } else {
-            LOG("Not found protoTransform");
+            X3DUser.LOG("Not found protoTransform");
         }
     }
 };
@@ -126,11 +125,11 @@ const x3d_serverupdate =  function (usernumber, position, orientation, allowedTo
 const reconnect = function () {
     'use strict';
 	try {
-		LOG("Reconnecting");
+		X3DUser.LOG("Reconnecting");
 		let UserGlobalSessions = user.updateSessions();
-		LOG("reconnect UGG", UserGlobalSessions);
+		X3DUser.LOG("reconnect UGG", UserGlobalSessions);
 		for (let sn in sockets) {
-			sockets[sn].disconnect();
+			// sockets[sn].disconnect();
 			sockets[sn] = null;
 		}
 		sockets = {};
@@ -148,12 +147,12 @@ const reconnect = function () {
 								maxHttpBufferSize: 1e8, pingTimeout: 60000,
 								transports: [ "polling", "websocket" ]
 							});
-							LOG('Connected to remote scene server', sessionlink);
+							X3DUser.LOG('Connected to remote scene server', sessionlink);
 						} catch (e) {
-							LOG(e);
+							X3DUser.LOG(e);
 						}
 					} else {
-						// LOG('Group Link must be specificed in Session Description for scene collaboration');
+						// X3DUser.LOG('Group Link must be specificed in Session Description for scene collaboration');
 					}
 					if (socket === null || typeof socket === 'undefined') {
 				             try {
@@ -161,22 +160,22 @@ const reconnect = function () {
 							maxHttpBufferSize: 1e8, pingTimeout: 60000,
 							transports: [ "polling", "websocket" ]
 						});
-						LOG('Connected to chat server');
+						X3DUser.LOG('Connected to chat server');
 						} catch (e) {
-							LOG(e);
+							X3DUser.LOG(e);
 						}
 					}
 					if (socket !== null) {
-						LOG("Connect!");
+						X3DUser.LOG("Connect!");
 						sockets[sessionname] = socket;
 						socket.emit('x3d_clientjoin');
 						socket.emit("x3d_clientsessions", UserGlobalSessions);
 						socket.emit("x3d_clientactivesession", sessiontoken);
 						if (x3d_serverupdate !== null) {
-							LOG("Found x3d_serverupdate", sessionname, sessiontoken, UserGlobalSessions);
+							X3DUser.LOG("Found x3d_serverupdate", sessionname, sessiontoken, UserGlobalSessions);
 							sockets[sessionname].on('x3d_serverupdate', x3d_serverupdate);
 						} else {
-							LOG("reconnect Can't service x3d_serverupdate", sessionname, sessiontoken);
+							X3DUser.LOG("reconnect Can't service x3d_serverupdate", sessionname, sessiontoken);
 						}
 						$(document).on('change','#session',function(){
 							let session = $(this).val();
@@ -191,13 +190,13 @@ const reconnect = function () {
 						 // socket.emit('clientmove', [0,0,0], [0,0,0]);
 						 // socket.emit('clientjoin');
 					} else {
-						LOG("Couldn't connect to", sessionlink);
+						X3DUser.LOG("Couldn't connect to", sessionlink);
 					}
 				}
 			}
 		}
 	} catch (e) {
-		LOG("ERROR RECONNECTING", e);
+		X3DUser.LOG("ERROR RECONNECTING", e);
 	}
 };
 
@@ -214,30 +213,30 @@ const token_test = function(test_token) {
         }
 	user.emit("x3d_clientsessions", UserGlobalSessions);
     } else {
-        LOG("UserGlobalSessions is not set right", UserGlobaSessions);
+        X3DUser.LOG("UserGlobalSessions is not set right", UserGlobaSessions);
     }
     return false;
 };
 
 const initialize = function () {
     'use strict';
-    LOG("Called intialize");
+    X3DUser.LOG("Called intialize");
     reconnect();
 };
 
 const newTranslation = function(Value) {
     'use strict';
-    LOG("newTranslation", petNames);
+    X3DUser.LOG("newTranslation", petNames);
     for (let p in petNames) {
         let petName = petNames[p];
         if (sockets[petName] !== null && typeof sockets[petName] !== 'undefined') {
             protoValue_changed = Value.x * protoScale;
             protoText_changed = new MFString(protoParameterName+'='+protoValue_changed.toFixed(2));
-            LOG("update", petName, protoText_changed, protoValue_changed);
-            LOG("x3d_clientmove", petName, [protoParameterName],[Value.x]);
+            X3DUser.LOG("update", petName, protoText_changed, protoValue_changed);
+            X3DUser.LOG("x3d_clientmove", petName, [protoParameterName],[Value.x]);
             sockets[petName].emit("x3d_clientmove", [protoParameterName],[Value.x]);
         } else {
-            LOG("No socket for ", petName);
+            X3DUser.LOG("No socket for ", petName);
         }
     }
 };

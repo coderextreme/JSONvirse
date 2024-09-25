@@ -227,6 +227,7 @@ class Multiplayer {
             oldsession["Group Active?"] = false;
 	    if (oldname) {
             	this.sendApiMessageToRoom('servermessage', player.username+"#"+player.playernumber+" left "+oldname+".", oldtoken);
+		LOG(player.username, "from", oldname);
 	    }
             socket.leave(oldtoken);
             this.sendPeersTo(oldtoken);
@@ -240,8 +241,10 @@ class Multiplayer {
             this.sendPeersTo(newtoken);
 	    if (newname) {
             	this.sendApiMessageToRoom('servermessage', player.username+"#"+player.playernumber+"@"+newname+" joined.", newtoken);
+		LOG(player.username, "to", newname);
             }
         }
+	
         socket.emit("serversessions", newsessions);
     }
     clientactivesession(socket, msg) {
@@ -304,6 +307,7 @@ class Multiplayer {
     clientmessage(socket, msg) {
         let player = this.getPlayer(socket);
 	if (player && msg[0] && player.room) {
+	    console.log("Sending", player.username, msg);
             this.sendRoomMessage(player, "<"+player.username+"#"+player.playernumber+"> "+msg[0]);
         } else if (player && player.room) {
 	    console.log("No message to send", msg);

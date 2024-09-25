@@ -10,9 +10,9 @@
 		"url": "git://github.com/coderextreme/JSONverse.git"
 	},
 	"dependencies": {
-		"express": "^4.21.0",
-		"socket.io": "^4.8.0",
-		"socket.io-client": "^4.8.0"
+		"express": "*",
+		"socket.io": "*",
+		"socket.io-client": "*"
 	},
 	"scripts": {
 		"start": "node ./index.js",
