@@ -7,12 +7,44 @@ const LOG = function() {
 class HTMLUser {
 	constructor() {
 	      let user = this;
+	      this.user = this;
 	      this.usersocket = null;
 	      $('#sessionbutton').click(function() {
 		    user.usersocket = user.reconnect();
 	      });
 	      $('#disconnectbutton').click(function() {
 		    user.disconnect();
+	      });
+	      $('#fetchbutton').click(function() {
+			let message = $('#m').val();
+		        if (user && user.usersocket && message.startsWith("http")) {
+			    user.usersocket.emit('clientmessage', message);
+			    const request = {
+			      method: 'GET'
+			    };
+			    fetch(message, request)
+			      .then(response => response.text())
+			      .then(data => {
+					$('#x3d').val(data);
+					$('#m').val('');
+			      })
+			      .catch(error => console.error('Error:', error));
+			} else {
+				alert("Can't fetch that!");
+			}
+	      });
+	      $('#publishbutton').click(function() {
+			let message = $('#m').val();
+			if ($('#x3d').val().trim() !== "" && user && user.usersocket) {
+				let username = $('#username').val();
+				user.usersocket.emit('clientmessage', username+" is publishing.");
+				user.usersocket.emit('clientpublish', $('#x3d').val().replace(/\n/g, ""));
+			} else if (user && user.usersocket && message.startsWith("http")) {
+				user.usersocket.emit('clientpublish', message);
+				$('#m').val('');
+			} else {
+				alert("Please set your user name, update session info, paste some X3D encoding text into the text area below the scene, and try republishing");
+			}
 	      });
 	      $("#username").on('keyup', function (e) {
     		  if (e.key === 'Enter' || e.keyCode === 13) {
@@ -34,13 +66,6 @@ class HTMLUser {
     		if (e.key === 'Enter' || e.keyCode === 13) {
 				try {
 					let message = $('#m').val();
-					if (message.startsWith("http")) {
-						// sent the link to the server to avoid CORS
-						user.usersocket.emit('clientpublish', message);
-					} else if ($('#x3d').val() !== "") {
-						// Grab the JSON in the text area
-						user.usersocket.emit('clientpublish', $('#x3d').val().replace(/\n/g, ""));
-					}
 					user.usersocket.emit('clientmessage', message);
 					$('#m').val('');
 				} catch (error) {
@@ -151,9 +176,9 @@ class HTMLUser {
 			while (username.trim() === "") {
 				username = prompt("Please specify a username:");
 				$('#username').val(username);
-				if (user && user.usersocket) {
-					user.usersocket.emit('clientactivename', username);
-					user.usersocket = user.reconnect();
+				if (typeof this.user !== 'undefined' && this.user.usersocket) {
+					this.user.usersocket.emit('clientactivename', username);
+					this.user.usersocket = this.user.reconnect();
 				}
 			}
 			let socket = user.usersocket;
