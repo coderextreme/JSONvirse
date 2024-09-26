@@ -50,15 +50,17 @@ class HTMLUser {
 	      });
 	      $('#publishbutton').click(function() {
 			let message = $('#m').val();
-			if ($('#x3d').val().trim() !== "" && user) {
-				let username = $('#username').val();
-				user.emit('clientmessage', username+" is publishing.");
-				user.emit('clientpublish', $('#x3d').val().replace(/\n/g, ""));
-			} else if (user && message.startsWith("http")) {
+			let username = $('#username').val();
+			user.emit('clientmessage', username+" is publishing.");
+		        if (username.trim() === "") {
+				alert("Please set your user name");
+			} else if (message.trim().startsWith("http://") || message.trim().startsWith("https://")) {
 				user.emit('clientpublish', message);
 				$('#m').val('');
+			} else if ($('#x3d').val().trim() !== "") {
+				user.emit('clientpublish', $('#x3d').val().replace(/\n/g, ""));
 			} else {
-				alert("Please set your user name, update session info, paste some X3D encoding text into the text area below the scene, and try republishing");
+				user.emit('clientmessage', username+" publishing failed?");
 			}
 	      });
 	      $("#username").on('keyup', function (e) {

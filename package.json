@@ -11,7 +11,11 @@
 	},
 	"dependencies": {
 		"express": "*",
+		"body-parser": "*",
 		"socket.io": "*",
+		"node-rest-client": "*"
+	},
+	"devDependencies": {
 		"socket.io-client": "*"
 	},
 	"scripts": {

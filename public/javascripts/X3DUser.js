@@ -150,7 +150,7 @@ const reconnect = function (x3duser) {
 				LOG(".x3duser._sockets", x3duser._sockets);
 				LOG(".x3duser._sockets[petName]", x3duser._sockets[sessionname]);
 				if (socket !== null) {
-					socket.emit('x3d_clientjoin');
+					// socket.emit('x3d_clientjoin');
 					socket.emit("x3d_clientsessions", UserGlobalSessions);
 					socket.emit("x3d_clientactivesession", sessiontoken);
 					if (x3d_serverupdate !== null) {
@@ -164,7 +164,8 @@ const reconnect = function (x3duser) {
 					 });
 					 socket.on('serverpublish', X3DUser.prototype.serverpublish);
 					 socket.on('servercapability', X3DUser.prototype.servercapability);
-					 socket.emit('clientrejoin', location.href);
+					 // No need to rejoin, since Sessions.js does
+					 // socket.emit('clientrejoin', location.href);
 					 // socket.emit('clientmove', [0,0,0], [0,0,0]);
 					 // socket.emit('clientjoin');
 				} else {

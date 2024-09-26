@@ -141,6 +141,7 @@ class Multiplayer {
                 mp.clientrejoin(socket, arguments);
             }
           });
+	/*
           socket.on('x3d_clientjoin', function () {
             if (mp.getPlayer(socket)) {
                 socket.emit('servermessage', "You're already joined");
@@ -148,6 +149,7 @@ class Multiplayer {
                 mp.clientjoin(socket, "x3dbot");
             }
           });
+	  */
           socket.on('clientjoin', function () {
             if (mp.getPlayer(socket)) {
                 socket.emit('servermessage', "You're already joined");
@@ -173,8 +175,9 @@ class Multiplayer {
 	let playernumber = player.playernumber;
         if (player) {
             LOG('servermessage', player.playernumber+" quit.");
+            this.io.emit('servermessage', player.username+"#"+player.playernumber+" quit.");
             if (player.room) {
-                this.sendRoomMessage(player, player.username+"#"+player.playernumber+" quit.");
+                // this.sendRoomMessage(player, player.username+"#"+player.playernumber+" quit.");
             	socket.leave(player.room);
             	this.sendPeersTo(player.room);
             } else {
@@ -281,7 +284,7 @@ class Multiplayer {
                         player.sessions[g]['Group Active?'] = false;
                     }
                 }
-                this.sendRoomMessage(player, player.username+"#"+player.playernumber+"@"+newroom+" became active.");
+                // this.sendRoomMessage(player, player.username+"#"+player.playernumber+"@"+newroom+" became active.");
                 LOG(player.username+"#"+player.playernumber+"@"+newroom+" became active.");
             }
         } else {

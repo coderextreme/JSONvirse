@@ -180,7 +180,9 @@ class Sessions {
 		}
 	}
 	serverupdate(p) {
-		this.servermessage(p.username+"#"+p.usernumber+" at "+p.position+" turns "+p.orientation);
+		if (p) {
+			this.servermessage(p.username+"#"+p.usernumber+" at "+p.position+" turns "+p.orientation);
+		}
 	}
 	servercapability() {
 		if ( history.pushState ) {
