@@ -112,6 +112,7 @@ router2.route('/template/:SessionName/:SessionPassword/:WebSocket')
 	res.send(template(templateparams));
   });
 app.use('/tapi', router2);
+app.use('/yottzumm/public', router2);
 
 
 var defaultPort = 8088;
@@ -127,7 +128,7 @@ console.log('\thttp://localhost:%s/yottzumm.html', port);
 console.log('\thttp://localhost:%s/yottzumm2.html', port);
 console.log('\thttp://localhost:%s/petnames.html', port);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/index.html', 8443);
-console.log('\thttp://lc-soc-lc.at:%s/tapi/template/yottzumm/Unique%20Super%20Secret%20Password/wss%3A%2F%2Flc-soc-lc.at%3A8443', 8443);
+console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/template/yottzumm/Unique%20Super%20Secret%20Password/wss%3A%2F%2Flc-soc-lc.at%3A8443', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzumm.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzumm2.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/lc-soc-lc.html', 8443);
