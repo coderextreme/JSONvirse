@@ -1,5 +1,6 @@
 var express = require('express');
 const bodyParser = require('body-parser');
+const Handlebars = require("handlebars");
 
 var fs = require('fs');
 var app = express();
@@ -96,6 +97,23 @@ router.route('/petnames')
   });
 app.use('/api', router);
 
+var router2 = express.Router();
+router2.route('/template/:SessionName/:SessionPassword/:WebSocket')
+  .get(function(req, res) {
+	console.log("Got template request");
+        let templatecode = fs.readFileSync(__dirname + "/public/template.html").toString();
+	const template = Handlebars.compile(templatecode);
+	  // TODO validation
+	const templateparams = {
+		sessionName : req.params.SessionName,
+		sessionPassword : req.params.SessionPassword,
+		webSocket : req.params.WebSocket
+	}
+	res.send(template(templateparams));
+  });
+app.use('/tapi', router2);
+
+
 var defaultPort = 8088;
 
 var port = process.env.X3DJSONPORT || defaultPort;
@@ -104,6 +122,7 @@ http.listen(port);
 
 console.log('go to the following in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt:');
 console.log('\thttp://localhost:%s/', port);
+console.log('\thttp://localhost:%s/tapi/template', port);
 console.log('\thttp://localhost:%s/yottzumm.html', port);
 console.log('\thttp://localhost:%s/yottzumm2.html', port);
 console.log('\thttp://localhost:%s/petnames.html', port);
