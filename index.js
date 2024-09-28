@@ -111,6 +111,19 @@ router2.route('/template/:SessionName/:SessionPassword/:WebSocket')
 	}
 	res.send(template(templateparams));
   });
+router2.route('/templateapache/:SessionName/:SessionPassword/:WebSocket')
+  .get(function(req, res) {
+	console.log("Got template request");
+        let templatecode = fs.readFileSync(__dirname + "/public/templateapache.html").toString();
+	const template = Handlebars.compile(templatecode);
+	  // TODO validation
+	const templateparams = {
+		sessionName : req.params.SessionName,
+		sessionPassword : req.params.SessionPassword,
+		webSocket : req.params.WebSocket
+	}
+	res.send(template(templateparams));
+  });
 app.use('/tapi', router2);
 
 
