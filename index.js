@@ -113,7 +113,7 @@ router2.route('/template/:SessionName/:SessionPassword/:WebSocket')
   });
 router2.route('/templateapache/:SessionName/:SessionPassword/:WebSocket')
   .get(function(req, res) {
-	console.log("Got template request");
+	console.log("Got templateapache request");
         let templatecode = fs.readFileSync(__dirname + "/public/templateapache.html").toString();
 	const template = Handlebars.compile(templatecode);
 	  // TODO validation
@@ -136,12 +136,13 @@ http.listen(port);
 console.log('go to the following in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt:');
 console.log('\thttp://localhost:%s/', port);
 console.log('\thttp://localhost:%s/tapi/template/yottzumm/Unique%20Super%20Secret%20Password/ws%3A%2F%2Flocalhost%3A8088', port);
+console.log('\thttp://localhost:%s/tapi/templateapache/yottzumm/Unique%20Super%20Secret%20Password/ws%3A%2F%2Flocalhost%3A8088', port);
 console.log('\thttp://localhost:%s/yottzumm.html', port);
 console.log('\thttp://localhost:%s/yottzumm2.html', port);
 console.log('\thttp://localhost:%s/petnames.html', port);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/index.html', 8443);
-console.log('\thttps://lc-soc-lc.at:%s/yottzumm/tapi/templateapache/yottzumm/Unique%20Super%20Secret%20Password/wss%3A%2F%2Flc-soc-lc.at%3A8443', 8443);
-console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/tapi/templateapache/yottzumm/Unique%20Super%20Secret%20Password/wss%3A%2F%2Flc-soc-lc.at%3A8443', 8443);
+console.log('\thttps://lc-soc-lc.at:%s/yottzumm/tapi/templateapache/yottzumm/Unique%20Super%20Secret%20Password/null', 8443);
+console.log('\thttps://lc-soc-lc.at:8443/yottzumm/public/tapi/templateapache/yottzumm/Unique%20Super%20Secret%20Password/null', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzumm.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzumm2.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/lc-soc-lc.html', 8443);
