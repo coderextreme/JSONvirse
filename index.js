@@ -117,6 +117,9 @@ router2.route('/templateapache/:SessionName/:SessionPassword/:WebSocket')
         let templatecode = fs.readFileSync(__dirname + "/public/templateapache.html").toString();
 	const template = Handlebars.compile(templatecode);
 	  // TODO validation
+	if (req.params.WebSocket === '"null"') {
+		req.params.WebSocket === '"null"';
+	}
 	const templateparams = {
 		sessionName : req.params.SessionName,
 		sessionPassword : req.params.SessionPassword,
@@ -141,8 +144,8 @@ console.log('\thttp://localhost:%s/yottzumm.html', port);
 console.log('\thttp://localhost:%s/yottzumm2.html', port);
 console.log('\thttp://localhost:%s/petnames.html', port);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/index.html', 8443);
-console.log('\thttps://lc-soc-lc.at:%s/yottzumm/tapi/templateapache/yottzumm/Unique%20Super%20Secret%20Password/null', 8443);
-console.log('\thttps://lc-soc-lc.at:8443/yottzumm/public/tapi/templateapache/yottzumm/Unique%20Super%20Secret%20Password/null', 8443);
+console.log('\thttps://lc-soc-lc.at:%s/yottzumm/tapi/templateapache/yottzumm/Unique%20Super%20Secret%20Password/%22null%22', 8443);
+console.log('\thttps://lc-soc-lc.at:8443/yottzumm/public/tapi/templateapache/yottzumm/Unique%20Super%20Secret%20Password/%22null%22', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzumm.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzumm2.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/lc-soc-lc.html', 8443);
