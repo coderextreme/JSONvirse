@@ -26,7 +26,7 @@ class Sessions {
 			for (let g in UserGlobalSessions) {
 				if (UserGlobalSessions.hasOwnProperty(g) && parseInt(g, 10) >= 0) {
 					let session = UserGlobalSessions[g];
-					let sessionname = session['Group Petname'];
+					let sessionname = session['Session Petname'];
 					callback(sessionname, session, this);
 				}
 			}
@@ -78,8 +78,8 @@ class Sessions {
 			}
 			this.disconnect();
 			this.operateOnSessions(function (sessionname, session, user) {
-				let sessiontoken = session['Group Token'];
-				let sessionlink = session['Group Link'];
+				let sessiontoken = session['Session Token'];
+				let sessionlink = session['Session Link'];
 				let socket = user._sockets[sessionname];
 				if (!socket) {
 					if (sessionlink && typeof sessionlink === 'string') {
@@ -96,7 +96,7 @@ class Sessions {
 						}
 						*/
 					} else {
-						// Sessions.LOG('Group Link must be specificed in Session Description for scene collaboration');
+						// Sessions.LOG('Session Link must be specificed in Session Description for scene collaboration');
 					}
 					if (socket === null || typeof socket === 'undefined') {
 					     // if all else fails, connect back to same host
@@ -152,8 +152,8 @@ class Sessions {
 			let session = sessions[g];
 			HTMLUser.LOG(session);
 			let option = $("<option>", {
-			  value: session['Group Petname'],  // could be token
-			  text: session['Group Petname'] 
+			  value: session['Session Petname'],  // could be token
+			  text: session['Session Petname'] 
 			});
 
 			$('#session').append(option);

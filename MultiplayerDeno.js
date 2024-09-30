@@ -49,7 +49,7 @@ const LOG = function() {
     // console.log('SERVER', ...arguments);
 };
 
-class Multiplayer {
+export default class Multiplayer {
     constructor(io, metaServer) {
         let mp = this;
             this.maxplayers = 1;
@@ -530,5 +530,3 @@ class Multiplayer {
         }
     }
 }
-
-module.exports = Multiplayer;

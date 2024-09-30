@@ -142,8 +142,8 @@ const reconnect = function (x3duser) {
 		if (UserGlobalSessions && UserGlobalSessions.length > 0) {
 			for (let g in UserGlobalSessions) {
 				let session = UserGlobalSessions[g];
-				let sessionname = session['Group Petname'];
-				let sessiontoken = session['Group Token'];
+				let sessionname = session['Session Petname'];
+				let sessiontoken = session['Session Token'];
 				let socket = x3duser._sockets[sessionname];
 				LOG(".x3duser", x3duser);
 				LOG(".sessionname", sessionname);
@@ -184,7 +184,7 @@ const token_test = function(test_token) {
     if (UserGlobalSessions && UserGlobalSessions.length > 0) {
         for (let g in UserGlobalSessions) {
             let session = UserGlobalSessions[g];
-            let sessiontoken = session['Group Token'];
+            let sessiontoken = session['Session Token'];
             if (test_token === sessiontoken) {
                 return true;
             }

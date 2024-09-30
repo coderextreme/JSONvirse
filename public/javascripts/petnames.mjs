@@ -29,7 +29,7 @@ function petNameUpdateAndQuery(body) {
 	  $('#visit').click(function() {
 		var values = [];
 		$('input[type="checkbox"]:checked').each(function() {
-		      values.push({"Group Petname": $(this).val(), "Group Token": "Super Secret Password", "Group Type": "Stanards Development Organization", "Group Link": null});
+		      values.push({"Session Petname": $(this).val(), "Session Token": "Super Secret Password", "Session Type": "Stanards Development Organization", "Session Link": null});
 		});
 		if (values.length) {
 		    const request = {
@@ -40,7 +40,7 @@ function petNameUpdateAndQuery(body) {
 		    fetch("/api/group", request)
 		      .then(response => response.json())
 		      .then(data => {
-			      $("body").append("Copy this to your app to visit groups:").append("<br/");
+			      $("body").append("Copy this to your app to visit sessions:").append("<br/");
 			      $("body").append("<br/");
 			      $("body").append('<textarea rows="10" cols="40">'+JSON.stringify(data, null, 2)+"</textarea>");
 		      });
