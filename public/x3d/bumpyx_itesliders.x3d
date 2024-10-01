@@ -326,7 +326,7 @@ function initialize() {
 	      <fieldValue name='textString' value='"a="'/>
 	      <fieldValue name='parameterScale' value='30'/>
 	      <fieldValue name='parameterName' value='a'/>
-	      <fieldValue name='petNames' value='"yottzumm"'/>
+	      <fieldValue name='petNames' value='"yottzumm" "group1-petname"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>
@@ -339,7 +339,7 @@ function initialize() {
 	      <fieldValue name='textString' value='"b="'/>
 	      <fieldValue name='parameterScale' value='30'/>
 	      <fieldValue name='parameterName' value='b'/>
-	      <fieldValue name='petNames' value='"yottzumm"'/>
+	      <fieldValue name='petNames' value='"yottzumm" "group1-petname"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>
@@ -351,7 +351,7 @@ function initialize() {
 	      <fieldValue name='textString' value='"c="'/>
 	      <fieldValue name='parameterScale' value='20'/>
 	      <fieldValue name='parameterName' value='c'/>
-	      <fieldValue name='petNames' value='"yottzumm" "yottzumm2"'/>
+	      <fieldValue name='petNames' value='"yottzumm" "yottzumm2" "group1-petname"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>
@@ -363,7 +363,7 @@ function initialize() {
 	      <fieldValue name='textString' value='"d="'/>
 	      <fieldValue name='parameterScale' value='20'/>
 	      <fieldValue name='parameterName' value='d'/>
-	      <fieldValue name='petNames' value='"yottzumm" "yottzumm2"'/>
+	      <fieldValue name='petNames' value='"yottzumm" "yottzumm2" "group1-petname"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>
@@ -375,7 +375,7 @@ function initialize() {
 	      <fieldValue name='textString' value='"tdelta="'/>
 	      <fieldValue name='parameterScale' value='6.28'/>
 	      <fieldValue name='parameterName' value='tdelta'/>
-	      <fieldValue name='petNames' value='"yottzumm2"'/>
+	      <fieldValue name='petNames' value='"yottzumm2" "group1-petname"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>
@@ -387,7 +387,7 @@ function initialize() {
 	      <fieldValue name='textString' value='"pdelta="'/>
 	      <fieldValue name='parameterScale' value='6.28'/>
 	      <fieldValue name='parameterName' value='pdelta'/>
-	      <fieldValue name='petNames' value='"yottzumm2"'/>
+	      <fieldValue name='petNames' value='"yottzumm2" "group1-petname"'/>
 	      <fieldValue name='shaderNode'>
 		      <ComposedShader USE="x_iteShader"/>
 	      </fieldValue>
