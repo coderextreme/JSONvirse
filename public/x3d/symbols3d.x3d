@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
-<X3D profile='Full' version='4.0'>
+<X3D profile='Immersive' version='4.0'>
 <head>
     	      <component level='1' name='Scripting'/>
 	      <component name='EnvironmentalEffects' level='3'></component>
@@ -10,284 +10,290 @@
 	      <component name='Rendering' level='1'></component>
 	      <component name='Grouping' level='3'></component>
 	      <component name='Core' level='1'></component>
-    <meta content='symbols.x3d' name='title'/>
+    <meta content='symbols3d.x3d' name='title'/>
     <meta content="Tim Climie's 3D symbol puzzle solver" name='description'/>
     <meta content='Tim Climie, John Carlson' name='creator'/>
     <meta content='Oct 3 2024' name='created'/>
+    <meta name='identifier' content='https://raw.githubusercontent.com/coderextreme/JSONverse/refs/heads/main/public/x3d/symbols3d.x3d'/>
+    <meta name='generator' content='vim and X3D-Edit, https://savage.nps.edu/X3D-Edit for validation'/>
+    <meta name="license" content='Web3D Consortium License'/>
 </head>
 <Scene>
-	<!--
-  <LayerSet activeLayer='1' order='1, 2' >
-    <Layer isPickable='true'>
-	-->
-    <Group DEF='AnimationSelectMenu'>
-
-      <ProximitySensor DEF='HudProx' size='50 50 50'/>
-
-      <Transform DEF='HudXform'>
-	      <!--
-      <Transform DEF='HudXform' rotation='0 1 0 0.78' translation='2 1 2'>
-
-        <Transform DEF='Menu' scale="0.2 0.2 0.2" translation='-0.38 0.05 -0.75'> 
-	-->
-        <Transform DEF='Menu' scale="1.2 1.2 1.2" translation='-0.38 0.05 -7.5'>
+    <Viewpoint centerOfRotation='0 0 0' description='Symbols' position='0 0 3.53'/>
+      	<Transform translation="0 0 0">
+	    <Billboard axisOfRotation="0 0 0">
+	      <Group DEF='AnimationSelectMenu'>
 	<Transform translation="2 0.9 0">
-            <TouchSensor DEF='Default_Touch'/>
+            <TouchSensor DEF='colorPicker1'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="1 0 0"/>
+			<Material DEF="menuColor1" diffuseColor="1 0 0"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 0.8 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker2'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="0 1 0"/>
+			<Material DEF="menuColor2" diffuseColor="0 1 0"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 0.7 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker3'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="0 0 1"/>
+			<Material DEF="menuColor3" diffuseColor="0 0 1"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 0.6 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker4'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="1 1 0"/>
+			<Material DEF="menuColor4" diffuseColor="1 1 0"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 0.5 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker5'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="0 1 1"/>
+			<Material DEF="menuColor5" diffuseColor="0 1 1"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 0.4 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker6'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="1 0 1"/>
+			<Material DEF="menuColor6" diffuseColor="1 0 1"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 0.3 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker7'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="1 0.5 0"/>
+			<Material DEF="menuColor7" diffuseColor="1 0.5 0"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 0.2 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker8'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="0.5 0 0.5"/>
+			<Material DEF="menuColor8" diffuseColor="0.5 0 0.5"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 0.1 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker9'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="1 0.75 0.8"/>
+			<Material DEF="menuColor9" diffuseColor="1 0.75 0.8"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 0.0 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker10'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="0.75 1 0"/>
+			<Material DEF="menuColor10" diffuseColor="0.75 1 0"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 -0.1 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker11'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="0 0.5 0.5"/>
+			<Material DEF="menuColor11" diffuseColor="0 0.5 0.5"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 -0.2 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker12'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="0.75 0.5 1"/>
+			<Material DEF="menuColor12" diffuseColor="0.75 0.5 1"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 -0.3 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker13'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="0.6 0.3 0.2"/>
+			<Material DEF="menuColor13" diffuseColor="0.6 0.3 0.2"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 -0.4 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker14'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="0 0.5 0"/>
+			<Material DEF="menuColor14" diffuseColor="0 0.5 0"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 -0.5 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker15'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="0.5 0.75 1"/>
+			<Material DEF="menuColor15" diffuseColor="0.5 0.75 1"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 -0.6 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker16'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="0.5 0 0"/>
+			<Material DEF="menuColor16" diffuseColor="0.5 0 0"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 -0.7 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker17'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="0.5 0.5 0"/>
+			<Material DEF="menuColor17" diffuseColor="0.5 0.5 0"/>
 		</Appearance>
 		</Shape>
 	</Transform>
 
 	<Transform translation="2 -0.8 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='colorPicker18'/>
 		<Shape>
-		<Box size="0.05 0.05 0.05"/>
+		<Box size="0.1 0.1 0.1"/>
 		<Appearance>
-			<Material diffuseColor="0.75 0.75 0.75"/>
+			<Material DEF="menuColor18" diffuseColor="0.75 0.75 0.75"/>
 		</Appearance>
 		</Shape>
 	</Transform>
+	<!--
        <ROUTE fromField='position_changed' fromNode='HudProx' toField='set_translation' toNode='HudXform'/>
        <ROUTE fromField='orientation_changed' fromNode='HudProx' toField='set_rotation' toNode='HudXform'/>
-       </Transform>
-       </Transform>
+	-->
        </Group>
-	<!--
-	</Layer>
+	    </Billboard>
+	</Transform>
 
-    <Layer isPickable='true'>
-		    -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	<Transform scale="0.15 0.58 0.15" translation="0 0.70 0" rotation="0 0 1 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry1'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="1 0 0"/>
+			<Material DEF="color1" diffuseColor="1 0 0"/>
 		</Appearance>
 		<Cylinder>
 		</Cylinder>
 		</Shape>
-		<!--
-		<ROUTE fromNode="colorPickerColor" fromField="diffuseColor" toNode="color1" toField="diffuseColor"/>
-			-->
 	</Transform>
 	<Transform scale="0.15 0.58 0.15" translation="0.70 0 0" rotation="0 0 1 1.57">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry2'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="0 1 0"/>
+			<Material DEF="color2" diffuseColor="0 1 0"/>
 		</Appearance>
 		<Cylinder>
 		</Cylinder>
 		</Shape>
 	</Transform>
 	<Transform scale="0.15 0.58 0.15" translation="0 -0.70 0" rotation="0 0 1 3.14">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry3'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="0 0 1"/>
+			<Material DEF="color3" diffuseColor="0 0 1"/>
 		</Appearance>
 		<Cylinder>
 		</Cylinder>
 		</Shape>
 	</Transform>
 	<Transform scale="0.15 0.58 0.15" translation="-0.70 0 0" rotation="0 0 1 4.71">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry4'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="1 1 0"/>
+			<Material DEF="color4" diffuseColor="1 1 0"/>
 		</Appearance>
 		<Cylinder>
 		</Cylinder>
 		</Shape>
 	</Transform>
 	<Transform scale="0.15 0.58 0.15" translation="0 0 0.70" rotation="1 0 0 1.57">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry5'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="0 1 1"/>
+			<Material DEF="color5" diffuseColor="0 1 1"/>
 		</Appearance>
 		<Cylinder>
 		</Cylinder>
 		</Shape>
 	</Transform>
 	<Transform scale="0.15 0.58 0.15" translation="0 0 -0.70" rotation="1 0 0 4.71">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry6'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="1 0 1"/>
+			<Material DEF="color6" diffuseColor="1 0 1"/>
 		</Appearance>
 		<Cylinder>
 		</Cylinder>
 		</Shape>
 	</Transform>
 	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry7'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="1 0.5 0"/>
+			<Material DEF="color7" diffuseColor="1 0.5 0"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='2 0 0 1.85 0 0.77 1.41 0 1.41 0.77 0 1.85 0 0 2'>
@@ -295,10 +301,10 @@
         	</Shape>
 	</Transform>
 	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry8'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="0.5 0 0.5"/>
+			<Material DEF="color8" diffuseColor="0.5 0 0.5"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='0 0 2 -0.77 0 1.85 -1.41 0 1.41 -1.85 0 0.77 -2 0 0'>
@@ -306,10 +312,10 @@
         	</Shape>
 	</Transform>
 	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry9'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="1 0.75 0.8"/>
+			<Material DEF="color9" diffuseColor="1 0.75 0.8"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='-2 0 0 -1.85 0 -0.77 -1.41 0 -1.41 -0.77 0 -1.85 0 0 -2'>
@@ -317,10 +323,10 @@
         	</Shape>
 	</Transform>
 	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 0">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry10'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="0.75 1 0"/>
+			<Material DEF="color10" diffuseColor="0.75 1 0"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='0 0 -2 0.77 0 -1.85 1.41 0 -1.41 1.85 0 -0.77 2 0 0'>
@@ -328,10 +334,10 @@
         	</Shape>
 	</Transform>
 	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 1.57">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry11'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="0 0.5 0.5"/>
+			<Material DEF="color11" diffuseColor="0 0.5 0.5"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='2 0 0 1.85 0 0.77 1.41 0 1.41 0.77 0 1.85 0 0 2'>
@@ -339,10 +345,10 @@
         	</Shape>
 	</Transform>
 	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 1.57">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry12'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="0.75 0.5 1"/>
+			<Material DEF="color12" diffuseColor="0.75 0.5 1"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='0 0 2 -0.77 0 1.85 -1.41 0 1.41 -1.85 0 0.77 -2 0 0'>
@@ -350,10 +356,10 @@
         	</Shape>
 	</Transform>
 	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 1.57">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry13'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="0.6 0.3 0.2"/>
+			<Material DEF="color13" diffuseColor="0.6 0.3 0.2"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='-2 0 0 -1.85 0 -0.77 -1.41 0 -1.41 -0.77 0 -1.85 0 0 -2'>
@@ -361,10 +367,10 @@
         	</Shape>
 	</Transform>
 	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 1.57">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry14'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="0 0.5 0"/>
+			<Material DEF="color14" diffuseColor="0 0.5 0"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='0 0 -2 0.77 0 -1.85 1.41 0 -1.41 1.85 0 -0.77 2 0 0'>
@@ -372,10 +378,10 @@
         	</Shape>
 	</Transform>
 	<Transform scale="0.57 0.57 0.57" rotation="0 0 1 1.57">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry15'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="0.5 0.75 1"/>
+			<Material DEF="color15" diffuseColor="0.5 0.75 1"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='2 0 0 1.85 0 0.77 1.41 0 1.41 0.77 0 1.85 0 0 2'>
@@ -383,10 +389,10 @@
         	</Shape>
 	</Transform>
 	<Transform scale="0.57 0.57 0.57" rotation="0 0 1 1.57">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry16'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="0.5 0 0"/>
+			<Material DEF="color16" diffuseColor="0.5 0 0"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='0 0 2 -0.77 0 1.85 -1.41 0 1.41 -1.85 0 0.77 -2 0 0'>
@@ -394,10 +400,10 @@
         	</Shape>
 	</Transform>
 	<Transform scale="0.57 0.57 0.57" rotation="0 0 1 1.57">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry17'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="0.5 0.5 0"/>
+			<Material DEF="color17" diffuseColor="0.5 0.5 0"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='-2 0 0 -1.85 0 -0.77 -1.41 0 -1.41 -0.77 0 -1.85 0 0 -2'>
@@ -405,19 +411,387 @@
         	</Shape>
 	</Transform>
 	<Transform scale="0.57 0.57 0.57" rotation="0 0 1 1.57">
-            <TouchSensor USE='Default_Touch'/>
+            <TouchSensor DEF='geometry18'/>
 		<Shape>
 		<Appearance>
-			<Material diffuseColor="0.75 0.75 0.75"/>
+			<Material DEF="color18" diffuseColor="0.75 0.75 0.75"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='0 0 -2 0.77 0 -1.85 1.41 0 -1.41 1.85 0 -0.77 2 0 0'>
  		</Extrusion>
         	</Shape>
 	</Transform>
-	<!--
-	</Layer>
-	</LayerSet>
+	<!-- NOTES
+	Clicking on geometry gets the script color and applies it to diffuse geometry
+	Clicking on the menu sets the script color
 	-->
+    <Script DEF='ColorPickerScript'>
+      <field accessType='inputOutput' name='color' type='SFColor' value="1 1 1"/>
+      <field accessType='inputOnly' name='color1Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color2Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color3Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color4Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color5Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color6Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color7Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color8Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color9Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color10Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color11Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color12Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color13Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color14Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color15Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color16Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color17Picked' type='SFBool'/>
+      <field accessType='inputOnly' name='color18Picked' type='SFBool'/>
+      <![CDATA[ecmascript:
+	      function initalize() {
+	      	  color = new SFColor(1, 1, 1);
+	      }
+	      function color1Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(1, 0, 0);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color2Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(0, 1, 0);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color3Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(0, 0, 1);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color4Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(1, 1, 0);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color5Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(0, 1, 1);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color6Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(1, 0, 1);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color7Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(1, 0.5, 0);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color8Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(0.5, 0, 0.5);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color9Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(1, 0.75, 0.8);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color10Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(0.75, 1, 0);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color11Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(0, 0.5, 0.5);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color12Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(0.75, 0.5, 1);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color13Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(0.6, 0.3, 0.2);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color14Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(0, 0.5, 0);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color15Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(0.5, 0.75, 1);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color16Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(0.5, 0, 0);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color17Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(0.5, 0.5, 0);
+	      	  Browser.print(color);
+	        }
+	      }
+	      function color18Picked(value) {
+	        if (value) {
+	      	  color = new SFColor(0.75, 0.75, 0.75);
+	      	  Browser.print(color);
+	        }
+	      }
+      ]]>
+    </Script>
+    <Shape>
+      <Appearance>
+        <Material DEF='SelectedColor' diffuseColor="1 1 1"/>
+      </Appearance>
+      <Box size="0 0 0"/>
+    </Shape>
+
+    <ROUTE fromNode='colorPicker1' fromField='isActive' toNode='ColorPickerScript' toField='color1Picked'/>
+    <ROUTE fromNode='colorPicker2' fromField='isActive' toNode='ColorPickerScript' toField='color2Picked'/>
+    <ROUTE fromNode='colorPicker3' fromField='isActive' toNode='ColorPickerScript' toField='color3Picked'/>
+    <ROUTE fromNode='colorPicker4' fromField='isActive' toNode='ColorPickerScript' toField='color4Picked'/>
+    <ROUTE fromNode='colorPicker5' fromField='isActive' toNode='ColorPickerScript' toField='color5Picked'/>
+    <ROUTE fromNode='colorPicker6' fromField='isActive' toNode='ColorPickerScript' toField='color6Picked'/>
+    <ROUTE fromNode='colorPicker7' fromField='isActive' toNode='ColorPickerScript' toField='color7Picked'/>
+    <ROUTE fromNode='colorPicker8' fromField='isActive' toNode='ColorPickerScript' toField='color8Picked'/>
+    <ROUTE fromNode='colorPicker9' fromField='isActive' toNode='ColorPickerScript' toField='color9Picked'/>
+    <ROUTE fromNode='colorPicker10' fromField='isActive' toNode='ColorPickerScript' toField='color10Picked'/>
+    <ROUTE fromNode='colorPicker11' fromField='isActive' toNode='ColorPickerScript' toField='color11Picked'/>
+    <ROUTE fromNode='colorPicker12' fromField='isActive' toNode='ColorPickerScript' toField='color12Picked'/>
+    <ROUTE fromNode='colorPicker13' fromField='isActive' toNode='ColorPickerScript' toField='color13Picked'/>
+    <ROUTE fromNode='colorPicker14' fromField='isActive' toNode='ColorPickerScript' toField='color14Picked'/>
+    <ROUTE fromNode='colorPicker15' fromField='isActive' toNode='ColorPickerScript' toField='color15Picked'/>
+    <ROUTE fromNode='colorPicker16' fromField='isActive' toNode='ColorPickerScript' toField='color16Picked'/>
+    <ROUTE fromNode='colorPicker17' fromField='isActive' toNode='ColorPickerScript' toField='color17Picked'/>
+    <ROUTE fromNode='colorPicker18' fromField='isActive' toNode='ColorPickerScript' toField='color18Picked'/>
+
+<Script DEF='GeometryColorScript'>
+  <field accessType='inputOnly' name='geometry1Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry2Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry3Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry4Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry5Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry6Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry7Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry8Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry9Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry10Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry11Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry12Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry13Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry14Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry15Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry16Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry17Touched' type='SFBool'/>
+  <field accessType='inputOnly' name='geometry18Touched' type='SFBool'/>
+
+  <field accessType='inputOnly' name='selectedColor' type='SFColor'/>
+
+  <field accessType='outputOnly' name='setGeometry1Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry2Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry3Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry4Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry5Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry6Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry7Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry8Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry9Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry10Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry11Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry12Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry13Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry14Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry15Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry16Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry17Color' type='SFColor'/>
+  <field accessType='outputOnly' name='setGeometry18Color' type='SFColor'/>
+
+  <![CDATA[ecmascript:
+  var currentSelectedColor;
+
+  function initialize() {
+    currentSelectedColor = new SFColor(1, 1, 1);
+  }
+
+  function geometry1Touched(value) {
+    if (value) {
+      setGeometry1Color = currentSelectedColor;
+    }
+  }
+
+  function geometry1Touched(value) {
+    if (value) {
+      setGeometry1Color = currentSelectedColor;
+    }
+  }
+
+  function geometry2Touched(value) {
+    if (value) {
+      setGeometry2Color = currentSelectedColor;
+    }
+  }
+
+  function geometry3Touched(value) {
+    if (value) {
+      setGeometry3Color = currentSelectedColor;
+    }
+  }
+
+  function geometry4Touched(value) {
+    if (value) {
+      setGeometry4Color = currentSelectedColor;
+    }
+  }
+
+  function geometry5Touched(value) {
+    if (value) {
+      setGeometry5Color = currentSelectedColor;
+    }
+  }
+
+  function geometry6Touched(value) {
+    if (value) {
+      setGeometry6Color = currentSelectedColor;
+    }
+  }
+
+  function geometry7Touched(value) {
+    if (value) {
+      setGeometry7Color = currentSelectedColor;
+    }
+  }
+
+  function geometry8Touched(value) {
+    if (value) {
+      setGeometry8Color = currentSelectedColor;
+    }
+  }
+
+  function geometry9Touched(value) {
+    if (value) {
+      setGeometry9Color = currentSelectedColor;
+    }
+  }
+
+  function geometry10Touched(value) {
+    if (value) {
+      setGeometry10Color = currentSelectedColor;
+    }
+  }
+
+  function geometry11Touched(value) {
+    if (value) {
+      setGeometry11Color = currentSelectedColor;
+    }
+  }
+
+  function geometry12Touched(value) {
+    if (value) {
+      setGeometry12Color = currentSelectedColor;
+    }
+  }
+
+  function geometry13Touched(value) {
+    if (value) {
+      setGeometry13Color = currentSelectedColor;
+    }
+  }
+
+  function geometry14Touched(value) {
+    if (value) {
+      setGeometry14Color = currentSelectedColor;
+    }
+  }
+
+  function geometry15Touched(value) {
+    if (value) {
+      setGeometry15Color = currentSelectedColor;
+    }
+  }
+
+  function geometry16Touched(value) {
+    if (value) {
+      setGeometry16Color = currentSelectedColor;
+    }
+  }
+
+  function geometry17Touched(value) {
+    if (value) {
+      setGeometry17Color = currentSelectedColor;
+    }
+  }
+
+  function geometry18Touched(value) {
+    if (value) {
+      setGeometry18Color = currentSelectedColor;
+    }
+  }
+
+  function selectedColor(value) {
+    currentSelectedColor = value;
+  }
+
+  ]]>
+</Script>
+
+<ROUTE fromNode='ColorPickerScript' fromField='color' toNode='GeometryColorScript' toField='selectedColor'/>
+
+<ROUTE fromNode='geometry1' fromField='isActive' toNode='GeometryColorScript' toField='geometry1Touched'/>
+<ROUTE fromNode='geometry2' fromField='isActive' toNode='GeometryColorScript' toField='geometry2Touched'/>
+<ROUTE fromNode='geometry3' fromField='isActive' toNode='GeometryColorScript' toField='geometry3Touched'/>
+<ROUTE fromNode='geometry4' fromField='isActive' toNode='GeometryColorScript' toField='geometry4Touched'/>
+<ROUTE fromNode='geometry5' fromField='isActive' toNode='GeometryColorScript' toField='geometry5Touched'/>
+<ROUTE fromNode='geometry6' fromField='isActive' toNode='GeometryColorScript' toField='geometry6Touched'/>
+<ROUTE fromNode='geometry7' fromField='isActive' toNode='GeometryColorScript' toField='geometry7Touched'/>
+<ROUTE fromNode='geometry8' fromField='isActive' toNode='GeometryColorScript' toField='geometry8Touched'/>
+<ROUTE fromNode='geometry9' fromField='isActive' toNode='GeometryColorScript' toField='geometry9Touched'/>
+<ROUTE fromNode='geometry10' fromField='isActive' toNode='GeometryColorScript' toField='geometry10Touched'/>
+<ROUTE fromNode='geometry11' fromField='isActive' toNode='GeometryColorScript' toField='geometry11Touched'/>
+<ROUTE fromNode='geometry12' fromField='isActive' toNode='GeometryColorScript' toField='geometry12Touched'/>
+<ROUTE fromNode='geometry13' fromField='isActive' toNode='GeometryColorScript' toField='geometry13Touched'/>
+<ROUTE fromNode='geometry14' fromField='isActive' toNode='GeometryColorScript' toField='geometry14Touched'/>
+<ROUTE fromNode='geometry15' fromField='isActive' toNode='GeometryColorScript' toField='geometry15Touched'/>
+<ROUTE fromNode='geometry16' fromField='isActive' toNode='GeometryColorScript' toField='geometry16Touched'/>
+<ROUTE fromNode='geometry17' fromField='isActive' toNode='GeometryColorScript' toField='geometry17Touched'/>
+<ROUTE fromNode='geometry18' fromField='isActive' toNode='GeometryColorScript' toField='geometry18Touched'/>
+
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry1Color' toNode='color1' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry2Color' toNode='color2' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry3Color' toNode='color3' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry4Color' toNode='color4' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry5Color' toNode='color5' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry6Color' toNode='color6' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry7Color' toNode='color7' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry8Color' toNode='color8' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry9Color' toNode='color9' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry10Color' toNode='color10' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry11Color' toNode='color11' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry12Color' toNode='color12' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry13Color' toNode='color13' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry14Color' toNode='color14' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry15Color' toNode='color15' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry16Color' toNode='color16' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry17Color' toNode='color17' toField='diffuseColor'/>
+<ROUTE fromNode='GeometryColorScript' fromField='setGeometry18Color' toNode='color18' toField='diffuseColor'/>
 </Scene>
 </X3D>
