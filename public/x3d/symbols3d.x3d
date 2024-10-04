@@ -304,6 +304,8 @@
 			spine='0 0 2 -0.77 0 1.85 -1.41 0 1.41 -1.85 0 0.77 -2 0 0'>
  		</Extrusion>
         	</Shape>
+	</Transform>
+	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 0">
             <TouchSensor USE='Default_Touch'/>
 		<Shape>
 		<Appearance>
@@ -313,6 +315,8 @@
 			spine='-2 0 0 -1.85 0 -0.77 -1.41 0 -1.41 -0.77 0 -1.85 0 0 -2'>
  		</Extrusion>
         	</Shape>
+	</Transform>
+	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 0">
             <TouchSensor USE='Default_Touch'/>
 		<Shape>
 		<Appearance>
@@ -333,6 +337,8 @@
 			spine='2 0 0 1.85 0 0.77 1.41 0 1.41 0.77 0 1.85 0 0 2'>
  		</Extrusion>
         	</Shape>
+	</Transform>
+	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 1.57">
             <TouchSensor USE='Default_Touch'/>
 		<Shape>
 		<Appearance>
@@ -342,6 +348,8 @@
 			spine='0 0 2 -0.77 0 1.85 -1.41 0 1.41 -1.85 0 0.77 -2 0 0'>
  		</Extrusion>
         	</Shape>
+	</Transform>
+	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 1.57">
             <TouchSensor USE='Default_Touch'/>
 		<Shape>
 		<Appearance>
@@ -351,6 +359,8 @@
 			spine='-2 0 0 -1.85 0 -0.77 -1.41 0 -1.41 -0.77 0 -1.85 0 0 -2'>
  		</Extrusion>
         	</Shape>
+	</Transform>
+	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 1.57">
             <TouchSensor USE='Default_Touch'/>
 		<Shape>
 		<Appearance>
@@ -371,6 +381,8 @@
 			spine='2 0 0 1.85 0 0.77 1.41 0 1.41 0.77 0 1.85 0 0 2'>
  		</Extrusion>
         	</Shape>
+	</Transform>
+	<Transform scale="0.57 0.57 0.57" rotation="0 0 1 1.57">
             <TouchSensor USE='Default_Touch'/>
 		<Shape>
 		<Appearance>
@@ -380,6 +392,8 @@
 			spine='0 0 2 -0.77 0 1.85 -1.41 0 1.41 -1.85 0 0.77 -2 0 0'>
  		</Extrusion>
         	</Shape>
+	</Transform>
+	<Transform scale="0.57 0.57 0.57" rotation="0 0 1 1.57">
             <TouchSensor USE='Default_Touch'/>
 		<Shape>
 		<Appearance>
@@ -389,6 +403,8 @@
 			spine='-2 0 0 -1.85 0 -0.77 -1.41 0 -1.41 -0.77 0 -1.85 0 0 -2'>
  		</Extrusion>
         	</Shape>
+	</Transform>
+	<Transform scale="0.57 0.57 0.57" rotation="0 0 1 1.57">
             <TouchSensor USE='Default_Touch'/>
 		<Shape>
 		<Appearance>
