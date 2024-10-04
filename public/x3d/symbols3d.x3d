@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Full' version='4.0'>
+<head>
+    	      <component level='1' name='Scripting'/>
+	      <component name='EnvironmentalEffects' level='3'></component>
+	      <component name='Shaders' level='1'></component>
+	      <component name='CubeMapTexturing' level='1'></component>
+	      <component name='Texturing' level='1'></component>
+	      <component name='Rendering' level='1'></component>
+	      <component name='Grouping' level='3'></component>
+	      <component name='Core' level='1'></component>
+    <meta content='symbols.x3d' name='title'/>
+    <meta content="Tim Climie's 3D symbol puzzle solver" name='description'/>
+    <meta content='Tim Climie, John Carlson' name='creator'/>
+    <meta content='Oct 3 2024' name='created'/>
+</head>
+<Scene>
+	<!--
+  <LayerSet activeLayer='1' order='1, 2' >
+    <Layer isPickable='true'>
+	-->
+    <Group DEF='AnimationSelectMenu'>
+
+      <ProximitySensor DEF='HudProx' size='50 50 50'/>
+
+      <Transform DEF='HudXform'>
+	      <!--
+      <Transform DEF='HudXform' rotation='0 1 0 0.78' translation='2 1 2'>
+
+        <Transform DEF='Menu' scale="0.2 0.2 0.2" translation='-0.38 0.05 -0.75'> 
+	-->
+        <Transform DEF='Menu' scale="1.2 1.2 1.2" translation='-0.38 0.05 -7.5'>
+	<Transform translation="2 0.9 0">
+            <TouchSensor DEF='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="1 0 0"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 0.8 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="0 1 0"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 0.7 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="0 0 1"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 0.6 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="1 1 0"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 0.5 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="0 1 1"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 0.4 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="1 0 1"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 0.3 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="1 0.5 0"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 0.2 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="0.5 0 0.5"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 0.1 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="1 0.75 0.8"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 0.0 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="0.75 1 0"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 -0.1 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="0 0.5 0.5"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 -0.2 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="0.75 0.5 1"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 -0.3 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="0.6 0.3 0.2"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 -0.4 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="0 0.5 0"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 -0.5 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="0.5 0.75 1"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 -0.6 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="0.5 0 0"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 -0.7 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="0.5 0.5 0"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+
+	<Transform translation="2 -0.8 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Box size="0.05 0.05 0.05"/>
+		<Appearance>
+			<Material diffuseColor="0.75 0.75 0.75"/>
+		</Appearance>
+		</Shape>
+	</Transform>
+       <ROUTE fromField='position_changed' fromNode='HudProx' toField='set_translation' toNode='HudXform'/>
+       <ROUTE fromField='orientation_changed' fromNode='HudProx' toField='set_rotation' toNode='HudXform'/>
+       </Transform>
+       </Transform>
+       </Group>
+	<!--
+	</Layer>
+
+    <Layer isPickable='true'>
+		    -->
+	<Transform scale="0.15 0.58 0.15" translation="0 0.70 0" rotation="0 0 1 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="1 0 0"/>
+		</Appearance>
+		<Cylinder>
+		</Cylinder>
+		</Shape>
+		<!--
+		<ROUTE fromNode="colorPickerColor" fromField="diffuseColor" toNode="color1" toField="diffuseColor"/>
+			-->
+	</Transform>
+	<Transform scale="0.15 0.58 0.15" translation="0.70 0 0" rotation="0 0 1 1.57">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="0 1 0"/>
+		</Appearance>
+		<Cylinder>
+		</Cylinder>
+		</Shape>
+	</Transform>
+	<Transform scale="0.15 0.58 0.15" translation="0 -0.70 0" rotation="0 0 1 3.14">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="0 0 1"/>
+		</Appearance>
+		<Cylinder>
+		</Cylinder>
+		</Shape>
+	</Transform>
+	<Transform scale="0.15 0.58 0.15" translation="-0.70 0 0" rotation="0 0 1 4.71">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="1 1 0"/>
+		</Appearance>
+		<Cylinder>
+		</Cylinder>
+		</Shape>
+	</Transform>
+	<Transform scale="0.15 0.58 0.15" translation="0 0 0.70" rotation="1 0 0 1.57">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="0 1 1"/>
+		</Appearance>
+		<Cylinder>
+		</Cylinder>
+		</Shape>
+	</Transform>
+	<Transform scale="0.15 0.58 0.15" translation="0 0 -0.70" rotation="1 0 0 4.71">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="1 0 1"/>
+		</Appearance>
+		<Cylinder>
+		</Cylinder>
+		</Shape>
+	</Transform>
+	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="1 0.5 0"/>
+		</Appearance>
+		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
+			spine='2 0 0 1.85 0 0.77 1.41 0 1.41 0.77 0 1.85 0 0 2'>
+ 		</Extrusion>
+        	</Shape>
+	</Transform>
+	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 0">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="0.5 0 0.5"/>
+		</Appearance>
+		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
+			spine='0 0 2 -0.77 0 1.85 -1.41 0 1.41 -1.85 0 0.77 -2 0 0'>
+ 		</Extrusion>
+        	</Shape>
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="1 0.75 0.8"/>
+		</Appearance>
+		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
+			spine='-2 0 0 -1.85 0 -0.77 -1.41 0 -1.41 -0.77 0 -1.85 0 0 -2'>
+ 		</Extrusion>
+        	</Shape>
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="0.75 1 0"/>
+		</Appearance>
+		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
+			spine='0 0 -2 0.77 0 -1.85 1.41 0 -1.41 1.85 0 -0.77 2 0 0'>
+ 		</Extrusion>
+        	</Shape>
+	</Transform>
+	<Transform scale="0.57 0.57 0.57" rotation="1 0 0 1.57">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="0 0.5 0.5"/>
+		</Appearance>
+		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
+			spine='2 0 0 1.85 0 0.77 1.41 0 1.41 0.77 0 1.85 0 0 2'>
+ 		</Extrusion>
+        	</Shape>
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="0.75 0.5 1"/>
+		</Appearance>
+		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
+			spine='0 0 2 -0.77 0 1.85 -1.41 0 1.41 -1.85 0 0.77 -2 0 0'>
+ 		</Extrusion>
+        	</Shape>
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="0.6 0.3 0.2"/>
+		</Appearance>
+		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
+			spine='-2 0 0 -1.85 0 -0.77 -1.41 0 -1.41 -0.77 0 -1.85 0 0 -2'>
+ 		</Extrusion>
+        	</Shape>
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="0 0.5 0"/>
+		</Appearance>
+		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
+			spine='0 0 -2 0.77 0 -1.85 1.41 0 -1.41 1.85 0 -0.77 2 0 0'>
+ 		</Extrusion>
+        	</Shape>
+	</Transform>
+	<Transform scale="0.57 0.57 0.57" rotation="0 0 1 1.57">
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="0.5 0.75 1"/>
+		</Appearance>
+		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
+			spine='2 0 0 1.85 0 0.77 1.41 0 1.41 0.77 0 1.85 0 0 2'>
+ 		</Extrusion>
+        	</Shape>
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="0.5 0 0"/>
+		</Appearance>
+		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
+			spine='0 0 2 -0.77 0 1.85 -1.41 0 1.41 -1.85 0 0.77 -2 0 0'>
+ 		</Extrusion>
+        	</Shape>
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="0.5 0.5 0"/>
+		</Appearance>
+		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
+			spine='-2 0 0 -1.85 0 -0.77 -1.41 0 -1.41 -0.77 0 -1.85 0 0 -2'>
+ 		</Extrusion>
+        	</Shape>
+            <TouchSensor USE='Default_Touch'/>
+		<Shape>
+		<Appearance>
+			<Material diffuseColor="0.75 0.75 0.75"/>
+		</Appearance>
+		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
+			spine='0 0 -2 0.77 0 -1.85 1.41 0 -1.41 1.85 0 -0.77 2 0 0'>
+ 		</Extrusion>
+        	</Shape>
+	</Transform>
+	<!--
+	</Layer>
+	</LayerSet>
+	-->
+</Scene>
+</X3D>
