@@ -2,14 +2,17 @@
 <html>
   <head>
 	<title>Tim Climie's 3D Symbols</title>
-    <link rel="stylesheet" href="stylesheets/symbol.css" />
-    <script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/x_ite@10.5.1/dist/x_ite.min.js"></script>
-<style>
-x3d-canvas { width: 1000px; height: 500px}
-</style>
+	<script defer src="https://cdn.jsdelivr.net/npm/x_ite@10.5.5/dist/x_ite.min.js"></script>
+        <script defer type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script defer src="javascripts/tim3.js"></script>
+	<style>
+	x3d-canvas { width: 1000px; height: 500px}
+	.networkAware {}
+	</style>
   </head>
   <body>
     <x3d-canvas url='"x3d/symbols3d.x3d"'>
     </x3d-canvas>
+    <div id="symbols"></div>
   </body>
 </html>

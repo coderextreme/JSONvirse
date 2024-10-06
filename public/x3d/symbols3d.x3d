@@ -19,7 +19,9 @@
     <meta name="license" content='Web3D Consortium License'/>
 </head>
 <Scene>
+	<!--
     <Viewpoint centerOfRotation='0 0 0' description='Symbols' position='0 0 3.53'/>
+	-->
       	<Transform translation="0 0 0">
 	    <Billboard axisOfRotation="0 0 0">
 	      <Group DEF='AnimationSelectMenu'>
@@ -233,27 +235,27 @@
             <TouchSensor DEF='geometry1'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color1" diffuseColor="1 0 0"/>
-		</Appearance>
-		<Cylinder>
-		</Cylinder>
-		</Shape>
-	</Transform>
-	<Transform scale="0.15 0.58 0.15" translation="0.70 0 0" rotation="0 0 1 1.57">
-            <TouchSensor DEF='geometry2'/>
-		<Shape>
-		<Appearance>
-			<Material DEF="color2" diffuseColor="0 1 0"/>
+			<Material class="networkAware" id="color1" DEF="color1" diffuseColor="1 0 0"/>
 		</Appearance>
 		<Cylinder>
 		</Cylinder>
 		</Shape>
 	</Transform>
 	<Transform scale="0.15 0.58 0.15" translation="0 -0.70 0" rotation="0 0 1 3.14">
+            <TouchSensor DEF='geometry2'/>
+		<Shape>
+		<Appearance>
+			<Material class="networkAware" id="color2" DEF="color2" diffuseColor="0 0 1"/>
+		</Appearance>
+		<Cylinder>
+		</Cylinder>
+		</Shape>
+	</Transform>
+	<Transform scale="0.15 0.58 0.15" translation="0.70 0 0" rotation="0 0 1 1.57">
             <TouchSensor DEF='geometry3'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color3" diffuseColor="0 0 1"/>
+			<Material class="networkAware" id="color3" DEF="color3" diffuseColor="0 1 0"/>
 		</Appearance>
 		<Cylinder>
 		</Cylinder>
@@ -263,7 +265,7 @@
             <TouchSensor DEF='geometry4'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color4" diffuseColor="1 1 0"/>
+			<Material class="networkAware" id="color4" DEF="color4" diffuseColor="1 1 0"/>
 		</Appearance>
 		<Cylinder>
 		</Cylinder>
@@ -273,7 +275,7 @@
             <TouchSensor DEF='geometry5'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color5" diffuseColor="0 1 1"/>
+			<Material class="networkAware" id="color5" DEF="color5" diffuseColor="0 1 1"/>
 		</Appearance>
 		<Cylinder>
 		</Cylinder>
@@ -283,7 +285,7 @@
             <TouchSensor DEF='geometry6'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color6" diffuseColor="1 0 1"/>
+			<Material class="networkAware" id="color6" DEF="color6" diffuseColor="1 0 1"/>
 		</Appearance>
 		<Cylinder>
 		</Cylinder>
@@ -293,7 +295,7 @@
             <TouchSensor DEF='geometry7'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color7" diffuseColor="1 0.5 0"/>
+			<Material class="networkAware" id="color7" DEF="color7" diffuseColor="1 0.5 0"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='2 0 0 1.85 0 0.77 1.41 0 1.41 0.77 0 1.85 0 0 2'>
@@ -304,7 +306,7 @@
             <TouchSensor DEF='geometry8'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color8" diffuseColor="0.5 0 0.5"/>
+			<Material class="networkAware" id="color8" DEF="color8" diffuseColor="0.5 0 0.5"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='0 0 2 -0.77 0 1.85 -1.41 0 1.41 -1.85 0 0.77 -2 0 0'>
@@ -315,7 +317,7 @@
             <TouchSensor DEF='geometry9'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color9" diffuseColor="1 0.75 0.8"/>
+			<Material class="networkAware" id="color9" DEF="color9" diffuseColor="1 0.75 0.8"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='-2 0 0 -1.85 0 -0.77 -1.41 0 -1.41 -0.77 0 -1.85 0 0 -2'>
@@ -326,7 +328,7 @@
             <TouchSensor DEF='geometry10'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color10" diffuseColor="0.75 1 0"/>
+			<Material class="networkAware" id="color10" DEF="color10" diffuseColor="0.75 1 0"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='0 0 -2 0.77 0 -1.85 1.41 0 -1.41 1.85 0 -0.77 2 0 0'>
@@ -337,7 +339,7 @@
             <TouchSensor DEF='geometry11'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color11" diffuseColor="0 0.5 0.5"/>
+			<Material class="networkAware" id="color11" DEF="color11" diffuseColor="0 0.5 0.5"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='2 0 0 1.85 0 0.77 1.41 0 1.41 0.77 0 1.85 0 0 2'>
@@ -348,7 +350,7 @@
             <TouchSensor DEF='geometry12'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color12" diffuseColor="0.75 0.5 1"/>
+			<Material class="networkAware" id="color12" DEF="color12" diffuseColor="0.75 0.5 1"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='0 0 2 -0.77 0 1.85 -1.41 0 1.41 -1.85 0 0.77 -2 0 0'>
@@ -359,7 +361,7 @@
             <TouchSensor DEF='geometry13'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color13" diffuseColor="0.6 0.3 0.2"/>
+			<Material class="networkAware" id="color13" DEF="color13" diffuseColor="0.6 0.3 0.2"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='-2 0 0 -1.85 0 -0.77 -1.41 0 -1.41 -0.77 0 -1.85 0 0 -2'>
@@ -370,7 +372,7 @@
             <TouchSensor DEF='geometry14'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color14" diffuseColor="0 0.5 0"/>
+			<Material class="networkAware" id="color14" DEF="color14" diffuseColor="0 0.5 0"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='0 0 -2 0.77 0 -1.85 1.41 0 -1.41 1.85 0 -0.77 2 0 0'>
@@ -381,7 +383,7 @@
             <TouchSensor DEF='geometry15'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color15" diffuseColor="0.5 0.75 1"/>
+			<Material class="networkAware" id="color15" DEF="color15" diffuseColor="0.5 0.75 1"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='2 0 0 1.85 0 0.77 1.41 0 1.41 0.77 0 1.85 0 0 2'>
@@ -392,7 +394,7 @@
             <TouchSensor DEF='geometry16'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color16" diffuseColor="0.5 0 0"/>
+			<Material class="networkAware" id="color16" DEF="color16" diffuseColor="0.5 0 0"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='0 0 2 -0.77 0 1.85 -1.41 0 1.41 -1.85 0 0.77 -2 0 0'>
@@ -403,7 +405,7 @@
             <TouchSensor DEF='geometry17'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color17" diffuseColor="0.5 0.5 0"/>
+			<Material class="networkAware" id="color17" DEF="color17" diffuseColor="0.5 0.5 0"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='-2 0 0 -1.85 0 -0.77 -1.41 0 -1.41 -0.77 0 -1.85 0 0 -2'>
@@ -414,7 +416,7 @@
             <TouchSensor DEF='geometry18'/>
 		<Shape>
 		<Appearance>
-			<Material DEF="color18" diffuseColor="0.75 0.75 0.75"/>
+			<Material class="networkAware" id="color18" DEF="color18" diffuseColor="0.75 0.75 0.75"/>
 		</Appearance>
 		<Extrusion beginCap='true' creaseAngle='3.14' crossSection='0.33 0 0.307 -0.127 0.237 -0.237 0.127 -0.307 0 -0.33 -0.127 -0.307 -0.237 -0.237 -0.307 -0.127 -0.33 -0 -0.307 0.127 -0.237 0.237 -0.127 0.307 0 0.33 0.127 0.307 0.237 0.237 0.307 0.127 0.33 0' endCap='true'
 			spine='0 0 -2 0.77 0 -1.85 1.41 0 -1.41 1.85 0 -0.77 2 0 0'>
@@ -452,109 +454,91 @@
 	      function color1Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(1, 0, 0);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color2Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(0, 1, 0);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color3Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(0, 0, 1);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color4Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(1, 1, 0);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color5Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(0, 1, 1);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color6Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(1, 0, 1);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color7Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(1, 0.5, 0);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color8Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(0.5, 0, 0.5);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color9Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(1, 0.75, 0.8);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color10Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(0.75, 1, 0);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color11Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(0, 0.5, 0.5);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color12Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(0.75, 0.5, 1);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color13Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(0.6, 0.3, 0.2);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color14Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(0, 0.5, 0);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color15Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(0.5, 0.75, 1);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color16Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(0.5, 0, 0);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color17Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(0.5, 0.5, 0);
-	      	  Browser.print(color);
 	        }
 	      }
 	      function color18Picked(value) {
 	        if (value) {
 	      	  color = new SFColor(0.75, 0.75, 0.75);
-	      	  Browser.print(color);
 	        }
 	      }
       ]]>
@@ -627,124 +611,209 @@
   <field accessType='outputOnly' name='setGeometry18Color' type='SFColor'/>
 
   <![CDATA[ecmascript:
-  var currentSelectedColor;
+let currentSelectedColor;
+  function plotPlane(bits, offset, rgb, jackbits) {
+	  let jack = bits & jackbits & 0b111111;
+	  let torus = (bits & (0b1111 << offset)) >> offset;
+	  let xarcs = "";
+	  for (let nn = 3; nn >= 2; nn--) {
+	  	xarcs += ((torus & (1 << nn)) >> nn) + "0";
+	  }
+	  let yarcs = "";
+	  for (let nn = 1; nn >= 0; nn--) {
+	  	yarcs += ((torus & (1 << nn)) >> nn) + "0";
+	  }
+	  let xjacs = "";
+	  let yjacs = "";
+	  let count = 0;
+	  for (let nn = 5; nn >= 0; nn--) {
+		if (jack & (1 << nn)) {
+			if (count % 2 == 0) {
+				xjacs += "0" + ((jack & (1 << nn)) >> nn);
+			} else {
+				yjacs += "0" + ((jack & (1 << nn)) >> nn);
+			}
+			count++;
+	  	}
+	  }
+	  let x = parseInt(xarcs, 2) | parseInt(xjacs, 2);
+	  let y = parseInt(yarcs, 2) | parseInt(yjacs, 2);
+	  console.log("Ouput", xarcs, xjacs, yarcs, yjacs);
+	  if (x + y > 0) {
+	  	$("#symbols").append(plotSymbol(x, y, rgb));
+	  }
+	  
+  }
+  function computeSymbols() {
+	  let colors = {};
+	  console.error("stop here");
+	  let extrabits = 0;
+	  for (extrabits = 0; extrabits < 6; extrabits++) {
+		let material = Browser.currentScene.getNamedNode("color"+(extrabits+1));
+	  	let color = material.diffuseColor.r+" "+material.diffuseColor.g+" "+material.diffuseColor.b
+	 	if (typeof colors[color] === 'undefined') {
+	  		colors[color] = 0;
+	  	}
+	  	colors[color] |= 1 << extrabits;
+	  	console.log("color"+(extrabits+1), color, colors[color]);
+	  }
+	  for (let nn = extrabits; nn < 24; nn++) {
+		let material = Browser.currentScene.getNamedNode("color"+(nn-extrabits+1));
+	  	let color = material.diffuseColor.r+" "+material.diffuseColor.g+" "+material.diffuseColor.b
+	 	if (typeof colors[color] === 'undefined') {
+	  		colors[color] = 0;
+	  	}
+	  	colors[color] |= 1 << nn;
+	  	console.log("color"+(nn-extrabits+1), color, colors[color]);
+	  }
+	  $("#symbols").empty();
+	  for (let c in colors) {
+	  	let components = c.split(" ");
+	  	let rgb = "#";
+		for (let comp in components) {
+			compon = Math.round(parseFloat(components[comp]) * 255).toString(16);
+	  		if (compon.length == 1) {
+	  			compon = "0"+compon;
+	  		}
+	  		rgb += compon;
+	  		console.log(c, colors[c].toString(2), rgb);
+	  	}
+	  	plotPlane(colors[c], 12, rgb, 0b111100111100);
+	  	plotPlane(colors[c], 16, rgb, 0b001111001111);
+	  	plotPlane(colors[c], 20, rgb, 0b110011110011);
+	  	$("#symbols").append("<br>");
+	  }
+  }
 
   function initialize() {
     currentSelectedColor = new SFColor(1, 1, 1);
+    computeSymbols();
   }
 
   function geometry1Touched(value) {
     if (value) {
       setGeometry1Color = currentSelectedColor;
     }
-  }
-
-  function geometry1Touched(value) {
-    if (value) {
-      setGeometry1Color = currentSelectedColor;
-    }
+    computeSymbols();
   }
 
   function geometry2Touched(value) {
     if (value) {
       setGeometry2Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry3Touched(value) {
     if (value) {
       setGeometry3Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry4Touched(value) {
     if (value) {
       setGeometry4Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry5Touched(value) {
     if (value) {
       setGeometry5Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry6Touched(value) {
     if (value) {
       setGeometry6Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry7Touched(value) {
     if (value) {
       setGeometry7Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry8Touched(value) {
     if (value) {
       setGeometry8Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry9Touched(value) {
     if (value) {
       setGeometry9Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry10Touched(value) {
     if (value) {
       setGeometry10Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry11Touched(value) {
     if (value) {
       setGeometry11Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry12Touched(value) {
     if (value) {
       setGeometry12Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry13Touched(value) {
     if (value) {
       setGeometry13Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry14Touched(value) {
     if (value) {
       setGeometry14Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry15Touched(value) {
     if (value) {
       setGeometry15Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry16Touched(value) {
     if (value) {
       setGeometry16Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry17Touched(value) {
     if (value) {
       setGeometry17Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function geometry18Touched(value) {
     if (value) {
       setGeometry18Color = currentSelectedColor;
     }
+    computeSymbols();
   }
 
   function selectedColor(value) {
