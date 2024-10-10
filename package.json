@@ -2,7 +2,7 @@
 	"name": "x3d-jsonverse",
 	"author": "John Carlson, Yottzumm, coderextreme",
 	"license": "BSD 2-Clause License",
-	"version": "4.3.4",
+	"version": "4.3.5",
 	"description": "X3DJSONVerse -- npx X3D Server",
 	"main": "index.js",
 	"repository": {
