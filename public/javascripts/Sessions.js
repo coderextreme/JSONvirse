@@ -23,25 +23,57 @@ class Sessions {
 	operateOnSessions(callback) {
 		let UserGlobalSessions = JSON.parse($('#sessionjson').val());
 		if (UserGlobalSessions !== null && (typeof UserGlobalSessions === 'object') && UserGlobalSessions.length > 0 && typeof this._user !== 'undefined') {
+			UserGlobalSessions = this.updateSessions();
 			for (let g in UserGlobalSessions) {
 				if (UserGlobalSessions.hasOwnProperty(g) && parseInt(g, 10) >= 0) {
 					let session = UserGlobalSessions[g];
 					let sessionname = session['Session Petname'];
+					let socket = this._user._sockets[sessionname];
+					if (socket) {
+						Sessions.LOG("Loading", UserGlobalSessions);
+						socket.emit('clientsessions', UserGlobalSessions);
+					}
 					callback(sessionname, session, this);
 				}
 			}
+			$('#sessionjson').val(JSON.stringify(UserGlobalSessions, null, 2));
 		}
 	}
 	updateSessions() {
 		// try {
 			let UserGlobalSessions = JSON.parse($('#sessionjson').val());
+			let unpackedSessions = [];
+			for (let g in UserGlobalSessions) {
+				if (UserGlobalSessions.hasOwnProperty(g) && parseInt(g, 10) >= 0) {
+					let session = UserGlobalSessions[g];
+					let sessionnames = session['Session Petname'].split(":");
+					let sessiontokens = session['Session Token'].split(":");
+					if (sessionnames.length != sessiontokens.length) {
+						alert("Corrupted sessions, see matching colons");
+					} else {
+						for (let us in sessiontokens) {
+							let unpackedSession = {
+								"Session Petname" :sessionnames[us],
+								"Session Token" :sessiontokens[us],
+								"Session Type" :session["Session Type"],
+								"Session Link" :session["Session Link"]
+							}
+							unpackedSessions.push(unpackedSession);
+						}
+					}
+				}
+			}
+			UserGlobalSessions = unpackedSessions;
+		/*
 			this.operateOnSessions(function (sessionname, session, user) {
-				let socket = user._sockets[sessionname];
+				let socket = this._user._sockets[sessionname];
 				if (socket) {
 					Sessions.LOG("Loading", UserGlobalSessions);
 					socket.emit('clientsessions', UserGlobalSessions);
 				}
 			});
+			*/
+			$('#sessionjson').val(JSON.stringify(UserGlobalSessions, null, 2));
 			return UserGlobalSessions;
 		/*
 		} catch (e) {

@@ -98,7 +98,7 @@ router.route('/petnames')
 app.use('/api', router);
 
 var router2 = express.Router();
-router2.route('/template/:SessionName/:SessionPassword/:WebSocket')
+router2.route('/template/:SessionName/:SessionToken/:WebSocket')
   .get(function(req, res) {
 	console.log("Got template request");
         let templatecode = fs.readFileSync(__dirname + "/public/template.html").toString();
@@ -108,13 +108,14 @@ router2.route('/template/:SessionName/:SessionPassword/:WebSocket')
 		req.params.WebSocket === null;
 	}
 	const templateparams = {
+		firstSession : req.params.SessionName.split(':')[0],
 		sessionName : req.params.SessionName,
-		sessionPassword : req.params.SessionPassword,
+		sessionToken : req.params.SessionToken,
 		webSocket : req.params.WebSocket
 	}
 	res.send(template(templateparams));
   });
-router2.route('/templateapache/:SessionName/:SessionPassword/:WebSocket')
+router2.route('/templateapache/:SessionName/:SessionToken/:WebSocket')
   .get(function(req, res) {
 	console.log("Got templateapache request");
         let templatecode = fs.readFileSync(__dirname + "/public/templateapache.html").toString();
@@ -125,7 +126,7 @@ router2.route('/templateapache/:SessionName/:SessionPassword/:WebSocket')
 	}
 	const templateparams = {
 		sessionName : req.params.SessionName,
-		sessionPassword : req.params.SessionPassword,
+		sessionToken : req.params.SessionToken,
 		webSocket : req.params.WebSocket
 	}
 	res.send(template(templateparams));
@@ -142,12 +143,12 @@ http.listen(port);
 console.log('go to the following in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt:');
 console.log('\thttp://localhost:%s/', port);
 console.log('\thttp://localhost:%s/symbols.html', port);
-console.log('\thttp://localhost:%s/tapi/template/yottzumm/Unique%20Super%20Secret%20Password/null', port);
+console.log('\thttp://localhost:%s/tapi/template/yottzumm/Unique%20Super%20Secret%20Token/null', port);
 console.log('\thttp://localhost:%s/yottzumm.html', port);
 console.log('\thttp://localhost:%s/yottzumm2.html', port);
 console.log('\thttp://localhost:%s/petnames.html', port);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/index.html', 8443);
-console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/tapi/templateapache/yottzumm/Unique%20Super%20Secret%20Password/null', 8443);
+console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/tapi/templateapache/yottzumm/Unique%20Super%20Secret%20Token/null', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzumm.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/yottzumm2.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/lc-soc-lc.html', 8443);

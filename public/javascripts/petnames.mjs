@@ -29,7 +29,7 @@ function petNameUpdateAndQuery(body) {
 	  $('#visit').click(function() {
 		var values = [];
 		$('input[type="checkbox"]:checked').each(function() {
-		      values.push({"Session Petname": $(this).val(), "Session Token": "Super Secret Password", "Session Type": "Stanards Development Organization", "Session Link": null});
+		      values.push({"Session Petname": $(this).val(), "Session Token": "Super Secret Token", "Session Type": "Stanards Development Organization", "Session Link": null});
 		});
 		if (values.length) {
 		    const request = {

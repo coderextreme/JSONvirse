@@ -24,6 +24,29 @@ class X3DUser {
 	updateSessions() {
 		try {
 			let UserGlobalSessions = JSON.parse($('#sessionjson').val());
+			let unpackedSessions = [];
+			for (let g in UserGlobalSessions) {
+				if (UserGlobalSessions.hasOwnProperty(g) && parseInt(g, 10) >= 0) {
+					let session = UserGlobalSessions[g];
+					let sessionnames = session['Session Petname'].split(":");
+					let sessiontokens = session['Session Token'].split(":");
+					if (sessionnames.length != sessiontokens.length) {
+						alert("Corrupted sessions, see matching colons");
+					} else {
+						for (let us in sessiontokens) {
+							let unpackedSession = {
+								"Session Petname" :sessionnames[us],
+								"Session Token" :sessiontokens[us],
+								"Session Type" :session["Session Type"],
+								"Session Link" :session["Session Link"]
+							}
+							unpackedSessions.push(unpackedSession);
+						}
+					}
+				}
+			}
+			UserGlobalSessions = unpackedSessions;
+			$('#sessionjson').val(JSON.stringify(UserGlobalSessions, null, 2));
 			return UserGlobalSessions;
 		} catch (e) {
 			X3DUser.LOG(e);
@@ -139,38 +162,36 @@ const reconnect = function (x3duser) {
 	        x3duser._sockets = x3duser._sessions._sockets;
 		X3DUser.LOG("reconnect!");
 		let UserGlobalSessions = x3duser.updateSessions();
-		if (UserGlobalSessions && UserGlobalSessions.length > 0) {
-			for (let g in UserGlobalSessions) {
-				let session = UserGlobalSessions[g];
-				let sessionname = session['Session Petname'];
-				let sessiontoken = session['Session Token'];
-				let socket = x3duser._sockets[sessionname];
-				LOG(".x3duser", x3duser);
-				LOG(".sessionname", sessionname);
-				LOG(".x3duser._sockets", x3duser._sockets);
-				LOG(".x3duser._sockets[petName]", x3duser._sockets[sessionname]);
-				if (socket !== null) {
-					// socket.emit('x3d_clientjoin');
-					socket.emit("x3d_clientsessions", UserGlobalSessions);
-					socket.emit("x3d_clientactivesession", sessiontoken);
-					if (x3d_serverupdate !== null) {
-						X3DUser.LOG("Found x3d_serverupdate", sessionname, sessiontoken, UserGlobalSessions);
-						x3duser._sockets[sessionname].on('x3d_serverupdate', x3d_serverupdate);
-					} else {
-						X3DUser.LOG("reconnect Can't service x3d_serverupdate", sessionname, sessiontoken);
-					}
-					$('#session').on("change",function(){
-						reconnect(x3duser);
-					 });
-					 socket.on('serverpublish', X3DUser.prototype.serverpublish);
-					 socket.on('servercapability', X3DUser.prototype.servercapability);
-					 // No need to rejoin, since Sessions.js does
-					 // socket.emit('clientrejoin', location.href);
-					 // socket.emit('clientmove', [0,0,0], [0,0,0]);
-					 // socket.emit('clientjoin');
+		for (let g in UserGlobalSessions) {
+			let session = UserGlobalSessions[g];
+			let sessionname = session['Session Petname'];
+			let sessiontoken = session['Session Token'];
+			let socket = x3duser._sockets[sessionname];
+			LOG(".x3duser", x3duser);
+			LOG(".sessionname", sessionname);
+			LOG(".x3duser._sockets", x3duser._sockets);
+			LOG(".x3duser._sockets[petName]", x3duser._sockets[sessionname]);
+			if (socket !== null) {
+				// socket.emit('x3d_clientjoin');
+				socket.emit("x3d_clientsessions", UserGlobalSessions);
+				socket.emit("x3d_clientactivesession", sessiontoken);
+				if (x3d_serverupdate !== null) {
+					X3DUser.LOG("Found x3d_serverupdate", sessionname, sessiontoken, UserGlobalSessions);
+					x3duser._sockets[sessionname].on('x3d_serverupdate', x3d_serverupdate);
 				} else {
-					X3DUser.LOG("Couldn't connect to", sessionlink);
+					X3DUser.LOG("reconnect Can't service x3d_serverupdate", sessionname, sessiontoken);
 				}
+				$('#session').on("change",function(){
+					reconnect(x3duser);
+				 });
+				 socket.on('serverpublish', X3DUser.prototype.serverpublish);
+				 socket.on('servercapability', X3DUser.prototype.servercapability);
+				 // No need to rejoin, since Sessions.js does
+				 // socket.emit('clientrejoin', location.href);
+				 // socket.emit('clientmove', [0,0,0], [0,0,0]);
+				 // socket.emit('clientjoin');
+			} else {
+				X3DUser.LOG("Couldn't connect to", sessionlink);
 			}
 		}
 	} catch (e) {
@@ -179,9 +200,8 @@ const reconnect = function (x3duser) {
 };
 
 const token_test = function(test_token) {
-    'use strict';
-    let UserGlobalSessions = x3duser.updateSessions();
-    if (UserGlobalSessions && UserGlobalSessions.length > 0) {
+        'use strict';
+        let UserGlobalSessions = x3duser.updateSessions();
         for (let g in UserGlobalSessions) {
             let session = UserGlobalSessions[g];
             let sessiontoken = session['Session Token'];
@@ -190,10 +210,7 @@ const token_test = function(test_token) {
             }
         }
 	x3duser.emit("x3d_clientsessions", UserGlobalSessions);
-    } else {
-        X3DUser.LOG("UserGlobalSessions is not set right", UserGlobaSessions);
-    }
-    return false;
+	return false;
 };
 
 const initialize = function () {
