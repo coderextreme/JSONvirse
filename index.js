@@ -140,7 +140,7 @@ var port = process.env.X3DJSONPORT || defaultPort;
 
 http.listen(port);
 
-console.log('go to the following in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt:');
+console.log(`go to the following in your browser or restart after typing $ export X3DJSONPORT=${port} # at your terminal prompt:`);
 console.log('\thttp://localhost:%s/', port);
 console.log('\thttp://localhost:%s/symbols.html', port);
 console.log('\thttp://localhost:%s/tapi/template/yottzumm/Unique%20Super%20Secret%20Token/null', port);
@@ -156,7 +156,7 @@ console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/lc-soc-lc.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/petnames.html', 8443);
 */
 if (metaServer === null) {
-	console.log('You may wish to type $ export METASERVER=8088 # at your terminal prompt to atttach to the metaserver after launching the meta server');
+	console.log('You may wish to type $ export METASERVER=8090 # at your terminal prompt to atttach to the metaserver after launching the meta server');
 } else {
 	console.log('\t'+metaServer);
 }

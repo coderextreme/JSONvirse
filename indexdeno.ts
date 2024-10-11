@@ -142,7 +142,7 @@ const handler = async (request: Request): Promise<Response> => {
   return await app.handle(request);
 };
 
-console.log('go to the following in your browser or restart after typing $ export X3DJSONPORT=8088 # at your terminal prompt:');
+console.log(`go to the following in your browser or restart after typing $ export X3DJSONPORT=${port} # at your terminal prompt:`);
 console.log('\thttp://localhost:%s/', port);
 console.log('\thttp://localhost:%s/symbols.html', port);
 console.log('\thttp://localhost:%s/tapi/template/yottzumm/Unique%20Super%20Secret%20Token/null', port);
