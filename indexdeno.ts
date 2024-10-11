@@ -117,12 +117,13 @@ app.use(router.allowedMethods());
 const defaultPort = 8088;
 const port = parseInt(Deno.env.get("X3DJSONPORT") || defaultPort.toString());
 
-let io: SocketIOServer | null = null;
+let io = null;
 
 const handler = async (request: Request): Promise<Response> => {
   const { pathname } = new URL(request.url);
   
-  if (pathname === "/socket.io.js") {
+  if (pathname.endsWith("/socket.io.js")) {
+    console.log("request", pathname);
     return new Response(io?.serveClient(), {
       headers: { "Content-Type": "application/javascript" },
     });
