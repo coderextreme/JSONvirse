@@ -35,25 +35,25 @@ function plotSymbol(eightbits, rgb, bits) {
         sy = scale;
     svg.push('<svg id="svg" width="200" height="90" xmlns="http://www.w3.org/2000/svg"><g id="g" style="font:10px times">');
     if (eightbits & 0x1) {
-        svg.push('<path stroke="'+rgb+'" stroke-width="2" d="M'+(sx)+" "+(sy)+ " L"+(sx)+" "+(sy-down)+' Z"/>');
+        svg.push('<path stroke="'+rgb+'" stroke-width="2" d="M'+(sx)+" "+(sy)+ " L"+(sx)+" "+(sy+down)+' Z"/>');
     }
     if (eightbits & 0x2) {
         svg.push('<path fill="transparent" stroke="'+rgb+'" d="'+describeArc(sx, sy, down, 270, 0)+'" stroke-width="2"/>');
     }
     if (eightbits & 0x4) {
-        svg.push('<path stroke="'+rgb+'" stroke-width="2" d="M'+(sx)+" "+(sy)+ " L"+(sx+left)+" "+(sy)+' Z"/>');
+        svg.push('<path stroke="'+rgb+'" stroke-width="2" d="M'+(sx)+" "+(sy)+ " L"+(sx-left)+" "+(sy)+' Z"/>');
     }
     if (eightbits & 0x8) {
         svg.push('<path fill="transparent" stroke="'+rgb+'" d="'+describeArc(sx, sy, left, 0, 90)+'" stroke-width="2"/>');
     }
     if (eightbits & 0x10) {
-        svg.push('<path stroke="'+rgb+'" stroke-width="2" d="M'+(sx)+" "+(sy)+ " L"+(sx)+" "+(sy+down)+' Z"/>');
+        svg.push('<path stroke="'+rgb+'" stroke-width="2" d="M'+(sx)+" "+(sy)+ " L"+(sx+left)+" "+(sy)+' Z"/>');
     }
     if (eightbits & 0x20) {
         svg.push('<path fill="transparent" stroke="'+rgb+'" d="'+describeArc(sx, sy, left, 90, 180)+'" stroke-width="2"/>');
     }
     if (eightbits & 0x40) {
-        svg.push('<path stroke="'+rgb+'" stroke-width="2" d="M'+(sx)+" "+(sy)+ " L"+(sx-left)+" "+(sy)+' Z"/>');
+        svg.push('<path stroke="'+rgb+'" stroke-width="2" d="M'+(sx)+" "+(sy)+ " L"+(sx)+" "+(sy-down)+' Z"/>');
     }
     if (eightbits & 0x80) {
         svg.push('<path fill="transparent" stroke="'+rgb+'" d="'+describeArc(sx, sy, down, 180, 270)+'" stroke-width="2"/>');
