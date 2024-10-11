@@ -29,7 +29,7 @@
 		    <span><button id="fetchbutton">Fetch</button></span>
 		    <span><button id="publishbutton">Publish</button></span><br>
 		    <span><button id="sessionbutton">Update Session Info</button></span>
-		    <span>Session name: <select id="session"><option value="{{firstSession}}">{{firstSession}}</option></select></span><br>
+		    <span>Session name: <select id="session"><option value="{{firstToken}}">{{firstName}}</option></select></span><br>
 		    <span><button id="disconnectbutton">Disconnect All Sessions</button></span><br>
 		    <span>Start Date/Time: <input type="datetime" id="from"/></span><br>
 		    <span>Stop Date/Time:   <input type="datetime" id="to"/></span><br>
@@ -54,8 +54,8 @@
   {
   "Session Petname": "{{sessionName}}",
   "Session Token": "{{sessionToken}}",
-    "Session Type": "Testing Session",
-    "Session Link": {{webSocket}}
+  "Session Type": "{{sessionType}}",
+  "Session Link": {{webSocket}}
   }
 ]</textarea></span><br>
 	    </div>

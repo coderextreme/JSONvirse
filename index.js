@@ -97,39 +97,45 @@ router.route('/petnames')
   });
 app.use('/api', router);
 
+function templatize(req, sessionType, ws) {
+	  // TODO validation
+	let webSocket = null;
+	if (ws === null || ws === '"null"' || ws === 'null') {
+		webSocket = 'null';
+	} else {
+		webSocket = ws;
+	}
+	const templateparams = {
+		firstName : req.params.SessionName.split(':')[0],
+		firstToken : req.params.SessionToken.split(':')[0],
+		sessionName : req.params.SessionName,
+		sessionToken : req.params.SessionToken,
+		sessionType : sessionType,
+		webSocket : webSocket
+	}
+	return templateparams;
+}
 var router2 = express.Router();
+router2.route('/template/Gathering/:SessionName/:SessionToken/:WebSocket')
+  .get(function(req, res) {
+	console.log("Got template request");
+        let templatecode = fs.readFileSync(__dirname + "/public/grouptemplate.html").toString();
+	const template = Handlebars.compile(templatecode);
+	res.send(template(templatize(req, "Gathering", req.params.WebSocket)));
+  });
 router2.route('/template/:SessionName/:SessionToken/:WebSocket')
   .get(function(req, res) {
 	console.log("Got template request");
         let templatecode = fs.readFileSync(__dirname + "/public/template.html").toString();
 	const template = Handlebars.compile(templatecode);
-	  // TODO validation
-	if (req.params.WebSocket === '"null"' || req.params.WebSocket === 'null') {
-		req.params.WebSocket === null;
-	}
-	const templateparams = {
-		firstSession : req.params.SessionName.split(':')[0],
-		sessionName : req.params.SessionName,
-		sessionToken : req.params.SessionToken,
-		webSocket : req.params.WebSocket
-	}
-	res.send(template(templateparams));
+	res.send(template(templatize(req, null, req.params.WebSocket)));
   });
 router2.route('/templateapache/:SessionName/:SessionToken/:WebSocket')
   .get(function(req, res) {
 	console.log("Got templateapache request");
         let templatecode = fs.readFileSync(__dirname + "/public/templateapache.html").toString();
 	const template = Handlebars.compile(templatecode);
-	  // TODO validation
-	if (req.params.WebSocket === '"null"' || req.params.WebSocket === 'null') {
-		req.params.WebSocket === null;
-	}
-	const templateparams = {
-		sessionName : req.params.SessionName,
-		sessionToken : req.params.SessionToken,
-		webSocket : req.params.WebSocket
-	}
-	res.send(template(templateparams));
+	res.send(template(templatize(req, null, req.params.WebSocket)));
   });
 app.use('/tapi', router2);
 
