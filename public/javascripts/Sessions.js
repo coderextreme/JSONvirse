@@ -179,16 +179,19 @@ class Sessions {
 		});
 		$('#session').append(noop);
 
+		$('#blocksessions').empty();
+
 		for (let g in sessions) {
 		    if (sessions.hasOwnProperty(g) && parseInt(g, 10) >= 0) {
 			let session = sessions[g];
 			HTMLUser.LOG(session);
 			let option = $("<option>", {
-			  value: session['Session Petname'],  // could be token
+			  value: session['Session Token'],
 			  text: session['Session Petname'] 
 			});
 
 			$('#session').append(option);
+			$('#blocksessions').append(option);
 		    }
 		}
 		$('#session').val(oldsession);

@@ -8,6 +8,7 @@
     <script defer type="text/javascript" src="/javascripts/bottomscroll.js"></script>
     <script defer type="text/javascript" src="/javascripts/Sessions.js"></script>
     <script defer type="text/javascript" src="/javascripts/HTMLUser.js"></script>
+    <script defer type="text/javascript" src="/javascripts/AdminUser.js"></script>
   </head>
   <body>
     <div id="chat">
@@ -19,9 +20,10 @@
 	    </div>
     <hr>
 	    <div>
-		    <span><button id="sessionbutton">Update Session Info</button></span>
-		    <span>Session name: <select id="session"><option value="{{firstToken}}">{{firstName}}</option></select></span><br>
-		    <span><button id="disconnectbutton">Disconnect All Sessions</button></span><br>
+		    <span><button id="hostbutton">Host Meeting:</button></span>
+		    <span>Host name: <select id="hostsession"><option value="{{firstToken}}">{{firstName}}</option></select></span><br>
+		    <span>Select Blockable Sessions: <select id="blocksessions" multiple="true"></option></select></span><br>
+		    <span><button id="blockbutton">Block Selected Sessions</button></span><br>
 		    <span>Start Date/Time: <input type="datetime" id="from"/></span><br>
 		    <span>Stop Date/Time:   <input type="datetime" id="to"/></span><br>
 		    <span>Amount:   <input id="rate" value="0"/></span><br>

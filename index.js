@@ -113,6 +113,11 @@ function templatize(req, sessionType, ws) {
 		sessionType : sessionType,
 		webSocket : webSocket
 	}
+	let sns = templateparams.sessionName.split(":");
+	let tos = templateparams.sessionToken.split(":");
+	for (let sn in sns) {
+		console.log(`http://localhost:${port}/tapi/template/group1-petname/${tos[sn]}/${webSocket}`)
+	}
 	return templateparams;
 }
 var router2 = express.Router();
@@ -162,7 +167,7 @@ console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/lc-soc-lc.html', 8443);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/petnames.html', 8443);
 */
 if (metaServer === null) {
-	console.log('You may wish to type $ export METASERVER=8090 # at your terminal prompt to atttach to the metaserver after launching the meta server');
+	console.log('You may wish to type $ export METASERVER=8090 # at your terminal prompt to attach to the metaserver after launching the meta server');
 } else {
 	console.log('\t'+metaServer);
 }
