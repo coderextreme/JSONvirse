@@ -3,6 +3,8 @@ import { Server as SocketIOServer } from "https://deno.land/x/socket_io@0.2.0/mo
 import { Application } from "jsr:@oak/oak/application";
 import { Router } from "jsr:@oak/oak/router";
 import Multiplayer from "./MultiplayerDeno.ts";
+import { ClientToServerEvents } from './ClientToServer.ts';
+import { ServerToClientEvents } from './ServerToClient.ts';
 
 const app = new Application();
 const router = new Router();
@@ -134,7 +136,7 @@ const handler = async (request: Request): Promise<Response> => {
   if (request.headers.get("upgrade") === "websocket") {
     const { socket, response } = Deno.upgradeWebSocket(request);
     console.log('Starting socket-io server');
-    io = new SocketIOServer(socket, {
+    io = new SocketIOServer<ClientToServerEvents, ServerToClientEvents, any, any>(socket, {
       maxHttpBufferSize: 1e9,
       pingTimeout: 60000,
       transports: [ "websocket" ],
