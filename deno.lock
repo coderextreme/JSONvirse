@@ -2,14 +2,84 @@
   "version": "3",
   "packages": {
     "specifiers": {
+      "jsr:@oak/commons@^1.0": "jsr:@oak/commons@1.0.0",
+      "jsr:@oak/oak": "jsr:@oak/oak@17.1.3",
+      "jsr:@std/assert@^1.0": "jsr:@std/assert@1.0.9",
+      "jsr:@std/bytes@^1.0": "jsr:@std/bytes@1.0.4",
+      "jsr:@std/bytes@^1.0.2": "jsr:@std/bytes@1.0.4",
+      "jsr:@std/crypto@^1.0": "jsr:@std/crypto@1.0.3",
+      "jsr:@std/encoding@^1.0": "jsr:@std/encoding@1.0.5",
+      "jsr:@std/encoding@^1.0.5": "jsr:@std/encoding@1.0.5",
+      "jsr:@std/http@^1.0": "jsr:@std/http@1.0.12",
+      "jsr:@std/io@0.224": "jsr:@std/io@0.224.9",
+      "jsr:@std/media-types@^1.0": "jsr:@std/media-types@1.1.0",
+      "jsr:@std/path@^1.0": "jsr:@std/path@1.0.8",
       "npm:body-parser": "npm:body-parser@1.20.3",
       "npm:express": "npm:express@4.21.0",
       "npm:express@4.21.1": "npm:express@4.21.1",
       "npm:handlebars@^4.7.8": "npm:handlebars@4.7.8",
       "npm:node-rest-client": "npm:node-rest-client@3.1.1",
+      "npm:path-to-regexp@6.2.1": "npm:path-to-regexp@6.2.1",
       "npm:socket.io": "npm:socket.io@4.8.0",
       "npm:socket.io-client": "npm:socket.io-client@4.8.0",
       "npm:socket.io-client@^4.8.0": "npm:socket.io-client@4.8.0"
+    },
+    "jsr": {
+      "@oak/commons@1.0.0": {
+        "integrity": "49805b55603c3627a9d6235c0655aa2b6222d3036b3a13ff0380c16368f607ac",
+        "dependencies": [
+          "jsr:@std/assert@^1.0",
+          "jsr:@std/bytes@^1.0",
+          "jsr:@std/crypto@^1.0",
+          "jsr:@std/encoding@^1.0",
+          "jsr:@std/http@^1.0",
+          "jsr:@std/media-types@^1.0"
+        ]
+      },
+      "@oak/oak@17.1.3": {
+        "integrity": "d89296c22db91681dd3a2a1e1fd14e258d0d5a9654de55637aee5b661c159f33",
+        "dependencies": [
+          "jsr:@oak/commons@^1.0",
+          "jsr:@std/assert@^1.0",
+          "jsr:@std/bytes@^1.0",
+          "jsr:@std/crypto@^1.0",
+          "jsr:@std/http@^1.0",
+          "jsr:@std/io@0.224",
+          "jsr:@std/media-types@^1.0",
+          "jsr:@std/path@^1.0",
+          "npm:path-to-regexp@6.2.1"
+        ]
+      },
+      "@std/assert@1.0.9": {
+        "integrity": "a9f0c611a869cc791b26f523eec54c7e187aab7932c2c8e8bea0622d13680dcd"
+      },
+      "@std/bytes@1.0.4": {
+        "integrity": "11a0debe522707c95c7b7ef89b478c13fb1583a7cfb9a85674cd2cc2e3a28abc"
+      },
+      "@std/crypto@1.0.3": {
+        "integrity": "a2a32f51ddef632d299e3879cd027c630dcd4d1d9a5285d6e6788072f4e51e7f"
+      },
+      "@std/encoding@1.0.5": {
+        "integrity": "ecf363d4fc25bd85bd915ff6733a7e79b67e0e7806334af15f4645c569fefc04"
+      },
+      "@std/http@1.0.12": {
+        "integrity": "85246d8bfe9c8e2538518725b158bdc31f616e0869255f4a8d9e3de919cab2aa",
+        "dependencies": [
+          "jsr:@std/encoding@^1.0.5"
+        ]
+      },
+      "@std/io@0.224.9": {
+        "integrity": "4414664b6926f665102e73c969cfda06d2c4c59bd5d0c603fd4f1b1c840d6ee3",
+        "dependencies": [
+          "jsr:@std/bytes@^1.0.2"
+        ]
+      },
+      "@std/media-types@1.1.0": {
+        "integrity": "c9d093f0c05c3512932b330e3cc1fe1d627b301db33a4c2c2185c02471d6eaa4"
+      },
+      "@std/path@1.0.8": {
+        "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
+      }
     },
     "npm": {
       "@socket.io/component-emitter@3.1.2": {
@@ -448,6 +518,10 @@
         "integrity": "sha512-7lf7qcQidTku0Gu3YDPc8DJ1q7OOucfa/BSsIwjuh56VU7katFvuM8hULfkwB3Fns/rsVF7PwPKVw1sl5KQS9w==",
         "dependencies": {}
       },
+      "path-to-regexp@6.2.1": {
+        "integrity": "sha512-JLyh7xT1kizaEvcaXOQwOc2/Yhw6KZOvPf1S8401UyLk86CU79LN3vl7ztXGm/pZ+YjoyAJ4rxmHwbkBXJX+yw==",
+        "dependencies": {}
+      },
       "proxy-addr@2.0.7": {
         "integrity": "sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==",
         "dependencies": {
@@ -789,6 +863,8 @@
     "https://deno.land/std@0.200.0/streams/zip_readable_streams.ts": "a9d81aa451240f79230add674809dbee038d93aabe286e2d9671e66591fc86ca",
     "https://deno.land/std@0.220.1/async/delay.ts": "8e1d18fe8b28ff95885e2bc54eccec1713f57f756053576d8228e6ca110793ad",
     "https://deno.land/std@0.220.1/http/server.ts": "cc8ae0de927c3afc855466b89bf9a7a3196223f47f2723e218912c6ca3eb166c",
+    "https://deno.land/std@0.224.0/async/delay.ts": "f90dd685b97c2f142b8069082993e437b1602b8e2561134827eeb7c12b95c499",
+    "https://deno.land/std@0.224.0/http/server.ts": "f9313804bf6467a1704f45f76cb6cd0a3396a3b31c316035e6a4c2035d1ea514",
     "https://deno.land/x/oak@v12.6.1/application.ts": "3028d3f6fa5ee743de013881550d054372c11d83c45099c2d794033786d27008",
     "https://deno.land/x/oak@v12.6.1/body.ts": "1899761b97fc9d776f3710b2637fb047ba29b968609afc6c0e5219b1108e703c",
     "https://deno.land/x/oak@v12.6.1/buf_reader.ts": "26640736541598dbd9f2b84a9d0595756afff03c9ca55b66eef1911f7798b56d",

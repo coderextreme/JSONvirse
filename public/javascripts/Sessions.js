@@ -115,34 +115,42 @@ class Sessions {
 				let socket = user._sockets[sessionname];
 				if (!socket) {
 					if (sessionlink && typeof sessionlink === 'string') {
-						// try {
+						try {
 							socket = null;
 							socket = io(sessionlink, {
 								maxHttpBufferSize: 1e8, pingTimeout: 60000,
-								transports: [ "polling" ]
+								transports: [ "polling", "websocket" ]
 							});
 							Sessions.LOG('Connected to remote scene server', sessionlink);
-						/*
 						} catch (e) {
 							Sessions.LOG(e);
 						}
-						*/
 					} else {
 						// Sessions.LOG('Session Link must be specificed in Session Description for scene collaboration');
 					}
 					if (socket === null || typeof socket === 'undefined') {
 					     // if all else fails, connect back to same host
-					     // try {
+					     try {
 						 socket = io({
 							maxHttpBufferSize: 1e8, pingTimeout: 60000,
-							transports: [ "polling" ]
+							transports: [ "polling", "websocket" ]
 						});
 						Sessions.LOG('Connected to chat server');
-						/*
-						} catch (e) {
-							Sessions.LOG(e);
-						}
-						*/
+					    } catch (e) {
+						Sessions.LOG(e);
+					    }
+					}
+					if (socket === null || typeof socket === 'undefined') {
+					     // if all else fails, connect to localhost
+					     try {
+						 socket = io("http://localhost:8088", {
+							maxHttpBufferSize: 1e8, pingTimeout: 60000,
+							transports: [ "polling", "websocket" ]
+						});
+						Sessions.LOG('Connected to chat server');
+					    } catch (e) {
+						Sessions.LOG(e);
+					    }
 					}
 					if (socket !== null) {
 						user._sockets[sessionname] = socket;

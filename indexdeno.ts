@@ -1,6 +1,7 @@
-import { serve } from "https://deno.land/std@0.220.1/http/server.ts";
+import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { Server as SocketIOServer } from "https://deno.land/x/socket_io@0.2.0/mod.ts";
-import { Application, Router } from "https://deno.land/x/oak@v12.6.1/mod.ts";
+import { Application } from "jsr:@oak/oak/application";
+import { Router } from "jsr:@oak/oak/router";
 import Multiplayer from "./MultiplayerDeno.ts";
 
 const app = new Application();
