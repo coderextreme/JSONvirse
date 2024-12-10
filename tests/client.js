@@ -10,3 +10,14 @@ if (socket === null) {
 } else {
 	console.log("Connect!");
 }
+
+var socket = io("http://localhost:8088/socket.io", {
+    maxHttpBufferSize: 1e9, pingTimeout: 60000,
+    transports: [ "polling", "websocket" ]
+});
+
+if (socket === null) {
+	console.log("Didn't connect!");
+} else {
+	console.log("Connect!");
+}

@@ -119,7 +119,7 @@ class Sessions {
 							socket = null;
 							socket = io(sessionlink, {
 								maxHttpBufferSize: 1e8, pingTimeout: 60000,
-								transports: [ "polling", "websocket" ]
+								transports: [ "polling" ]
 							});
 							Sessions.LOG('Connected to remote scene server', sessionlink);
 						} catch (e) {
@@ -133,7 +133,7 @@ class Sessions {
 					     try {
 						 socket = io({
 							maxHttpBufferSize: 1e8, pingTimeout: 60000,
-							transports: [ "polling", "websocket" ]
+							transports: [ "polling" ]
 						});
 						Sessions.LOG('Connected to chat server');
 					    } catch (e) {
@@ -145,7 +145,19 @@ class Sessions {
 					     try {
 						 socket = io("http://localhost:8088", {
 							maxHttpBufferSize: 1e8, pingTimeout: 60000,
-							transports: [ "polling", "websocket" ]
+							transports: [ "polling" ]
+						});
+						Sessions.LOG('Connected to chat server');
+					    } catch (e) {
+						Sessions.LOG(e);
+					    }
+					}
+					if (socket === null || typeof socket === 'undefined') {
+					     // if all else fails, connect to websocket
+					     try {
+						 socket = io("ws://localhost:8088", {
+							maxHttpBufferSize: 1e8, pingTimeout: 60000,
+							transports: [ "websocket" ]
 						});
 						Sessions.LOG('Connected to chat server');
 					    } catch (e) {

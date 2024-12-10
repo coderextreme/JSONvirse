@@ -122,8 +122,9 @@ let io = null;
 
 const handler = async (request: Request): Promise<Response> => {
   const { pathname } = new URL(request.url);
+  console.log('pathname is', pathname);
   
-  if (pathname.endsWith("/socket.io.js")) {
+  if (pathname.indexOf("socket.io") >= 0) {
     console.log("request", pathname);
     return new Response(io?.serveClient(), {
       headers: { "Content-Type": "application/javascript" },
@@ -132,10 +133,11 @@ const handler = async (request: Request): Promise<Response> => {
 
   if (request.headers.get("upgrade") === "websocket") {
     const { socket, response } = Deno.upgradeWebSocket(request);
+    console.log('Starting socket-io server');
     io = new SocketIOServer(socket, {
       maxHttpBufferSize: 1e9,
       pingTimeout: 60000,
-      transports: ["polling", "websocket"],
+      transports: [ "websocket" ],
     });
     new Multiplayer(io, metaServer);
     return response;
