@@ -2,11 +2,11 @@ function LOG () {
     Browser.print('X3D Scene', ...arguments);
 }
 
-let nodeGroup = null;
-let linkGroup = null;
-let nodeShapes = {};
-let linkShapes = {};
-let nodes = [];
+window.nodeGroup = null;
+window.linkGroup = null;
+nodeShapes = {};
+linkShapes = {};
+nodes = [];
 
 
 class X3DUser {
@@ -126,22 +126,21 @@ class X3DUser {
 }
 
 const x3d_serveravatar = function(usernumber, dml, allowedToken) {
-      LOG("Setting avatar function", dml.length, dml[0]);
       dml.forEach((line, index) => {
+        LOG("Avatar function", dml.length, line);
 	let dind = line.lastIndexOf("}");
 	if (dind > 0) {
 	      line = line.substr(dind+1);
 	}
 	const command = line.split("|");
 	if (command[0] === "NODE") {
-		Browser.print("DEBUG", line);
 		let node = {};
 		node.id = command[1];
 		node.sql = command[2];
 		if (node.sql === 'UPDATE') {
-			node.x = command[7];
-			node.y = command[8];
-			node.z = command[9];
+			node.x = parseFloat(command[7]);
+			node.y = parseFloat(command[8]);
+			node.z = parseFloat(command[9]);
 
 			// Create sphere for node
 			const nodeTransform = document.createElement('Transform');
@@ -152,29 +151,25 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 
 			const appearance = document.createElement('Appearance');
 			const material = document.createElement('Material');
-			material.setAttribute('diffuseColor', '0.5 0.5 0.5');
+			material.setAttribute('diffuseColor', '1.0 1.0 1.0');
 			material.setAttribute('transparency', '0.0'); // Start fully opaque
 			appearance.appendChild(material);
 
 			const sphere = document.createElement('Sphere');
-			sphere.setAttribute('radius', 0.5);
+			sphere.setAttribute('radius', 20);
 
 			shape.appendChild(appearance);
 			shape.appendChild(sphere);
 			nodeTransform.appendChild(shape);
 
-			// Add touch sensor for interaction
-			const touchSensor = document.createElement('TouchSensor');
-			touchSensor.setAttribute('description', `Node: ${node.label}`);
-			touchSensor.addEventListener('isActive', (event) => {
-			  if (event.value) {
-			    handleNodeClick(node);
-			  }
-			});
-			nodeTransform.appendChild(touchSensor);
-
-			if (nodeGroup) {
-				nodeGroup.appendChild(nodeTransform);
+			try {
+				window.nodeGroup = Browser.currentScene.getNamedNode("nodeGroup");
+				nodeTransform.parent = window.nodeGroup;
+			} catch (e) {
+				LOG("DEBUG NODE", node);
+				window.nodeGroup = Browser.currentScene.createNode("Group");
+				nodeTransform.parent = window.nodeGroup;
+				window.nodeGroup = Browser.currentScene.addNamedNode("nodeGroup", window.nodeGroup);
 			}
 			nodeShapes[node.id] = nodeTransform;
 			nodes.push(node);
@@ -202,8 +197,14 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		  shape.appendChild(lineSet);
 		  linkTransform.appendChild(shape);
 
-		  if (linkGroup) {
-		  	linkGroup.appendChild(linkTransform);
+		  try {
+			window.linkGroup = Browser.currentScene.getNamedNode("linkGroup");
+			linkTransform.parent = window.linkGroup;
+		  } catch (e) {
+			LOG("DEBUG LINK", sourceNode, targetNode);
+			window.linkGroup = Browser.currentScene.createNode("Group");
+			linkTransform.parent = window.linkGroup;
+			window.linkGroup = Browser.currentScene.addNamedNode("linkGroup", window.linkGroup);
 		  }
 		  // keep them around to delete later
 		  linkShapes[`${sourceNode.id}-${targetNode.id}-${index}`] = linkTransform;
@@ -325,10 +326,6 @@ const initialize = function () {
     'use strict';
     X3DUser.LOG("Called intialize");
     reconnect(x3duser);
-    let groupNode = Browser.currentScene.createNode("Group");
-    let groupLink = Browser.currentScene.createNode("Group");
-    nodeGroup = Browser.currentScene.addNamedNode("nodeGroup", groupNode);
-    linkGroup = Browser.currentScene.addNamedNode("linkGroup", groupLink);
 };
 
 const newTranslation = function(Value) {

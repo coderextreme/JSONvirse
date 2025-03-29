@@ -391,5 +391,7 @@ function initialize() {
       </ProtoInstance>
     </LayoutLayer>
   </LayerSet>
+  <Group DEF="nodeGroup"/>
+  <Group DEF="linkGroup"/>
 </Scene>
 </X3D>
