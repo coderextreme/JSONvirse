@@ -216,9 +216,6 @@ function initialize() {
 	      <DISEntityTypeMapping category='77' specific='2' url='"Lily8Final.x3d"'/>
       </DISEntityManager>
       -->
-      <Collision enabled='false'>
-        <Group DEF='AvatarHolder'/>
-      </Collision>
       <!--
       <ROUTE fromField='addedEntities' fromNode='EntityManager' toField='addChildren' toNode='AvatarHolder'/>
       <ROUTE fromField='removedEntities' fromNode='EntityManager' toField='removeChildren' toNode='AvatarHolder'/>

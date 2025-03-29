@@ -109,7 +109,7 @@ class HTMLUser {
 			if (socket !== null) {
         			socket.emit(api, message);
 			} else {
-				HTMLUSer.LOG("failed to send", api, message);
+				HTMLUser.LOG("failed to send", api, message);
 			}
 		}
 	}

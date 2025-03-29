@@ -66,56 +66,60 @@ class Multiplayer {
             if (mp.getPlayer(socket)) {
                 mp.clientpublish(socket, arguments);
             } else {
-                socket.emit('servermessage', "You need to join before publishing documents");
+                socket.emit('html_servermessage', "You need to join before publishing documents");
             }
           });
           socket.on('clientactivename', function() {
             if (mp.getPlayer(socket)) {
                 mp.clientactivename(socket, arguments);
             } else {
-                socket.emit('servermessage', "You need to join before sending username");
+                socket.emit('html_servermessage', "You need to join before sending username");
             }
           });
           socket.on('clientactivesession', function() {
             if (mp.getPlayer(socket)) {
                 mp.clientactivesession(socket, arguments);
             } else {
-                socket.emit('servermessage', "You need to join before sending room");
+                socket.emit('html_servermessage', "You need to join before sending room");
             }
           });
           socket.on('x3d_clientactivesession', function() {
             if (mp.getPlayer(socket)) {
                 mp.clientactivesession(socket, arguments);
             } else {
-                socket.emit('servermessage', "You need to join before sending room");
+                socket.emit('html_servermessage', "You need to join before sending room");
             }
           });
           socket.on('clientsessions', function() {
             if (mp.getPlayer(socket)) {
                 mp.clientsessions(socket, arguments);
             } else {
-                socket.emit('servermessage', "You need to join before sending sessions");
+                socket.emit('html_servermessage', "You need to join before sending sessions");
             }
           });
           socket.on('x3d_clientsessions', function() {
             if (mp.getPlayer(socket)) {
                 mp.clientsessions(socket, arguments);
             } else {
-                socket.emit('servermessage', "You need to join before sending sessions");
+                socket.emit('html_servermessage', "You need to join before sending sessions");
             }
+          });
+          socket.on('python_clientavatar', function() {
+	    const dml = arguments[0].toString().split(" ");
+            mp.python_clientavatar(socket, dml);
           });
           socket.on('clientsdp', function() {
             if (mp.getPlayer(socket)) {
                 mp.clientsdp(socket, arguments);
             } else {
-                socket.emit('servermessage', "You need to join before sending SDP");
+                socket.emit('html_servermessage', "You need to join before sending SDP");
             }
           });
           socket.on('clientmessage', function() {
             if (mp.getPlayer(socket)) {
                 mp.clientmessage(socket, arguments);
             } else {
-                socket.emit('servermessage', "You need to join before sending messages");
+                socket.emit('html_servermessage', "You need to join before sending messages");
             }
           });
           socket.on('clientmove', function() {
@@ -123,7 +127,7 @@ class Multiplayer {
             if (mp.getPlayer(socket)) { // if joined
                 mp.clientmove(socket, arguments[0], arguments[1]);
             } else {
-                socket.emit('servermessage', "Something wrong with socket or player are you in a session?");
+                socket.emit('html_servermessage', "Something wrong with socket or player are you in a session?");
             }
           });
           socket.on('x3d_clientmove', function() {
@@ -131,12 +135,12 @@ class Multiplayer {
             if (mp.getPlayer(socket)) { // if joined
                 mp.clientmove(socket, arguments[0], arguments[1]);
             } else {
-                socket.emit('servermessage', "Something wrong with socket or player are you in a session?");
+                socket.emit('html_servermessage', "Something wrong with socket or player are you in a session?");
             }
           });
           socket.on('clientrejoin', function () {
             if (mp.getPlayer(socket)) {
-                socket.emit('servermessage', "You're already joined, not rejoining");
+                socket.emit('html_servermessage', "You're already joined, not rejoining");
             } else {
                 mp.clientrejoin(socket, arguments);
             }
@@ -144,7 +148,7 @@ class Multiplayer {
 	/*
           socket.on('x3d_clientjoin', function () {
             if (mp.getPlayer(socket)) {
-                socket.emit('servermessage', "You're already joined");
+                socket.emit('html_servermessage', "You're already joined");
             } else {
                 mp.clientjoin(socket, "x3dbot");
             }
@@ -152,7 +156,7 @@ class Multiplayer {
 	  */
           socket.on('clientjoin', function () {
             if (mp.getPlayer(socket)) {
-                socket.emit('servermessage', "You're already joined");
+                socket.emit('html_servermessage', "You're already joined");
             } else {
                 mp.clientjoin(socket, "htmlbot");
             }
@@ -164,7 +168,7 @@ class Multiplayer {
             if (mp.getPlayer(socket)) {
                 mp.disconnect(socket, arguments);
             } else {
-                socket.emit('servermessage', "You need to connect before disconnecting");
+                socket.emit('html_servermessage', "You need to connect before disconnecting");
             }
           });
         });
@@ -174,8 +178,8 @@ class Multiplayer {
 	let playerusername = player.username;
 	let playernumber = player.playernumber;
         if (player) {
-            LOG('servermessage', player.playernumber+" quit.");
-            this.io.emit('servermessage', player.username+"#"+player.playernumber+" quit.");
+            LOG('html_servermessage', player.playernumber+" quit.");
+            this.io.emit('html_servermessage', player.username+"#"+player.playernumber+" quit.");
             if (player.room) {
                 // this.sendRoomMessage(player, player.username+"#"+player.playernumber+" quit.");
             	socket.leave(player.room);
@@ -197,6 +201,10 @@ class Multiplayer {
             }
         }
         this.sendApiMessageToRoom('serverpeers', names, room);
+    }
+    python_clientavatar(socket, dml) {
+        let player = this.getPlayer(socket);
+        this.io.emit('x3d_serveravatar', player.playernumber, dml, player.room);
     }
     clientsessions(socket, msg) {
         let player = this.getPlayer(socket);
@@ -229,7 +237,7 @@ class Multiplayer {
             let oldtoken = oldsession["Session Token"];
             oldsession["Session Active?"] = false;
 	    if (oldname) {
-            	this.sendApiMessageToRoom('servermessage', player.username+"#"+player.playernumber+" left "+oldname+".", oldtoken);
+            	this.sendApiMessageToRoom('html_servermessage', player.username+"#"+player.playernumber+" left "+oldname+".", oldtoken);
 		LOG(player.username, "from", oldname);
 	    }
             socket.leave(oldtoken);
@@ -243,7 +251,7 @@ class Multiplayer {
             socket.join(newtoken);
             this.sendPeersTo(newtoken);
 	    if (newname) {
-            	this.sendApiMessageToRoom('servermessage', player.username+"#"+player.playernumber+"@"+newname+" joined.", newtoken);
+            	this.sendApiMessageToRoom('html_servermessage', player.username+"#"+player.playernumber+"@"+newname+" joined.", newtoken);
 		LOG(player.username, "to", newname);
             }
         }
@@ -262,7 +270,7 @@ class Multiplayer {
         }
         if (oldroom !== player.room) {
             if (this.getPetName(oldroom)) {
-                this.io.to(oldroom).emit('servermessage', player.username+"#"+player.playernumber+"@"+this.getPetName(oldroom)+" went idle in "+oldroom);
+                this.io.to(oldroom).emit('html_servermessage', player.username+"#"+player.playernumber+"@"+this.getPetName(oldroom)+" went idle in "+oldroom);
                 socket.leave(oldroom);
                 this.sendPeersTo(oldroom);
             } else {
@@ -360,11 +368,11 @@ class Multiplayer {
             player.position = [0,0,0];
             player.orientation = orientation;
         }
-        // LOG('serverupdate', player);
+        // LOG('html_serverupdate', player);
         */
         if (player.room) {
             LOG("sending server update to room", player.room, player.username, player.playernumber, player.position, player.orientation);
-            this.sendApiMessageToPlayerRoom('serverupdate', player, player);
+            this.sendApiMessageToPlayerRoom('html_serverupdate', player, player);
             this.getRoomSend(player).emit('x3d_serverupdate', player.playernumber, player.position, player.orientation, player.room);
         } else {
             LOG("warning, room does not exist", player.username, "#", player.playernumber, "@", player.room);
@@ -389,8 +397,8 @@ class Multiplayer {
                         this.players[p].position = [0,0,0];
                         player.score++;
                         if (typeof orientation[0] === 'number') {
-                            //LOG('serverupdate', this.players[p]);
-                            this.io.emit('serverupdate', this.players[p]);
+                            //LOG('html_serverupdate', this.players[p]);
+                            this.io.emit('html_serverupdate', this.players[p]);
                         }
                         this.io.emit('serverscore', player.playernumber, player.score);
                     }
@@ -410,8 +418,8 @@ class Multiplayer {
                     score: this.oldplayers[id].score,
                     username:this.oldplayers[id].username,
                     room:this.oldplayers[id].room};
-                //socket.emit('servermessage', 'Your previous id was '+id);
-                //socket.emit('servermessage', 'Your current id is '+socket.client.id);
+                //socket.emit('html_servermessage', 'Your previous id was '+id);
+                //socket.emit('html_servermessage', 'Your current id is '+socket.client.id);
                 //LOG(this.players[socket.client.id]);
                 let player = this.getPlayer(socket);
                 if (player.room) {
@@ -451,7 +459,7 @@ class Multiplayer {
                 numPlayers++;
             }
         }
-        this.io.emit('servermessage', "The server has "+numPlayers+" resident"+(numPlayers !== 1 ? "s." : "."));
+        this.io.emit('html_servermessage', "The server has "+numPlayers+" resident"+(numPlayers !== 1 ? "s." : "."));
         var uri = socket.handshake.headers.referer;
         if (typeof uri !== 'undefined') {
             var hostIndex = uri.indexOf("//")+2;
@@ -498,8 +506,8 @@ class Multiplayer {
     }
 
     sendRoomMessage(player, msg) {
-        LOG("3. Sending servermessage '", msg, "' to", player.username);
-        this.sendApiMessageToPlayerRoom('servermessage', msg, player);
+        LOG("3. Sending html_servermessage '", msg, "' to", player.username);
+        this.sendApiMessageToPlayerRoom('html_servermessage', msg, player);
     }
     getRoom(player, petName) {
         for (let g in player.sessions) {

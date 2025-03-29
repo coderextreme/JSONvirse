@@ -166,10 +166,10 @@ class Sessions {
 					}
 					if (socket !== null) {
 						user._sockets[sessionname] = socket;
-						socket.on('servermessage', user.servermessage);
+						socket.on('html_servermessage', user.html_servermessage);
 						socket.on('serverpeers', user.serverpeers);
 						socket.on('serversessions', user.serversessions);
-						socket.on('serverupdate', user.serverupdate);
+						socket.on('html_serverupdate', user.html_serverupdate);
 						socket.on('servercapability', user.servercapability);
 						socket.emit('clientjoin');
 						// socket.emit("clientsessions", UserGlobalSessions);
@@ -192,7 +192,7 @@ class Sessions {
 		let oldsession = $('#session').val();
 		$('#session').empty();
 		let sessions = msg;
-		HTMLUser.LOG(sessions);
+		// HTMLUser.LOG(sessions);
 		let noop = $("<option>", {
 		  value: "common room",
 		  text: "common room"
@@ -204,7 +204,7 @@ class Sessions {
 		for (let g in sessions) {
 		    if (sessions.hasOwnProperty(g) && parseInt(g, 10) >= 0) {
 			let session = sessions[g];
-			HTMLUser.LOG(session);
+			// HTMLUser.LOG(session);
 			let option = $("<option>", {
 			  value: session['Session Token'],
 			  text: session['Session Petname'] 
@@ -216,7 +216,7 @@ class Sessions {
 		}
 		$('#session').val(oldsession);
 	}
-	servermessage (msg) {
+	html_servermessage (msg) {
 		$('#messages').append($('<li>').text(msg));
 		HTMLUser.LOG("message from server", msg);
 		scrollToBottom();
@@ -234,9 +234,9 @@ class Sessions {
 			$('#score').append($('<li>').text(msg));
 		}
 	}
-	serverupdate(p) {
+	html_serverupdate(p) {
 		if (p) {
-			this.servermessage(p.username+"#"+p.usernumber+" at "+p.position+" turns "+p.orientation);
+			html_servermessage(p.username+"#"+p.usernumber+" at "+p.position+" turns "+p.orientation);
 		}
 	}
 	servercapability() {

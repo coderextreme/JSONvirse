@@ -2,6 +2,13 @@ function LOG () {
     Browser.print('X3D Scene', ...arguments);
 }
 
+let nodeGroup = null;
+let linkGroup = null;
+let nodeShapes = {};
+let linkShapes = {};
+let nodes = [];
+
+
 class X3DUser {
 	static LOG () {
 	    Browser.print('X3D Browser', ...arguments);
@@ -115,8 +122,103 @@ class X3DUser {
 			history.pushState( {}, document.title, href+"?"+arguments[0].id );
 		}
 	}
+
 }
 
+const x3d_serveravatar = function(usernumber, dml, allowedToken) {
+      LOG("Setting avatar function", dml.length, dml[0]);
+      dml.forEach((line, index) => {
+	let dind = line.lastIndexOf("}");
+	if (dind > 0) {
+	      line = line.substr(dind+1);
+	}
+	const command = line.split("|");
+	if (command[0] === "NODE") {
+		Browser.print("DEBUG", line);
+		let node = {};
+		node.id = command[1];
+		node.sql = command[2];
+		if (node.sql === 'UPDATE') {
+			node.x = command[7];
+			node.y = command[8];
+			node.z = command[9];
+
+			// Create sphere for node
+			const nodeTransform = document.createElement('Transform');
+			nodeTransform.setAttribute('translation', `${node.x} ${node.y} ${node.z}`);
+			nodeTransform.setAttribute('data-id', node.id);
+
+			const shape = document.createElement('Shape');
+
+			const appearance = document.createElement('Appearance');
+			const material = document.createElement('Material');
+			material.setAttribute('diffuseColor', '0.5 0.5 0.5');
+			material.setAttribute('transparency', '0.0'); // Start fully opaque
+			appearance.appendChild(material);
+
+			const sphere = document.createElement('Sphere');
+			sphere.setAttribute('radius', 0.5);
+
+			shape.appendChild(appearance);
+			shape.appendChild(sphere);
+			nodeTransform.appendChild(shape);
+
+			// Add touch sensor for interaction
+			const touchSensor = document.createElement('TouchSensor');
+			touchSensor.setAttribute('description', `Node: ${node.label}`);
+			touchSensor.addEventListener('isActive', (event) => {
+			  if (event.value) {
+			    handleNodeClick(node);
+			  }
+			});
+			nodeTransform.appendChild(touchSensor);
+
+			if (nodeGroup) {
+				nodeGroup.appendChild(nodeTransform);
+			}
+			nodeShapes[node.id] = nodeTransform;
+			nodes.push(node);
+		}
+	} else if (command[0] === "SEGMENT") {
+		const sourceNode = nodes.find(n => n.id === command[3]);
+		const targetNode = nodes.find(n => n.id === command[4]);
+
+		if (sourceNode && targetNode) {
+		  const linkTransform = document.createElement('Transform');
+		  const shape = document.createElement('Shape');
+		  const appearance = document.createElement('Appearance');
+		  const material = document.createElement('Material');
+		  material.setAttribute('diffuseColor', "1 1 1");
+		  material.setAttribute('emissiveColor', "1 1 1");
+		  appearance.appendChild(material);
+		  const lineSet = document.createElement('LineSet');
+		  const coordinates = document.createElement('Coordinate');
+		  coordinates.setAttribute('point',
+		    `${sourceNode.x} ${sourceNode.y} ${sourceNode.z}, ${targetNode.x} ${targetNode.y} ${targetNode.z}`
+		  );
+		  lineSet.setAttribute('vertexCount', '2');
+		  lineSet.appendChild(coordinates);
+		  shape.appendChild(appearance);
+		  shape.appendChild(lineSet);
+		  linkTransform.appendChild(shape);
+
+		  if (linkGroup) {
+		  	linkGroup.appendChild(linkTransform);
+		  }
+		  // keep them around to delete later
+		  linkShapes[`${sourceNode.id}-${targetNode.id}-${index}`] = linkTransform;
+
+		  // Create arrow for directed relationship
+		  //createArrow(sourceNode, targetNode, link);
+
+		  // Create property label for link
+		  //createArcLabel(link, sourceNode, targetNode, index);
+		}
+	} else {
+		Browser.print("DEBUG", line);
+	}
+      });
+}
 
 const x3d_serverupdate =  function (usernumber, position, orientation, allowedToken) {
     'use strict';
@@ -181,6 +283,12 @@ const reconnect = function (x3duser) {
 				} else {
 					X3DUser.LOG("reconnect Can't service x3d_serverupdate", sessionname, sessiontoken);
 				}
+				if (x3d_serveravatar !== null) {
+					X3DUser.LOG("Found x3d_serveravatar", sessionname, sessiontoken, UserGlobalSessions);
+					x3duser._sockets[sessionname].on('x3d_serveravatar', x3d_serveravatar);
+				} else {
+					X3DUser.LOG("reconnect Can't service x3d_serveravatar", sessionname, sessiontoken);
+				}
 				$('#session').on("change",function(){
 					reconnect(x3duser);
 				 });
@@ -217,6 +325,10 @@ const initialize = function () {
     'use strict';
     X3DUser.LOG("Called intialize");
     reconnect(x3duser);
+    let groupNode = Browser.currentScene.createNode("Group");
+    let groupLink = Browser.currentScene.createNode("Group");
+    nodeGroup = Browser.currentScene.addNamedNode("nodeGroup", groupNode);
+    linkGroup = Browser.currentScene.addNamedNode("linkGroup", groupLink);
 };
 
 const newTranslation = function(Value) {
