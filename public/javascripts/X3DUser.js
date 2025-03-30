@@ -162,15 +162,8 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 			shape.appendChild(sphere);
 			nodeTransform.appendChild(shape);
 
-			try {
-				window.nodeGroup = Browser.currentScene.getNamedNode("nodeGroup");
-				nodeTransform.parent = window.nodeGroup;
-			} catch (e) {
-				LOG("DEBUG NODE", node);
-				window.nodeGroup = Browser.currentScene.createNode("Group");
-				nodeTransform.parent = window.nodeGroup;
-				window.nodeGroup = Browser.currentScene.addNamedNode("nodeGroup", window.nodeGroup);
-			}
+			window.nodeGroup = document.querySelector('Group[DEF="nodeGroup"]');
+			window.nodeGroup.appendChild(nodeTransform)
 			nodeShapes[node.id] = nodeTransform;
 			nodes.push(node);
 		}
@@ -197,15 +190,8 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		  shape.appendChild(lineSet);
 		  linkTransform.appendChild(shape);
 
-		  try {
-			window.linkGroup = Browser.currentScene.getNamedNode("linkGroup");
-			linkTransform.parent = window.linkGroup;
-		  } catch (e) {
-			LOG("DEBUG LINK", sourceNode, targetNode);
-			window.linkGroup = Browser.currentScene.createNode("Group");
-			linkTransform.parent = window.linkGroup;
-			window.linkGroup = Browser.currentScene.addNamedNode("linkGroup", window.linkGroup);
-		  }
+		  window.linkGroup = document.querySelector('Group[DEF="linkGroup"]');
+		  window.linkGroup.appendChild(linkTransform)
 		  // keep them around to delete later
 		  linkShapes[`${sourceNode.id}-${targetNode.id}-${index}`] = linkTransform;
 
