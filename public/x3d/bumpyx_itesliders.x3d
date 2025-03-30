@@ -314,6 +314,8 @@ function initialize() {
         <ROUTE fromField='translation_changed' fromNode='protoSensor' toField='newTranslation' toNode='protoValueTransformerScript'/>
         <ROUTE fromField='protoText_changed' fromNode='protoValueTransformerScript' toField='string' toNode='protoText'/>
 	    </Group>
+	    <Group DEF="nodeGroup"/>
+	    <Group DEF="linkGroup"/>
           </ProtoBody>
       </ProtoDeclare>
       <ProtoInstance DEF="aPI" name="SliderProto">
@@ -391,7 +393,5 @@ function initialize() {
       </ProtoInstance>
     </LayoutLayer>
   </LayerSet>
-  <Group DEF="nodeGroup"/>
-  <Group DEF="linkGroup"/>
 </Scene>
 </X3D>

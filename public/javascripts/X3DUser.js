@@ -2,10 +2,8 @@ function LOG () {
     Browser.print('X3D Scene', ...arguments);
 }
 
-window.nodeGroup = null;
-window.linkGroup = null;
-nodeShapes = {};
-linkShapes = {};
+nodesShapes = {};
+linksShapes = {};
 nodes = [];
 
 
@@ -82,12 +80,8 @@ class X3DUser {
 
 	loadURL(selector, url) {
 		try {
-			/*
-			document.querySelector("#scene").setAttribute("url", "\""+url+"\"");
-			*/
 			if (typeof Browser !== 'undefined') {
 				   // Import the X3D scene and handle the Promise
-				   X3DUser.LOG("url type", typeof url, url);
 				   Browser.loadURL(new X3D.MFString (url))
 				       .then(() => {
 					       X3DUser.LOG('Success importing URL:', url);
@@ -124,77 +118,151 @@ class X3DUser {
 	}
 
 }
+const addNodeTransform = function(node) {
+
+	// Create sphere for node
+	const nodeTransform = Browser.currentScene.createNode('Transform');
+	Browser.currentScene.addNamedNode(node.id, nodeTransform);
+
+	const shape = Browser.currentScene.createNode('Shape');
+	const appearance = Browser.currentScene.createNode('Appearance');
+	const material = Browser.currentScene.createNode('Material');
+	setField(material, 'diffuseColor', '1.0 1.0 1.0');
+	setField(material, 'transparency', '0.0'); // Start fully opaque
+	setField(appearance, 'material', material);
+
+	const sphere = Browser.currentScene.createNode('Sphere');
+	setField(sphere, 'radius', 20);
+
+	setField(shape, 'appearance', appearance);
+	setField(shape, 'geometry', sphere);
+	setMFField(nodeTransform, 'children', shape);
+	return nodeTransform;
+
+}
+const addLinkTransform = function(index, sourceNode, targetNode) {
+	const shape = Browser.currentScene.createNode('Shape');
+	const appearance = Browser.currentScene.createNode('Appearance');
+	const material = Browser.currentScene.createNode('Material');
+	const linkTransform = Browser.currentScene.createNode('Transform');
+	Browser.currentScene.addNamedNode('trans'+index, linkTransform);
+
+	setField(material, 'diffuseColor', "1 1 1");
+	setField(material, 'emissiveColor', "1 1 1");
+	setField(appearance, 'material', material);
+	const lineSet = Browser.currentScene.createNode('LineSet');
+	const coordinates = Browser.currentScene.createNode('Coordinate');
+	if (coordinates && typeof sourceNode.x !== 'undefined') {
+		setField(coordinates, 'point', new MFVec3f(
+			new SFVec3f(sourceNode.x, sourceNode.y, sourceNode.z),
+			new SFVec3f(targetNode.x, targetNode.y, targetNode.z))
+		);
+	}
+	setField(lineSet, 'vertexCount', '2');
+	Browser.currentScene.addNamedNode("point"+index, coordinates);
+	setField(lineSet, 'coord', coordinates);
+	setField(shape, 'appearance', appearance);
+	setField(shape, 'geometry', lineSet);
+	setMFField(linkTransform, 'children', shape);
+	return linkTransform;
+}
+
+const setField = function(node, fieldName, value) {
+	node.getField(fieldName).setValue(value);
+}
+
+const setMFField = function(node, fieldName, value) {
+	let field = node.getField(fieldName);
+	let children = field.getValue();
+	children.push(value);
+	field.setValue(children);
+}
 
 const x3d_serveravatar = function(usernumber, dml, allowedToken) {
       dml.forEach((line, index) => {
-        LOG("Avatar function", dml.length, line);
 	let dind = line.lastIndexOf("}");
 	if (dind > 0) {
 	      line = line.substr(dind+1);
 	}
+	LOG(line);
 	const command = line.split("|");
 	if (command[0] === "NODE") {
-		let node = {};
+		let node = nodes.find(n => n.id === command[1]);
+		if (!node) {
+			node = {};
+		}
 		node.id = command[1];
 		node.sql = command[2];
+		let nodeGroup = Browser.currentScene.getNamedNode('nodeGroup');
+		let nodeTransform = null;
+		try {
+			nodeTransform = Browser.currentScene.getNamedNode(node.id);
+		} catch (e) {
+			Browser.print(e);
+		}
+		if (nodeTransform === null) {
+			nodeTransform = addNodeTransform(node);
+		}
 		if (node.sql === 'UPDATE') {
 			node.x = parseFloat(command[7]);
 			node.y = parseFloat(command[8]);
 			node.z = parseFloat(command[9]);
-
-			// Create sphere for node
-			const nodeTransform = document.createElement('Transform');
-			nodeTransform.setAttribute('translation', `${node.x} ${node.y} ${node.z}`);
-			nodeTransform.setAttribute('data-id', node.id);
-
-			const shape = document.createElement('Shape');
-
-			const appearance = document.createElement('Appearance');
-			const material = document.createElement('Material');
-			material.setAttribute('diffuseColor', '1.0 1.0 1.0');
-			material.setAttribute('transparency', '0.0'); // Start fully opaque
-			appearance.appendChild(material);
-
-			const sphere = document.createElement('Sphere');
-			sphere.setAttribute('radius', 20);
-
-			shape.appendChild(appearance);
-			shape.appendChild(sphere);
-			nodeTransform.appendChild(shape);
-
-			window.nodeGroup = document.querySelector('Group[DEF="nodeGroup"]');
-			window.nodeGroup.appendChild(nodeTransform)
-			nodeShapes[node.id] = nodeTransform;
-			nodes.push(node);
+			setField(nodeTransform, 'translation', new SFVec3f(node.x, node.y, node.z));
+			LOG("COORD", node.id, `${node.x} ${node.y} ${node.z}`);
+			nodesShapes[node.id] = nodeTransform;
+		} else if (node.sql === 'INSERT') {
+			if (!nodesShapes[node.id]) {
+				if (nodeGroup !== null) {
+					setMFField(nodeGroup, 'children', nodeTransform);
+				} else {
+					LOG("FATAL NODE", node.id);
+				}
+				nodesShapes[node.id] = nodeTransform;
+				nodes.push(node);
+			}
 		}
 	} else if (command[0] === "SEGMENT") {
 		const sourceNode = nodes.find(n => n.id === command[3]);
 		const targetNode = nodes.find(n => n.id === command[4]);
-
+		let sql = command[2];
 		if (sourceNode && targetNode) {
-		  const linkTransform = document.createElement('Transform');
-		  const shape = document.createElement('Shape');
-		  const appearance = document.createElement('Appearance');
-		  const material = document.createElement('Material');
-		  material.setAttribute('diffuseColor', "1 1 1");
-		  material.setAttribute('emissiveColor', "1 1 1");
-		  appearance.appendChild(material);
-		  const lineSet = document.createElement('LineSet');
-		  const coordinates = document.createElement('Coordinate');
-		  coordinates.setAttribute('point',
-		    `${sourceNode.x} ${sourceNode.y} ${sourceNode.z}, ${targetNode.x} ${targetNode.y} ${targetNode.z}`
-		  );
-		  lineSet.setAttribute('vertexCount', '2');
-		  lineSet.appendChild(coordinates);
-		  shape.appendChild(appearance);
-		  shape.appendChild(lineSet);
-		  linkTransform.appendChild(shape);
+		  let linkGroup = Browser.currentScene.getNamedNode('linkGroup');
+		  let linkTransform = null;
+		  try {
+		  	linkTransform = Browser.currentScene.getNamedNode('trans'+index);
+		  } catch (e) {
+			Browser.print(e);
+		  }
+		  if (linkTransform === null) {
+			linkTransform = addLinkTransform(index, sourceNode, targetNode);
+			if (!linksShapes[`${sourceNode.id}-${targetNode.id}-${index}`]) {
+		  		linksShapes[`${sourceNode.id}-${targetNode.id}-${index}`] = linkTransform;
+				  if (linkGroup !== null) {
+					setMFField(linkGroup, 'children', linkTransform);
+				  } else {
+					LOG("FATAL LINK", index);
+				  }
+			}
+		  }
+		  if (sql === 'UPDATE') {
+			  let coordinates = Browser.currentScene.getNamedNode('point'+index);
+			  if (coordinates) {
+				  if (typeof sourceNode.x !== 'undefined') {
+					setField(coordinates, 'point',
+						new MFVec3f(
+							new SFVec3f(sourceNode.x, sourceNode.y, sourceNode.z),
+							new SFVec3f(targetNode.x, targetNode.y, targetNode.z))
+					);
+					LOG("SUCCESSFUL COORDINATE", index, `${sourceNode.id} ${sourceNode.x} ${sourceNode.y} ${sourceNode.z}, ${targetNode.id} ${targetNode.x} ${targetNode.y} ${targetNode.z}`);
+				  } else {
+					LOG("FATAL COORDINATE", index, `${sourceNode.id} ${sourceNode.x} ${sourceNode.y} ${sourceNode.z}, ${targetNode.id} ${targetNode.x} ${targetNode.y} ${targetNode.z}`);
+				  }
+						
+			  } else {
+				LOG("COULDN'T FIND COORDINATE", index)
+		          }
 
-		  window.linkGroup = document.querySelector('Group[DEF="linkGroup"]');
-		  window.linkGroup.appendChild(linkTransform)
-		  // keep them around to delete later
-		  linkShapes[`${sourceNode.id}-${targetNode.id}-${index}`] = linkTransform;
-
+		  }
 		  // Create arrow for directed relationship
 		  //createArrow(sourceNode, targetNode, link);
 
@@ -256,10 +324,6 @@ const reconnect = function (x3duser) {
 			let sessionname = session['Session Petname'];
 			let sessiontoken = session['Session Token'];
 			let socket = x3duser._sockets[sessionname];
-			LOG(".x3duser", x3duser);
-			LOG(".sessionname", sessionname);
-			LOG(".x3duser._sockets", x3duser._sockets);
-			LOG(".x3duser._sockets[petName]", x3duser._sockets[sessionname]);
 			if (socket !== null) {
 				// socket.emit('x3d_clientjoin');
 				socket.emit("x3d_clientsessions", UserGlobalSessions);
@@ -268,7 +332,7 @@ const reconnect = function (x3duser) {
 					X3DUser.LOG("Found x3d_serverupdate", sessionname, sessiontoken, UserGlobalSessions);
 					x3duser._sockets[sessionname].on('x3d_serverupdate', x3d_serverupdate);
 				} else {
-					X3DUser.LOG("reconnect Can't service x3d_serverupdate", sessionname, sessiontoken);
+					X3DUser.LOG("FATAL skeleton reconnect Can't service x3d_serverupdate", sessionname, sessiontoken);
 				}
 				if (x3d_serveravatar !== null) {
 					X3DUser.LOG("Found x3d_serveravatar", sessionname, sessiontoken, UserGlobalSessions);
@@ -316,18 +380,11 @@ const initialize = function () {
 
 const newTranslation = function(Value) {
     'use strict';
-    X3DUser.LOG("newTranslation", petNames);
     for (let p in petNames) {
         let petName = petNames[p];
-	LOG("x3duser", x3duser);
-	LOG("petName", petName);
-	LOG("x3duser._sockets", x3duser._sockets);
-	LOG("x3duser._sockets[petName]", x3duser._sockets[petName]);
         if (x3duser._sockets[petName] !== null && typeof x3duser._sockets[petName] !== 'undefined') {
             protoValue_changed = Value.x * protoScale;
             protoText_changed = new MFString(protoParameterName+'='+protoValue_changed.toFixed(2));
-            X3DUser.LOG("update", petName, protoText_changed, protoValue_changed);
-            X3DUser.LOG("x3d_clientmove", petName, [protoParameterName],[Value.x]);
             x3duser._sockets[petName].emit("x3d_clientmove", [protoParameterName],[Value.x]);
         } else {
             X3DUser.LOG("No socket for ", petName);
