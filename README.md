@@ -22,5 +22,6 @@ Or equivalent, without installing in a folder, (installs in your npm cache):
 export X3DJSONPORT=8088  # or 80 or whatever you like, normally something > 1024.  80 works on Windows.  Probably not Linux or Mac.  Also using port 443 is not advised
 npx x3d-jsonverse@latest
 ```
-go to http://localhost:8088   # or whatever replaced 8088 above.
+Click on a one of the localhost:8088 links
+
 Type CTRL-C to exit in the terminal window you started npx in.
