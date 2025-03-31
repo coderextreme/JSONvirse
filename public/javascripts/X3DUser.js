@@ -127,15 +127,16 @@ const addNodeTransform = function(node) {
 	const shape = Browser.currentScene.createNode('Shape');
 	const appearance = Browser.currentScene.createNode('Appearance');
 	const material = Browser.currentScene.createNode('Material');
-	setField(material, 'diffuseColor', '1.0 1.0 1.0');
-	setField(material, 'transparency', '0.0'); // Start fully opaque
-	setField(appearance, 'material', material);
+	material.diffuseColor = new SFVec3f(1.0, 0.0, 0.0);
+	material.emissiveColor = new SFVec3f(1.0, 0.0, 0.0);
+	material.transparency = 0.0; // Start fully opaque
+	appearance.material = material;
 
 	const sphere = Browser.currentScene.createNode('Sphere');
-	setField(sphere, 'radius', 20);
+	sphere.radius = 3;
 
-	setField(shape, 'appearance', appearance);
-	setField(shape, 'geometry', sphere);
+	shape.appearance = appearance;
+	shape.geometry = sphere;
 	addChild(nodeTransform, shape);
 	return nodeTransform;
 
@@ -147,28 +148,23 @@ const addLinkTransform = function(index, sourceNode, targetNode) {
 	const linkTransform = Browser.currentScene.createNode('Transform');
 	Browser.currentScene.addNamedNode('trans'+index, linkTransform);
 
-	setField(material, 'diffuseColor', "1 1 1");
-	setField(material, 'emissiveColor', "1 1 1");
-	setField(appearance, 'material', material);
+	material.diffuseColor = new SFVec3f(1.0, 0.0, 0.0);
+	material.emissiveColor = new SFVec3f(1.0, 0.0, 0.0);
+	appearance.material = material;
 	const lineSet = Browser.currentScene.createNode('LineSet');
 	const coordinates = Browser.currentScene.createNode('Coordinate');
 	if (coordinates && typeof sourceNode.x !== 'undefined') {
-		setField(coordinates, 'point', new MFVec3f(
+		coordinates.point = new MFVec3f(
 			new SFVec3f(sourceNode.x, sourceNode.y, sourceNode.z),
-			new SFVec3f(targetNode.x, targetNode.y, targetNode.z))
-		);
+			new SFVec3f(targetNode.x, targetNode.y, targetNode.z));
 	}
-	setField(lineSet, 'vertexCount', '2');
+	lineSet.vertexCount = 2;
 	Browser.currentScene.addNamedNode("point"+index, coordinates);
-	setField(lineSet, 'coord', coordinates);
-	setField(shape, 'appearance', appearance);
-	setField(shape, 'geometry', lineSet);
+	lineSet.coord = coordinates;
+	shape.appearance = appearance;
+	shape.geometry = lineSet;
 	addChild(linkTransform, shape);
 	return linkTransform;
-}
-
-const setField = function(node, fieldName, value) {
-	node[fieldName] = value;
 }
 
 const addChild = function(node, value) {
@@ -199,11 +195,11 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 			nodeTransform = addNodeTransform(node);
 		}
 		if (node.sql === 'UPDATE') {
-			node.x = 5 * parseFloat(command[7]);
-			node.y = 5 * parseFloat(command[8]);
-			node.z = 5 * parseFloat(command[9]);
-			setField(nodeTransform, 'translation', new SFVec3f(node.x, node.y, node.z));
-			LOG("UPDATING NODE", node.id, node.x, node.y, node.z);
+			node.x = 10 * parseFloat(command[7]);
+			node.y = 10 * parseFloat(command[8]);
+			node.z = parseFloat(command[9]);
+			nodeTransform.translation = new SFVec3f(node.x, node.y, node.z);
+			// LOG("UPDATING NODE", node.id, node.x, node.y, node.z);
 			nodesShapes[node.id] = nodeTransform;
 		} else if (node.sql === 'INSERT') {
 			if (!nodesShapes[node.id]) {
@@ -244,11 +240,10 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 			  let coordinates = Browser.currentScene.getNamedNode('point'+index);
 			  if (coordinates) {
 				  if (typeof sourceNode.x !== 'undefined') {
-					setField(coordinates, 'point',
-						new MFVec3f([
+					coordinates.point = new MFVec3f(
 							new SFVec3f(sourceNode.x, sourceNode.y, sourceNode.z),
-							new SFVec3f(targetNode.x, targetNode.y, targetNode.z)])
-					);
+							new SFVec3f(targetNode.x, targetNode.y, targetNode.z));
+					LOG("SUCCESSFUL COORDINATE", index, "src", sourceNode.id, sourceNode.x, sourceNode.y, sourceNode.z, "tgt", targetNode.id, targetNode.x, targetNode.y, targetNode.z);
 				  } else {
 					LOG("FATAL COORDINATE", index, `${sourceNode.id} ${sourceNode.x} ${sourceNode.y} ${sourceNode.z}, ${targetNode.id} ${targetNode.x} ${targetNode.y} ${targetNode.z}`);
 				  }
