@@ -136,7 +136,7 @@ const addNodeTransform = function(node) {
 
 	setField(shape, 'appearance', appearance);
 	setField(shape, 'geometry', sphere);
-	setMFField(nodeTransform, 'children', shape);
+	addChild(nodeTransform, shape);
 	return nodeTransform;
 
 }
@@ -163,19 +163,16 @@ const addLinkTransform = function(index, sourceNode, targetNode) {
 	setField(lineSet, 'coord', coordinates);
 	setField(shape, 'appearance', appearance);
 	setField(shape, 'geometry', lineSet);
-	setMFField(linkTransform, 'children', shape);
+	addChild(linkTransform, shape);
 	return linkTransform;
 }
 
 const setField = function(node, fieldName, value) {
-	node.getField(fieldName).setValue(value);
+	node[fieldName] = value;
 }
 
-const setMFField = function(node, fieldName, value) {
-	let field = node.getField(fieldName);
-	let children = field.getValue();
-	children.push(value);
-	field.setValue(children);
+const addChild = function(node, value) {
+	node.children.push(value);
 }
 
 const x3d_serveravatar = function(usernumber, dml, allowedToken) {
@@ -184,7 +181,6 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 	if (dind > 0) {
 	      line = line.substr(dind+1);
 	}
-	LOG(line);
 	const command = line.split("|");
 	if (command[0] === "NODE") {
 		let node = nodes.find(n => n.id === command[1]);
@@ -198,22 +194,22 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		try {
 			nodeTransform = Browser.currentScene.getNamedNode(node.id);
 		} catch (e) {
-			Browser.print(e);
 		}
 		if (nodeTransform === null) {
 			nodeTransform = addNodeTransform(node);
 		}
 		if (node.sql === 'UPDATE') {
-			node.x = parseFloat(command[7]);
-			node.y = parseFloat(command[8]);
-			node.z = parseFloat(command[9]);
+			node.x = 5 * parseFloat(command[7]);
+			node.y = 5 * parseFloat(command[8]);
+			node.z = 5 * parseFloat(command[9]);
 			setField(nodeTransform, 'translation', new SFVec3f(node.x, node.y, node.z));
-			LOG("COORD", node.id, `${node.x} ${node.y} ${node.z}`);
+			LOG("UPDATING NODE", node.id, node.x, node.y, node.z);
 			nodesShapes[node.id] = nodeTransform;
 		} else if (node.sql === 'INSERT') {
 			if (!nodesShapes[node.id]) {
 				if (nodeGroup !== null) {
-					setMFField(nodeGroup, 'children', nodeTransform);
+					addChild(nodeGroup, nodeTransform);
+					LOG("SUCCESSFUL NODE", node.id, node.x, node.y, node.z);
 				} else {
 					LOG("FATAL NODE", node.id);
 				}
@@ -231,14 +227,14 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		  try {
 		  	linkTransform = Browser.currentScene.getNamedNode('trans'+index);
 		  } catch (e) {
-			Browser.print(e);
 		  }
 		  if (linkTransform === null) {
 			linkTransform = addLinkTransform(index, sourceNode, targetNode);
 			if (!linksShapes[`${sourceNode.id}-${targetNode.id}-${index}`]) {
 		  		linksShapes[`${sourceNode.id}-${targetNode.id}-${index}`] = linkTransform;
 				  if (linkGroup !== null) {
-					setMFField(linkGroup, 'children', linkTransform);
+					addChild(linkGroup, linkTransform);
+					LOG("SUCCESSFUL LINK", index, sourceNode.id, targetNode.id);
 				  } else {
 					LOG("FATAL LINK", index);
 				  }
@@ -249,11 +245,10 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 			  if (coordinates) {
 				  if (typeof sourceNode.x !== 'undefined') {
 					setField(coordinates, 'point',
-						new MFVec3f(
+						new MFVec3f([
 							new SFVec3f(sourceNode.x, sourceNode.y, sourceNode.z),
-							new SFVec3f(targetNode.x, targetNode.y, targetNode.z))
+							new SFVec3f(targetNode.x, targetNode.y, targetNode.z)])
 					);
-					LOG("SUCCESSFUL COORDINATE", index, `${sourceNode.id} ${sourceNode.x} ${sourceNode.y} ${sourceNode.z}, ${targetNode.id} ${targetNode.x} ${targetNode.y} ${targetNode.z}`);
 				  } else {
 					LOG("FATAL COORDINATE", index, `${sourceNode.id} ${sourceNode.x} ${sourceNode.y} ${sourceNode.z}, ${targetNode.id} ${targetNode.x} ${targetNode.y} ${targetNode.z}`);
 				  }
@@ -273,6 +268,10 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		Browser.print("DEBUG", line);
 	}
       });
+      var xml = Browser.currentScene.toXMLString();
+      if (document.querySelector("#x3d").innerHTML !== xml) {
+      	document.querySelector("#x3d").innerHTML = xml;
+      }
 }
 
 const x3d_serverupdate =  function (usernumber, position, orientation, allowedToken) {
@@ -329,13 +328,11 @@ const reconnect = function (x3duser) {
 				socket.emit("x3d_clientsessions", UserGlobalSessions);
 				socket.emit("x3d_clientactivesession", sessiontoken);
 				if (x3d_serverupdate !== null) {
-					X3DUser.LOG("Found x3d_serverupdate", sessionname, sessiontoken, UserGlobalSessions);
 					x3duser._sockets[sessionname].on('x3d_serverupdate', x3d_serverupdate);
 				} else {
 					X3DUser.LOG("FATAL skeleton reconnect Can't service x3d_serverupdate", sessionname, sessiontoken);
 				}
 				if (x3d_serveravatar !== null) {
-					X3DUser.LOG("Found x3d_serveravatar", sessionname, sessiontoken, UserGlobalSessions);
 					x3duser._sockets[sessionname].on('x3d_serveravatar', x3d_serveravatar);
 				} else {
 					X3DUser.LOG("reconnect Can't service x3d_serveravatar", sessionname, sessiontoken);

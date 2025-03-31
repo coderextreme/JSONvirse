@@ -263,6 +263,7 @@ function initialize() {
 	  </ProtoInterface>
 	  <ProtoBody>
 	    <Group>
+      	      <Viewpoint description='My Overview' fieldOfView='1.570796' position='0 1.75 60' />
 	      <Transform DEF="protoSlider" translation="0 0.7 0">
 		<IS>
 			<connect nodeField="translation" protoField="sliderTranslation"/>
@@ -313,9 +314,9 @@ function initialize() {
 
         <ROUTE fromField='translation_changed' fromNode='protoSensor' toField='newTranslation' toNode='protoValueTransformerScript'/>
         <ROUTE fromField='protoText_changed' fromNode='protoValueTransformerScript' toField='string' toNode='protoText'/>
-	    </Group>
 	    <Group DEF="nodeGroup"/>
 	    <Group DEF="linkGroup"/>
+	    </Group>
           </ProtoBody>
       </ProtoDeclare>
       <ProtoInstance DEF="aPI" name="SliderProto">
