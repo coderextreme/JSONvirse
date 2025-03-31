@@ -127,8 +127,8 @@ const addNodeTransform = function(node) {
 	const shape = Browser.currentScene.createNode('Shape');
 	const appearance = Browser.currentScene.createNode('Appearance');
 	const material = Browser.currentScene.createNode('Material');
-	material.diffuseColor = new SFVec3f(1.0, 0.0, 0.0);
-	material.emissiveColor = new SFVec3f(1.0, 0.0, 0.0);
+	material.diffuseColor = new SFColor(1.0, 0.0, 0.0);
+	material.emissiveColor = new SFColor(1.0, 0.0, 0.0);
 	material.transparency = 0.0; // Start fully opaque
 	appearance.material = material;
 
@@ -141,26 +141,26 @@ const addNodeTransform = function(node) {
 	return nodeTransform;
 
 }
-const addLinkTransform = function(index, sourceNode, targetNode) {
+const addLinkTransform = function(link, sourceNode, targetNode) {
 	const shape = Browser.currentScene.createNode('Shape');
 	const appearance = Browser.currentScene.createNode('Appearance');
 	const material = Browser.currentScene.createNode('Material');
 	const linkTransform = Browser.currentScene.createNode('Transform');
-	Browser.currentScene.addNamedNode('trans'+index, linkTransform);
+	Browser.currentScene.addNamedNode('trans'+link, linkTransform);
 
-	material.diffuseColor = new SFVec3f(1.0, 0.0, 0.0);
-	material.emissiveColor = new SFVec3f(1.0, 0.0, 0.0);
+	material.diffuseColor = new SFColor(0.0, 0.0, 1.0);
+	material.emissiveColor = new SFColor(0.0, 0.0, 1.0);
 	appearance.material = material;
 	const lineSet = Browser.currentScene.createNode('LineSet');
-	const coordinates = Browser.currentScene.createNode('Coordinate');
-	if (coordinates && typeof sourceNode.x !== 'undefined') {
-		coordinates.point = new MFVec3f(
+	const coordinate = Browser.currentScene.createNode('Coordinate');
+	if (coordinate && typeof sourceNode.x !== 'undefined') {
+		coordinate.point = new MFVec3f(
 			new SFVec3f(sourceNode.x, sourceNode.y, sourceNode.z),
 			new SFVec3f(targetNode.x, targetNode.y, targetNode.z));
 	}
 	lineSet.vertexCount = 2;
-	Browser.currentScene.addNamedNode("point"+index, coordinates);
-	lineSet.coord = coordinates;
+	Browser.currentScene.addNamedNode('point'+link, coordinate);
+	lineSet.coord = coordinate;
 	shape.appearance = appearance;
 	shape.geometry = lineSet;
 	addChild(linkTransform, shape);
@@ -205,7 +205,7 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 			if (!nodesShapes[node.id]) {
 				if (nodeGroup !== null) {
 					addChild(nodeGroup, nodeTransform);
-					LOG("SUCCESSFUL NODE", node.id, node.x, node.y, node.z);
+					// LOG("SUCCESSFUL NODE", node.id, node.x, node.y, node.z);
 				} else {
 					LOG("FATAL NODE", node.id);
 				}
@@ -217,39 +217,40 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		const sourceNode = nodes.find(n => n.id === command[3]);
 		const targetNode = nodes.find(n => n.id === command[4]);
 		let sql = command[2];
+		let link = command[3]+command[4];
 		if (sourceNode && targetNode) {
 		  let linkGroup = Browser.currentScene.getNamedNode('linkGroup');
 		  let linkTransform = null;
 		  try {
-		  	linkTransform = Browser.currentScene.getNamedNode('trans'+index);
+		  	linkTransform = Browser.currentScene.getNamedNode('trans'+link);
 		  } catch (e) {
 		  }
 		  if (linkTransform === null) {
-			linkTransform = addLinkTransform(index, sourceNode, targetNode);
-			if (!linksShapes[`${sourceNode.id}-${targetNode.id}-${index}`]) {
-		  		linksShapes[`${sourceNode.id}-${targetNode.id}-${index}`] = linkTransform;
+			linkTransform = addLinkTransform(link, sourceNode, targetNode);
+			if (linkTransform !== null && !linksShapes[`${sourceNode.id}-${targetNode.id}-${link}`]) {
+		  		linksShapes[`${sourceNode.id}-${targetNode.id}-${link}`] = linkTransform;
 				  if (linkGroup !== null) {
 					addChild(linkGroup, linkTransform);
-					LOG("SUCCESSFUL LINK", index, sourceNode.id, targetNode.id);
+					LOG("SUCCESSFUL LINK", link, sourceNode.id, targetNode.id);
 				  } else {
-					LOG("FATAL LINK", index);
+					LOG("FATAL LINK", link);
 				  }
 			}
 		  }
 		  if (sql === 'UPDATE') {
-			  let coordinates = Browser.currentScene.getNamedNode('point'+index);
-			  if (coordinates) {
+			  let coordinate = Browser.currentScene.getNamedNode('point'+link);
+			  if (coordinate) {
 				  if (typeof sourceNode.x !== 'undefined') {
-					coordinates.point = new MFVec3f(
+					coordinate.point = new MFVec3f(
 							new SFVec3f(sourceNode.x, sourceNode.y, sourceNode.z),
 							new SFVec3f(targetNode.x, targetNode.y, targetNode.z));
-					LOG("SUCCESSFUL COORDINATE", index, "src", sourceNode.id, sourceNode.x, sourceNode.y, sourceNode.z, "tgt", targetNode.id, targetNode.x, targetNode.y, targetNode.z);
+					// LOG("SUCCESSFUL COORDINATE", link, coordinate.point);
 				  } else {
-					LOG("FATAL COORDINATE", index, `${sourceNode.id} ${sourceNode.x} ${sourceNode.y} ${sourceNode.z}, ${targetNode.id} ${targetNode.x} ${targetNode.y} ${targetNode.z}`);
+					LOG("FATAL COORDINATE", link, `${sourceNode.id} ${sourceNode.x} ${sourceNode.y} ${sourceNode.z}, ${targetNode.id} ${targetNode.x} ${targetNode.y} ${targetNode.z}`);
 				  }
 						
 			  } else {
-				LOG("COULDN'T FIND COORDINATE", index)
+				LOG("COULDN'T FIND COORDINATE", link)
 		          }
 
 		  }
@@ -257,7 +258,7 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		  //createArrow(sourceNode, targetNode, link);
 
 		  // Create property label for link
-		  //createArcLabel(link, sourceNode, targetNode, index);
+		  //createArcLabel(link, sourceNode, targetNode, link);
 		}
 	} else {
 		Browser.print("DEBUG", line);
