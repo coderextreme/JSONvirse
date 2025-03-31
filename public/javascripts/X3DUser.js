@@ -190,6 +190,7 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		try {
 			nodeTransform = Browser.currentScene.getNamedNode(node.id);
 		} catch (e) {
+			nodeTransform = null;
 		}
 		if (nodeTransform === null) {
 			nodeTransform = addNodeTransform(node);
@@ -219,11 +220,17 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		let sql = command[2];
 		let link = command[3]+command[4];
 		if (sourceNode && targetNode) {
-		  let linkGroup = Browser.currentScene.getNamedNode('linkGroup');
+		  let linkGroup = null;
 		  let linkTransform = null;
+		  try {
+			linkGroup = Browser.currentScene.getNamedNode('linkGroup');
+		  } catch (e) {
+		  	linkGroup = null;
+		  }
 		  try {
 		  	linkTransform = Browser.currentScene.getNamedNode('trans'+link);
 		  } catch (e) {
+		  	linkTransform = null;
 		  }
 		  if (linkTransform === null) {
 			linkTransform = addLinkTransform(link, sourceNode, targetNode);
