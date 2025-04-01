@@ -208,18 +208,27 @@ const ensureLinkGroupExists = function() {
 }
 
 const x3d_serveravatar = function(usernumber, dml, allowedToken) {
+      let header = ["0", "0", "DUMMY"];
+      let command = ["DUMMY"];
       dml.forEach((line, index) => {
-	let dind = line.lastIndexOf("}");
-	if (dind > 0) {
-	      line = line.substr(dind+1);
+        let header_command = line.split(",");
+	if (header_command.length == 1) {
+		command = header_command[0].split("|");
+	} else if (header_command.length == 2) {
+      		header = header_command[0].split("|");
+		command = header_command[1].split("|");
 	}
-	const command = line.split("|");
+
+	let timestamp = parseInt(header[0]);
+	let sequence = parseInt(header[1]);
+	let nick = header[2];
+
 	if (command[0] === "NODE") {
-		let node = nodes.find(n => n.id === command[1]);
+		let node = nodes.find(n => n.id === nick+command[1]);
 		if (!node) {
 			node = {};
 		}
-		node.id = command[1];
+		node.id = nick+command[1];
 		node.sql = command[2];
 		node.red = parseFloat(command[3]);
 		node.green = parseFloat(command[4]);
@@ -241,7 +250,9 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		if (nodeTransform === null) {
 			nodeTransform = addNodeTransform(node);
 		}
-		updateNode(node, nodeTransform);
+		if (node.sql === 'UPDATE') {
+			updateNode(node, nodeTransform);
+		}
 		if (!nodesShapes[node.id]) {
 			if (nodeGroup !== null) {
 				addChild(nodeGroup, nodeTransform);
@@ -255,10 +266,10 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 			nodesShapes[node.id] = nodeTransform;
 		}
 	} else if (command[0] === "SEGMENT") {
-		const sourceNode = nodes.find(n => n.id === command[3]);
-		const targetNode = nodes.find(n => n.id === command[4]);
+		const sourceNode = nodes.find(n => n.id === nick+command[3]);
+		const targetNode = nodes.find(n => n.id === nick+command[4]);
 		let sql = command[2];
-		let link = command[3]+command[4];
+		let link = nick+command[3]+nick+command[4];
 		if (sourceNode && targetNode) {
 		  let linkGroup = ensureLinkGroupExists();
 		  let linkTransform = null;
