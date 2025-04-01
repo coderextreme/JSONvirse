@@ -226,6 +226,7 @@ function initialize() {
     <LayoutLayer isPickable='true'>
       <!-- positioning the LayoutLayer -->
       <Layout containerField='layout' align='"LEFT","BOTTOM"' offset='-0.2, 0.19' offsetUnits='"WORLD","WORLD"' scaleMode='"NONE","NONE"' size='0.4, 0.6' sizeUnits='"WORLD","WORLD"'/>
+      <Viewpoint description='My Overview' fieldOfView='1.570796' position='0 1.75 60' />
       <!-- clipping the LayoutLayer -->
       <Viewport clipBoundary='0, 1, 0, 1'/>
       <!-- the content (children) of the LayoutLayer -->
@@ -263,7 +264,6 @@ function initialize() {
 	  </ProtoInterface>
 	  <ProtoBody>
 	    <Group>
-      	      <Viewpoint description='My Overview' fieldOfView='1.570796' position='0 1.75 60' />
 	      <Transform DEF="protoSlider" translation="0 0.7 0">
 		<IS>
 			<connect nodeField="translation" protoField="sliderTranslation"/>

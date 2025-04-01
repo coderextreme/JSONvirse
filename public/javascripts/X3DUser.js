@@ -127,21 +127,26 @@ const addNodeTransform = function(node) {
 	const shape = Browser.currentScene.createNode('Shape');
 	const appearance = Browser.currentScene.createNode('Appearance');
 	const material = Browser.currentScene.createNode('Material');
-	material.diffuseColor = new SFColor(node.red, node.green, node.blue);
-	Browser.print(material.diffuseColor, `${node.red}-${node.green}-${node.blue}`);
-	material.emissiveColor = new SFColor(node.red, node.green, node.blue);
+	const sphere = Browser.currentScene.createNode('Sphere');
+
+	sphere.radius = 3;
 	material.transparency = 0.0; // Start fully opaque
 	appearance.material = material;
-
-	const sphere = Browser.currentScene.createNode('Sphere');
-	sphere.radius = 3;
-
-	shape.appearance = appearance;
 	shape.geometry = sphere;
+	shape.appearance = appearance;
 	addChild(nodeTransform, shape);
+	updateNode(node, nodeTransform);
 	return nodeTransform;
 
 }
+
+const updateNode = function(node, nodeTransform) {
+	nodeTransform.children[0].appearance.material.diffuseColor = new SFColor(node.red, node.green, node.blue);
+	nodeTransform.children[0].appearance.material.emissiveColor = new SFColor(node.red, node.green, node.blue);
+	nodeTransform.center = new SFVec3f(node.x, node.y, node.z);
+	nodeTransform.translation = new SFVec3f(node.x + node.offsetx, node.y + node.offsety, node.z + node.offsetz);
+}
+
 const addLinkTransform = function(link, sourceNode, targetNode) {
 	const shape = Browser.currentScene.createNode('Shape');
 	const appearance = Browser.currentScene.createNode('Appearance');
@@ -156,8 +161,14 @@ const addLinkTransform = function(link, sourceNode, targetNode) {
 	const coordinate = Browser.currentScene.createNode('Coordinate');
 	if (coordinate && typeof sourceNode.x !== 'undefined') {
 		coordinate.point = new MFVec3f(
-			new SFVec3f(sourceNode.x, sourceNode.y, sourceNode.z),
-			new SFVec3f(targetNode.x, targetNode.y, targetNode.z));
+			new SFVec3f(
+				sourceNode.x + sourceNode.offsetx,
+				sourceNode.y + sourceNode.offsety,
+				sourceNode.z + sourceNode.offsetz),
+			new SFVec3f(
+				targetNode.x + targetNode.offsetx,
+				targetNode.y + targetNode.offsety,
+				targetNode.z + targetNode.offsetz));
 	}
 	Browser.currentScene.addNamedNode('point'+link, coordinate);
 	lineSet.coord = coordinate;
@@ -216,6 +227,9 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		node.x = 10 * parseFloat(command[6]);
 		node.y = 10 * parseFloat(command[7]);
 		node.z = parseFloat(command[8]);
+		node.offsetx = parseFloat(command[9]);
+		node.offsety = parseFloat(command[10]);
+		node.offsetz = parseFloat(command[11]);
 
 		let nodeGroup = Browser.currentScene.getNamedNode('nodeGroup');
 		let nodeTransform = null;
@@ -227,21 +241,18 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		if (nodeTransform === null) {
 			nodeTransform = addNodeTransform(node);
 		}
-		if (node.sql === 'UPDATE') {
-			nodeTransform.translation = new SFVec3f(node.x, node.y, node.z);
-			// LOG("UPDATING NODE", node.id, node.x, node.y, node.z);
-			nodesShapes[node.id] = nodeTransform;
-		} else if (node.sql === 'INSERT') {
-			if (!nodesShapes[node.id]) {
-				if (nodeGroup !== null) {
-					addChild(nodeGroup, nodeTransform);
-					// LOG("SUCCESSFUL NODE", node.id, node.x, node.y, node.z);
-				} else {
-					LOG("FATAL NODE", node.id);
-				}
-				nodesShapes[node.id] = nodeTransform;
-				nodes.push(node);
+		updateNode(node, nodeTransform);
+		if (!nodesShapes[node.id]) {
+			if (nodeGroup !== null) {
+				addChild(nodeGroup, nodeTransform);
+				// LOG("SUCCESSFUL NODE", node.id, node.x, node.y, node.z);
+			} else {
+				LOG("FATAL NODE", node.id);
 			}
+			nodesShapes[node.id] = nodeTransform;
+			nodes.push(node);
+		} else {
+			nodesShapes[node.id] = nodeTransform;
 		}
 	} else if (command[0] === "SEGMENT") {
 		const sourceNode = nodes.find(n => n.id === command[3]);
@@ -269,8 +280,14 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 			  if (coordinate) {
 				  if (typeof sourceNode.x !== 'undefined') {
 					coordinate.point = new MFVec3f(
-							new SFVec3f(sourceNode.x, sourceNode.y, sourceNode.z),
-							new SFVec3f(targetNode.x, targetNode.y, targetNode.z));
+						new SFVec3f(
+							sourceNode.x + sourceNode.offsetx,
+							sourceNode.y + sourceNode.offsety,
+							sourceNode.z + sourceNode.offsetz),
+						new SFVec3f(
+							targetNode.x + targetNode.offsetx,
+							targetNode.y + targetNode.offsety,
+							targetNode.z + targetNode.offsetz));
 					// LOG("SUCCESSFUL COORDINATE", link, coordinate.point);
 				  } else {
 					LOG("FATAL COORDINATE", link, `${sourceNode.id} ${sourceNode.x} ${sourceNode.y} ${sourceNode.z}, ${targetNode.id} ${targetNode.x} ${targetNode.y} ${targetNode.z}`);
