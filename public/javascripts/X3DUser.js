@@ -127,8 +127,9 @@ const addNodeTransform = function(node) {
 	const shape = Browser.currentScene.createNode('Shape');
 	const appearance = Browser.currentScene.createNode('Appearance');
 	const material = Browser.currentScene.createNode('Material');
-	material.diffuseColor = new SFColor(1.0, 0.0, 0.0);
-	material.emissiveColor = new SFColor(1.0, 0.0, 0.0);
+	material.diffuseColor = new SFColor(node.red, node.green, node.blue);
+	Browser.print(material.diffuseColor, `${node.red}-${node.green}-${node.blue}`);
+	material.emissiveColor = new SFColor(node.red, node.green, node.blue);
 	material.transparency = 0.0; // Start fully opaque
 	appearance.material = material;
 
@@ -148,8 +149,8 @@ const addLinkTransform = function(link, sourceNode, targetNode) {
 	const linkTransform = Browser.currentScene.createNode('Transform');
 	Browser.currentScene.addNamedNode('trans'+link, linkTransform);
 
-	material.diffuseColor = new SFColor(0.0, 0.0, 1.0);
-	material.emissiveColor = new SFColor(0.0, 0.0, 1.0);
+	material.diffuseColor = new SFColor(1.0, 1.0, 1.0);
+	material.emissiveColor = new SFColor(1.0, 1.0, 1.0);
 	appearance.material = material;
 	const lineSet = Browser.currentScene.createNode('LineSet');
 	const coordinate = Browser.currentScene.createNode('Coordinate');
@@ -158,17 +159,41 @@ const addLinkTransform = function(link, sourceNode, targetNode) {
 			new SFVec3f(sourceNode.x, sourceNode.y, sourceNode.z),
 			new SFVec3f(targetNode.x, targetNode.y, targetNode.z));
 	}
-	lineSet.vertexCount = 2;
 	Browser.currentScene.addNamedNode('point'+link, coordinate);
 	lineSet.coord = coordinate;
+	lineSet.vertexCount = new MFInt32(2);
 	shape.appearance = appearance;
 	shape.geometry = lineSet;
 	addChild(linkTransform, shape);
+	/*
+	LOG("LineSet created", JSON.stringify({
+	  source: [sourceNode.x, sourceNode.y, sourceNode.z],
+	  target: [targetNode.x, targetNode.y, targetNode.z],
+	  vertexCount: lineSet.vertexCount,
+	  hasCoord: lineSet.coord !== null
+	}));
+	*/
 	return linkTransform;
 }
 
 const addChild = function(node, value) {
 	node.children.push(value);
+}
+
+const ensureLinkGroupExists = function() {
+  let linkGroup = null;
+  try {
+    linkGroup = Browser.currentScene.getNamedNode('linkGroup');
+  } catch (e) {
+    // Create the linkGroup if it doesn't exist
+    linkGroup = Browser.currentScene.createNode('Group');
+    Browser.currentScene.addNamedNode('linkGroup', linkGroup);
+
+    // Important: Add the linkGroup to the root of the scene or another visible parent
+    let root = Browser.currentScene.getNamedNode('Root') || Browser.currentScene.rootNode;
+    root.children.push(linkGroup);
+  }
+  return linkGroup;
 }
 
 const x3d_serveravatar = function(usernumber, dml, allowedToken) {
@@ -185,6 +210,13 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		}
 		node.id = command[1];
 		node.sql = command[2];
+		node.red = parseFloat(command[3]);
+		node.green = parseFloat(command[4]);
+		node.blue = parseFloat(command[5]);
+		node.x = 10 * parseFloat(command[6]);
+		node.y = 10 * parseFloat(command[7]);
+		node.z = parseFloat(command[8]);
+
 		let nodeGroup = Browser.currentScene.getNamedNode('nodeGroup');
 		let nodeTransform = null;
 		try {
@@ -196,9 +228,6 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 			nodeTransform = addNodeTransform(node);
 		}
 		if (node.sql === 'UPDATE') {
-			node.x = 10 * parseFloat(command[7]);
-			node.y = 10 * parseFloat(command[8]);
-			node.z = parseFloat(command[9]);
 			nodeTransform.translation = new SFVec3f(node.x, node.y, node.z);
 			// LOG("UPDATING NODE", node.id, node.x, node.y, node.z);
 			nodesShapes[node.id] = nodeTransform;
@@ -220,13 +249,8 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		let sql = command[2];
 		let link = command[3]+command[4];
 		if (sourceNode && targetNode) {
-		  let linkGroup = null;
+		  let linkGroup = ensureLinkGroupExists();
 		  let linkTransform = null;
-		  try {
-			linkGroup = Browser.currentScene.getNamedNode('linkGroup');
-		  } catch (e) {
-		  	linkGroup = null;
-		  }
 		  try {
 		  	linkTransform = Browser.currentScene.getNamedNode('trans'+link);
 		  } catch (e) {
@@ -236,12 +260,8 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 			linkTransform = addLinkTransform(link, sourceNode, targetNode);
 			if (linkTransform !== null && !linksShapes[`${sourceNode.id}-${targetNode.id}-${link}`]) {
 		  		linksShapes[`${sourceNode.id}-${targetNode.id}-${link}`] = linkTransform;
-				  if (linkGroup !== null) {
-					addChild(linkGroup, linkTransform);
-					LOG("SUCCESSFUL LINK", link, sourceNode.id, targetNode.id);
-				  } else {
-					LOG("FATAL LINK", link);
-				  }
+				addChild(linkGroup, linkTransform);
+				LOG("SUCCESSFUL LINK", link, sourceNode.id, targetNode.id);
 			}
 		  }
 		  if (sql === 'UPDATE') {
