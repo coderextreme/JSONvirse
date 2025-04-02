@@ -41,7 +41,7 @@
      open for their "discussion about the teapot" -->
 <Scene>
   <!-- LayerSet with two layers, navigation happens in layer 1 -->
-  <LayerSet activeLayer='1' order='1 2' >
+  <LayerSet activeLayer='1' order='1 2 3' >
     <!-- the first Layer contains the main scenery - "The Review of the Flower (DIS Multiuser)" -->
     <Layer isPickable='true'>
       <!-- basic nodes, which might be present in any scene -->
@@ -226,7 +226,6 @@ function initialize() {
     <LayoutLayer isPickable='true'>
       <!-- positioning the LayoutLayer -->
       <Layout containerField='layout' align='"LEFT","BOTTOM"' offset='-0.2, 0.19' offsetUnits='"WORLD","WORLD"' scaleMode='"NONE","NONE"' size='0.4, 0.6' sizeUnits='"WORLD","WORLD"'/>
-      <Viewpoint description='My Equation' fieldOfView='1.570796' position='0 1.75 60' />
       <!-- clipping the LayoutLayer -->
       <Viewport clipBoundary='0, 1, 0, 1'/>
       <!-- the content (children) of the LayoutLayer -->
@@ -314,7 +313,6 @@ function initialize() {
 
         <ROUTE fromField='translation_changed' fromNode='protoSensor' toField='newTranslation' toNode='protoValueTransformerScript'/>
         <ROUTE fromField='protoText_changed' fromNode='protoValueTransformerScript' toField='string' toNode='protoText'/>
-	    <Group DEF="humanoidGroup"/>
 	    </Group>
           </ProtoBody>
       </ProtoDeclare>
@@ -392,6 +390,11 @@ function initialize() {
 	      </fieldValue>
       </ProtoInstance>
     </LayoutLayer>
+    <Layer>
+            <Viewpoint description='My Humanoids' fieldOfView='1.570796' position='0 1.75 80' />
+	    <Script url='"../javascripts/X3DAvatar.js"' DEF='HumanoidScript' directOutput="true" mustEvaluate="true"/>
+	    <Group DEF="humanoidGroup"/>
+    </Layer>
   </LayerSet>
 </Scene>
 </X3D>

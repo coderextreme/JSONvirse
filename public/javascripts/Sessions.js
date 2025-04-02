@@ -236,7 +236,7 @@ class Sessions {
 	}
 	html_serverupdate(p) {
 		if (p) {
-			html_servermessage(p.username+"#"+p.usernumber+" at "+p.position+" turns "+p.orientation);
+			this.html_servermessage(p.username+"#"+p.usernumber+" at "+p.position+" turns "+p.orientation);
 		}
 	}
 	servercapability() {
