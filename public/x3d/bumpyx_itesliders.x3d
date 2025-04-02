@@ -226,7 +226,7 @@ function initialize() {
     <LayoutLayer isPickable='true'>
       <!-- positioning the LayoutLayer -->
       <Layout containerField='layout' align='"LEFT","BOTTOM"' offset='-0.2, 0.19' offsetUnits='"WORLD","WORLD"' scaleMode='"NONE","NONE"' size='0.4, 0.6' sizeUnits='"WORLD","WORLD"'/>
-      <Viewpoint description='My Overview' fieldOfView='1.570796' position='0 1.75 60' />
+      <Viewpoint description='My Equation' fieldOfView='1.570796' position='0 1.75 60' />
       <!-- clipping the LayoutLayer -->
       <Viewport clipBoundary='0, 1, 0, 1'/>
       <!-- the content (children) of the LayoutLayer -->
@@ -314,8 +314,7 @@ function initialize() {
 
         <ROUTE fromField='translation_changed' fromNode='protoSensor' toField='newTranslation' toNode='protoValueTransformerScript'/>
         <ROUTE fromField='protoText_changed' fromNode='protoValueTransformerScript' toField='string' toNode='protoText'/>
-	    <Group DEF="nodeGroup"/>
-	    <Group DEF="linkGroup"/>
+	    <Group DEF="humanoidGroup"/>
 	    </Group>
           </ProtoBody>
       </ProtoDeclare>

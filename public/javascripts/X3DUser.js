@@ -2,7 +2,7 @@ function LOG () {
     Browser.print('X3D Scene', ...arguments);
 }
 
-nodesShapes = {};
+hAnimJoints = {};
 linksShapes = {};
 nodes = [];
 
@@ -118,41 +118,49 @@ class X3DUser {
 	}
 
 }
-const addNodeTransform = function(node) {
+const addHAnimJoint = function(node) {
+	const hAnimJoint = Browser.currentScene.createNode('HAnimJoint');
+	Browser.currentScene.addNamedNode(node.id, hAnimJoint);
+	updateJointPosition(node, hAnimJoint);
+	return hAnimJoint;
+}
 
-	// Create sphere for node
-	const nodeTransform = Browser.currentScene.createNode('Transform');
-	Browser.currentScene.addNamedNode(node.id, nodeTransform);
+const updateJointPosition = function(node, hAnimJoint) {
+	hAnimJoint.center = new SFVec3f(node.x, node.y, node.z);
+	hAnimJoint.translation = new SFVec3f(node.offsetx, node.offsety, node.offsetz);
+}
 
+const updateJointSphere = function(node, hAnimSegment) {
+	// update Sphere color
+	hAnimSegment.children[0].children[0].appearance.material.diffuseColor = new SFColor(node.red, node.green, node.blue);
+	hAnimSegment.children[0].children[0].appearance.material.emissiveColor = new SFColor(node.red, node.green, node.blue);
+	
+	// update Sphere position
+	hAnimSegment.children[0].translation = new SFVec3f(node.x + node.offsetx, node.y + node.offsety, node.z + node.offsetz);
+}
+
+const addHAnimSegment = function(link, sourceNode, targetNode) {
+	// set up bone geometry
 	const shape = Browser.currentScene.createNode('Shape');
 	const appearance = Browser.currentScene.createNode('Appearance');
 	const material = Browser.currentScene.createNode('Material');
+	const hAnimSegment = Browser.currentScene.createNode('HAnimSegment');
+	Browser.currentScene.addNamedNode('trans'+link, hAnimSegment);
+
+	// set up joint geometry
+	const transform = Browser.currentScene.createNode('Transform');
+	const shape2 = Browser.currentScene.createNode('Shape');
+	const appearance2 = Browser.currentScene.createNode('Appearance');
+	const material2 = Browser.currentScene.createNode('Material');
 	const sphere = Browser.currentScene.createNode('Sphere');
 
 	sphere.radius = 3;
-	material.transparency = 0.0; // Start fully opaque
-	appearance.material = material;
-	shape.geometry = sphere;
-	shape.appearance = appearance;
-	addChild(nodeTransform, shape);
-	updateNode(node, nodeTransform);
-	return nodeTransform;
-
-}
-
-const updateNode = function(node, nodeTransform) {
-	nodeTransform.children[0].appearance.material.diffuseColor = new SFColor(node.red, node.green, node.blue);
-	nodeTransform.children[0].appearance.material.emissiveColor = new SFColor(node.red, node.green, node.blue);
-	nodeTransform.center = new SFVec3f(node.x, node.y, node.z);
-	nodeTransform.translation = new SFVec3f(node.x + node.offsetx, node.y + node.offsety, node.z + node.offsetz);
-}
-
-const addLinkTransform = function(link, sourceNode, targetNode) {
-	const shape = Browser.currentScene.createNode('Shape');
-	const appearance = Browser.currentScene.createNode('Appearance');
-	const material = Browser.currentScene.createNode('Material');
-	const linkTransform = Browser.currentScene.createNode('Transform');
-	Browser.currentScene.addNamedNode('trans'+link, linkTransform);
+	material2.transparency = 0.0; // Start fully opaque
+	appearance2.material = material2;
+	shape2.geometry = sphere;
+	shape2.appearance = appearance2;
+	addChild(transform, shape2);
+	addChild(hAnimSegment, transform);
 
 	material.diffuseColor = new SFColor(1.0, 1.0, 1.0);
 	material.emissiveColor = new SFColor(1.0, 1.0, 1.0);
@@ -175,7 +183,7 @@ const addLinkTransform = function(link, sourceNode, targetNode) {
 	lineSet.vertexCount = new MFInt32(2);
 	shape.appearance = appearance;
 	shape.geometry = lineSet;
-	addChild(linkTransform, shape);
+	addChild(hAnimSegment, shape);
 	/*
 	LOG("LineSet created", JSON.stringify({
 	  source: [sourceNode.x, sourceNode.y, sourceNode.z],
@@ -184,31 +192,30 @@ const addLinkTransform = function(link, sourceNode, targetNode) {
 	  hasCoord: lineSet.coord !== null
 	}));
 	*/
-	return linkTransform;
+	return hAnimSegment;
 }
 
 const addChild = function(node, value) {
 	node.children.push(value);
 }
 
-const ensureLinkGroupExists = function() {
-  let linkGroup = null;
+const ensureHumanoidExists = function(nick, humanoidGroup) {
+  let hAnimHumanoid = null;
+  let humanoidDEF = nick+'_humanoid';
   try {
-    linkGroup = Browser.currentScene.getNamedNode('linkGroup');
+    hAnimHumanoid = Browser.currentScene.getNamedNode(humanoidDEF);
   } catch (e) {
-    // Create the linkGroup if it doesn't exist
-    linkGroup = Browser.currentScene.createNode('Group');
-    Browser.currentScene.addNamedNode('linkGroup', linkGroup);
+    // Create the hAnimHumanoid if it doesn't exist
+    hAnimHumanoid = Browser.currentScene.createNode('HAnimHumanoid');
+    Browser.currentScene.addNamedNode(humanoidDEF, hAnimHumanoid);
 
-    // Important: Add the linkGroup to the root of the scene or another visible parent
-    let root = Browser.currentScene.getNamedNode('Root') || Browser.currentScene.rootNode;
-    root.children.push(linkGroup);
+    humanoidGroup.children.push(hAnimHumanoid);
   }
-  return linkGroup;
+  return hAnimHumanoid;
 }
 
 const x3d_serveravatar = function(usernumber, dml, allowedToken) {
-      let header = ["0", "0", "DUMMY"];
+      let header = ["0", "0"];
       let command = ["DUMMY"];
       dml.forEach((line, index) => {
         let header_command = line.split(",");
@@ -221,72 +228,90 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 
 	let timestamp = parseInt(header[0]);
 	let sequence = parseInt(header[1]);
-	let nick = header[2];
+	const NICK = 0;
+	const GEOMETRY = 1;
+	const ID = 2;
+	const SQL = 3;
+	const RED = 4;
+	const SOURCE = 4;
+	const GREEN = 5;
+	const TARGET = 5;
+	const BLUE = 6;
+	const X = 7;
+	const Y = 8;
+	const Z = 9;
+	const OFFSET_X = 10;
+	const OFFSET_Y = 11;
+	const OFFSET_Z = 12;
+	let nick = command[NICK];
 
-	if (command[0] === "NODE") {
-		let node = nodes.find(n => n.id === nick+command[1]);
+
+	if (command[GEOMETRY] === "J") { // JOINT
+		let node = nodes.find(n => n.id === nick+command[ID]);
 		if (!node) {
 			node = {};
 		}
-		node.id = nick+command[1];
-		node.sql = command[2];
-		node.red = parseFloat(command[3]);
-		node.green = parseFloat(command[4]);
-		node.blue = parseFloat(command[5]);
-		node.x = 10 * parseFloat(command[6]);
-		node.y = 10 * parseFloat(command[7]);
-		node.z = parseFloat(command[8]);
-		node.offsetx = parseFloat(command[9]);
-		node.offsety = parseFloat(command[10]);
-		node.offsetz = parseFloat(command[11]);
+		node.id = nick+command[ID];
+		node.sql = command[SQL];
+		node.red = parseFloat(command[RED]);
+		node.green = parseFloat(command[GREEN]);
+		node.blue = parseFloat(command[BLUE]);
+		node.x = 10 * parseFloat(command[X]);
+		node.y = 10 * parseFloat(command[Y]);
+		node.z = parseFloat(command[Z]);
+		node.offsetx = parseFloat(command[OFFSET_X]);
+		node.offsety = parseFloat(command[OFFSET_Y]);
+		node.offsetz = parseFloat(command[OFFSET_Z]);
 
-		let nodeGroup = Browser.currentScene.getNamedNode('nodeGroup');
-		let nodeTransform = null;
+		// TODO humanoidGroup must be present in scene
+		let humanoidGroup = Browser.currentScene.getNamedNode('humanoidGroup');
+		let hAnimHumanoid = ensureHumanoidExists(nick, humanoidGroup);
+		let hAnimJoint = null;
 		try {
-			nodeTransform = Browser.currentScene.getNamedNode(node.id);
+			hAnimJoint = Browser.currentScene.getNamedNode(node.id);
 		} catch (e) {
-			nodeTransform = null;
+			hAnimJoint = null;
 		}
-		if (nodeTransform === null) {
-			nodeTransform = addNodeTransform(node);
+		if (hAnimJoint === null) {
+			hAnimJoint = addHAnimJoint(node);
 		}
-		if (node.sql === 'UPDATE') {
-			updateNode(node, nodeTransform);
+		if (node.sql === 'U') {  // UPDATE
+			updateJointPosition(node, hAnimJoint);
 		}
-		if (!nodesShapes[node.id]) {
-			if (nodeGroup !== null) {
-				addChild(nodeGroup, nodeTransform);
-				// LOG("SUCCESSFUL NODE", node.id, node.x, node.y, node.z);
+		if (!hAnimJoints[node.id]) {
+			if (hAnimHumanoid !== null) {
+				hAnimHumanoid.skeleton.push(hAnimJoint);
+				// LOG("SUCCESSFUL JOINT", node.id, node.x, node.y, node.z);
 			} else {
-				LOG("FATAL NODE", node.id);
+				LOG("FATAL JOINT", node.id);
 			}
-			nodesShapes[node.id] = nodeTransform;
+			hAnimJoints[node.id] = hAnimJoint;
 			nodes.push(node);
 		} else {
-			nodesShapes[node.id] = nodeTransform;
+			hAnimJoints[node.id] = hAnimJoint;
 		}
-	} else if (command[0] === "SEGMENT") {
-		const sourceNode = nodes.find(n => n.id === nick+command[3]);
-		const targetNode = nodes.find(n => n.id === nick+command[4]);
-		let sql = command[2];
-		let link = nick+command[3]+nick+command[4];
+	} else if (command[GEOMETRY] === "S") {  // SEGMENT
+		const sourceNode = nodes.find(n => n.id === nick+command[SOURCE]);
+		const targetNode = nodes.find(n => n.id === nick+command[TARGET]);
+		let sql = command[SQL];
+		let link = nick+command[SOURCE]+command[TARGET];
 		if (sourceNode && targetNode) {
-		  let linkGroup = ensureLinkGroupExists();
-		  let linkTransform = null;
+		  let hAnimSegment = null;
 		  try {
-		  	linkTransform = Browser.currentScene.getNamedNode('trans'+link);
+		  	hAnimSegment = Browser.currentScene.getNamedNode('trans'+link);
 		  } catch (e) {
-		  	linkTransform = null;
+		  	hAnimSegment = null;
 		  }
-		  if (linkTransform === null) {
-			linkTransform = addLinkTransform(link, sourceNode, targetNode);
-			if (linkTransform !== null && !linksShapes[`${sourceNode.id}-${targetNode.id}-${link}`]) {
-		  		linksShapes[`${sourceNode.id}-${targetNode.id}-${link}`] = linkTransform;
-				addChild(linkGroup, linkTransform);
-				LOG("SUCCESSFUL LINK", link, sourceNode.id, targetNode.id);
+		  if (hAnimSegment === null) {
+			hAnimSegment = addHAnimSegment(link, sourceNode, targetNode);
+			if (hAnimSegment !== null && !linksShapes[`${sourceNode.id}-${targetNode.id}-${link}`]) {
+		  		linksShapes[`${sourceNode.id}-${targetNode.id}-${link}`] = hAnimSegment;
+				addChild(hAnimJoints[sourceNode.id], hAnimSegment);
+				LOG("SUCCESSFUL SEGMENT", link, sourceNode.id, targetNode.id);
 			}
 		  }
-		  if (sql === 'UPDATE') {
+		  updateJointSphere(sourceNode, hAnimSegment);
+		  if (sql === 'U') { // UPDATE
 			  let coordinate = Browser.currentScene.getNamedNode('point'+link);
 			  if (coordinate) {
 				  if (typeof sourceNode.x !== 'undefined') {
@@ -319,10 +344,12 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		Browser.print("DEBUG", line);
 	}
       });
+      /*
       var xml = Browser.currentScene.toXMLString();
       if (document.querySelector("#x3d").innerHTML !== xml) {
       	document.querySelector("#x3d").innerHTML = xml;
       }
+      */
 }
 
 const x3d_serverupdate =  function (usernumber, position, orientation, allowedToken) {
