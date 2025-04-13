@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Yottzumm 1 (JSONverse Demo Page)</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <script defer type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script defer type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/x_ite@11.4.1/dist/x_ite.js"></script>
+    <script defer type="text/javascript" src="javascripts/bottomscroll.js"></script>
+    <script defer type="text/javascript" src="javascripts/Sessions.js"></script>
+    <script defer type="text/javascript" src="javascripts/HTMLUser.js"></script>
+  </head>
+  <body>
+	  <!--
+    <x3d-canvas id="scene" url='"https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb"'></x3d-canvas>
+    -->
+    <x3d-canvas id="scene" url='"x3d/JinLOA4LiveMocap.x3d"'>
+
+    </x3d-canvas>
+    <textarea id="x3d" rows="15" cols="80"></textarea><br>
+    <div id="chat">
+    <ul id="messages"></ul>
+    <ul id="score"></ul>
+	    <div>
+		    <span>User name: <input id="username"/></span><br>
+		    <input id="m" autocomplete="off" /><br>
+	    </div>
+    <hr>
+	    <div>
+		    <span><button id="fetchbutton">Fetch</button></span>
+		    <span><button id="publishbutton">Publish</button></span><br>
+		    <span><button id="sessionbutton">Update Session Info</button></span>
+		    <span>Session name: <select id="session"><option value="{{firstSession}}">{{firstSession}}</option></select></span><br>
+		    <span><button id="disconnectbutton">Disconnect All Sessions</button></span><br>
+		    <span>Start Date/Time: <input type="datetime" id="from"/></span><br>
+		    <span>Stop Date/Time:   <input type="datetime" id="to"/></span><br>
+		    <span>Amount:   <input id="rate" value="0"/></span><br>
+		    <span>Amount unit:   <input id="currency" value="Bitcoin"/></span><br>
+		    <span>Period:   <input id="period" value="1"/></span><br>
+		    <span>Period unit: <select id="periodunit">
+				    <option value="year">year</option>
+				    <option value="month">month</option>
+				    <option value="fortnite">fortnite</option>
+				    <option value="week">week</option>
+				    <option value="day">day</option>
+				    <option value="hour">hour</option>
+				    <option value="minute">minute</option>
+				    <option value="second">second</option>
+				    <option value="millisecond">millisecond</option>
+				    <option value="nanosecond">nanosecond</option>
+				    <option value="picosecond">picosecond</option>
+				    <option value="femtosecond">femtosecond</option>
+		    </select></span><br>
+		    <span><textarea id="sessionjson" rows="15" cols="80">[
+  {
+    "Session Petname": "yottzumm",
+    "Session Token": "Unique Super Secret Token",
+    "Session Type": "Testing Session",
+    "Session Link": null
+  }
+]</textarea></span><br>
+	    </div>
+    </div>
+    Background Images by Paul Debevec. <a href="https://www.pauldebevec.com/Probes/">Light Probe Image Gallery</a>
+  </body>
+</html>

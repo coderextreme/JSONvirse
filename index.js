@@ -156,6 +156,7 @@ console.log('\thttp://localhost:%s/', port);
 console.log('\thttp://localhost:%s/symbols.html', port);
 console.log('\thttp://localhost:%s/tapi/template/yottzumm/Unique%20Super%20Secret%20Token/null', port);
 console.log('\thttp://localhost:%s/yottzumm.html', port);
+console.log('\thttp://localhost:%s/jin.html', port);
 console.log('\thttp://localhost:%s/yottzumm2.html', port);
 console.log('\thttp://localhost:%s/petnames.html', port);
 console.log('\thttps://lc-soc-lc.at:%s/yottzumm/public/index.html', 8443);
