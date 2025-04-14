@@ -4,8 +4,7 @@ function LOG () {
 
 const addHAnimJoint = function(node) {
 	const hAnimJoint = Browser.currentScene.createNode('HAnimJoint');
-	Browser.currentScene.addNamedNode(node.id, hAnimJoint);
-	updateJointPosition(node, hAnimJoint);
+	Browser.currentScene.addNamedNode(node.DEF, hAnimJoint);
 	return hAnimJoint;
 }
 
@@ -48,29 +47,35 @@ const normalize = function(vec) {
 	return vec
 }
 
-const updateJointPosition = function(node, hAnimJoint) {
-	if (!hAnimJoint.center) {  // Joint center should be set in X3D file
-		hAnimJoint.center = new SFVec3f(node.x, node.y, node.z);
+const updateJointRotation = function(sourceNode, sourceJoint, targetNode, targetJoint) {
+	if (!sourceJoint.center) {  // Joint center should be set in X3D file
+		LOG("Center isn't set", JSON.stringify(sourceNode));
+	} else {
+		let newRay = {
+			x: targetNode.x - sourceJoint.center.x,
+			y: targetNode.y - sourceJoint.center.y,
+			z: targetNode.z - sourceJoint.center.z
+		};
+		newRay = normalize(newRay);
+		if (typeof sourceNode.oldRay === 'undefined') {
+			sourceNode.oldRay = newRay;
+		}
+		let angle = angleBetweenVectors(sourceNode.oldRay, newRay);
+		let axis = crossProduct(sourceNode.oldRay, newRay);
+		axis.x = axis[0];
+		axis.y = axis[1];
+		axis.z = axis[2];
+		axis = normalize(axis);
+		if (!isNaN(angle)) {
+			sourceJoint.rotation = new SFRotation( axis.x, axis.y, axis.z, angle);
+			if (sourceJoint.rotation !== {}) {
+				if (angle !== 0) {
+					LOG(sourceNode.DEF, targetNode.DEF, angle);
+				}
+			}
+		}
+		sourceNode.oldRay = newRay;
 	}
-	let newOffset = {
-		x: node.x - hAnimJoint.center.x,
-		y: node.y - hAnimJoint.center.y,
-		z: node.z - hAnimJoint.center.z
-	};
-	newOffset = normalize(newOffset);
-	if (typeof node.oldOffset === 'undefined') {
-		node.oldOffset = newOffset;
-	}
-	let angle = angleBetweenVectors(node.oldOffset, newOffset);
-	let axis = crossProduct(node.oldOffset, newOffset);
-	axis.x = axis[0];
-	axis.y = axis[1];
-	axis.z = axis[2];
-	axis = normalize(axis);
-	if (!isNaN(angle)) {
-		hAnimJoint.rotation = new SFRotation( axis.x, axis.y, axis.z, angle);
-	}
-	node.oldOffset = newOffset;
 }
 
 const ensureHumanoidExists = function(nick, humanoidGroup) {
@@ -89,7 +94,6 @@ const ensureHumanoidExists = function(nick, humanoidGroup) {
 }
 
 const x3d_serveravatar = function(usernumber, dml, allowedToken) {
-      debugger;
       let header = ["0", "0"];
       let command = ["DUMMY"];
       dml.forEach((line, index) => {
@@ -117,37 +121,42 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 
 
 	if (command[NODE] === "J") { // JOINT
-		let node = nodes.find(n => n.id === nick+"_"+command[JOINT]);
+		let node = nodes.find(n => n.id === nick+command[ID]);
 		if (!node) {
 			node = {};
 		}
-		node.id = nick+"_"+command[JOINT];
+		node.DEF = (nick+"_"+command[JOINT]).replace("\n", "");
+		node.id = nick+command[ID];
 		node.sql = command[SQL];
 		node.x = parseFloat(command[X]);
 		node.y = parseFloat(command[Y]);
 		node.z = parseFloat(command[Z]);
-		node.joint = command[JOINT];
+		node.joint = command[JOINT].replace("\n", "");
 
 		// TODO humanoidGroup must be present in scene
 		let humanoidGroup = Browser.currentScene.getNamedNode('humanoidGroup');
 		let hAnimHumanoid = ensureHumanoidExists(nick, humanoidGroup);
 		let hAnimJoint = null;
 		try {
-			hAnimJoint = Browser.currentScene.getNamedNode(node.id);
+			hAnimJoint = Browser.currentScene.getNamedNode(node.DEF);
 		} catch (e) {
 			hAnimJoint = null;
 		}
 		if (hAnimJoint === null) {
 			hAnimJoint = addHAnimJoint(node);
-		}
-		if (node.sql === 'U') {  // UPDATE
-			updateJointPosition(node, hAnimJoint);
+			// LOG("ADDED JOINT", node.DEF);
 		}
 		if (!hAnimJoints[node.id]) {
 			hAnimJoints[node.id] = hAnimJoint;
 			nodes.push(node);
 		}
+		// LOG("Got node", JSON.stringify(node));
 	} else if (command[NODE] === "S") { // SEGMENT
+		const sourceNode = nodes.find(n => n.id === nick+command[SOURCE]);
+		const targetNode = nodes.find(n => n.id === nick+command[TARGET]);
+		if (sourceNode && targetNode) {
+		  updateJointRotation(sourceNode, hAnimJoints[sourceNode.id], targetNode, hAnimJoints[targetNode.id]);
+		}
 	} else {
 		Browser.print("DEBUG", line);
 	}
@@ -173,6 +182,7 @@ const reconnect = function (x3duser) {
 			let socket = x3duser._sockets[sessionname];
 			if (socket !== null) {
 				if (x3d_serveravatar !== null) {
+      					debugger;
 					x3duser._sockets[sessionname].on('x3d_serveravatar', x3d_serveravatar);
 				} else {
 					LOG("reconnect Can't service x3d_serveravatar", sessionname, sessiontoken);
