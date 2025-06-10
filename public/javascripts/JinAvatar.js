@@ -70,7 +70,7 @@ const updateJointRotation = function(sourceNode, sourceJoint, targetNode, target
 			sourceJoint.rotation = new SFRotation( axis.x, axis.y, axis.z, angle);
 			if (sourceJoint.rotation !== {}) {
 				if (angle !== 0) {
-					LOG(sourceNode.DEF, targetNode.DEF, angle);
+					LOG(sourceNode.DEF, sourceNode.id, targetNode.DEF, targetNode.id, angle);
 				}
 			}
 		}
@@ -125,13 +125,19 @@ const x3d_serveravatar = function(usernumber, dml, allowedToken) {
 		if (!node) {
 			node = {};
 		}
-		node.DEF = (nick+"_"+command[JOINT]).replace("\n", "");
+
+		let side = (
+			(command[ID].startsWith("l") || command[ID].startsWith("r")) &&
+			!(command[JOINT].startsWith("l_") || command[JOINT].startsWith("r_"))
+			? command[ID].substring(0,1)+"_"
+			: "" );
+		node.joint = side+command[JOINT].replace("\n", "");
+		node.DEF = nick+"_"+node.joint;
 		node.id = nick+command[ID];
 		node.sql = command[SQL];
 		node.x = parseFloat(command[X]);
 		node.y = parseFloat(command[Y]);
 		node.z = parseFloat(command[Z]);
-		node.joint = command[JOINT].replace("\n", "");
 
 		// TODO humanoidGroup must be present in scene
 		let humanoidGroup = Browser.currentScene.getNamedNode('humanoidGroup');
