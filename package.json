@@ -12,6 +12,7 @@
 	"dependencies": {
 		"body-parser": "*",
 		"express": "*",
+    		"debug": "4.4.1",
 		"handlebars": "^4.7.8",
 		"node-rest-client": "*",
 		"socket.io": "*",
