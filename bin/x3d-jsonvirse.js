@@ -1,0 +1,1 @@
+// Content of the file bin/x3d-jsonverse.js (please replace this with the actual content if known)
