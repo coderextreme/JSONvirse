@@ -3,11 +3,11 @@
 	"author": "John Carlson, Yottzumm, coderextreme",
 	"license": "BSD 2-Clause License",
 	"version": "4.3.6",
-	"description": "X3DJSONVerse -- npx X3D Server",
+	"description": "X3DJSONVirse -- npx X3D Server",
 	"main": "index.js",
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/coderextreme/JSONverse.git"
+		"url": "git://github.com/coderextreme/JSONvirse.git"
 	},
 	"dependencies": {
 		"body-parser": "*",
@@ -26,10 +26,10 @@
 		"publish": "npm publish --access public"
 	},
 	"bin": {
-		"x3d-jsonverse": "bin/x3d-jsonverse.js"
+		"x3d-jsonvirse": "bin/x3d-jsonvirse.js"
 	},
 	"bugs": {
-		"url": "https://github.com/coderextreme/JSONverse/issues"
+		"url": "https://github.com/coderextreme/JSONvirse/issues"
 	},
-	"homepage": "https://www.npmjs.com/package/x3d-jsonverse"
+	"homepage": "https://www.npmjs.com/package/x3d-jsonvirse"
 }
