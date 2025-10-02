@@ -11,17 +11,17 @@ $ret=0
 if (Test-Path "$basedir/node$exe") {
   # Support pipeline input
   if ($MyInvocation.ExpectingInput) {
-    $input | & "$basedir/node$exe"  "$basedir/../../JSONverse/bin/x3d-jsonverse.js" $args
+    $input | & "$basedir/node$exe"  "$basedir/../../JSONvirse/bin/x3d-jsonvirse.js" $args
   } else {
-    & "$basedir/node$exe"  "$basedir/../../JSONverse/bin/x3d-jsonverse.js" $args
+    & "$basedir/node$exe"  "$basedir/../../JSONvirse/bin/x3d-jsonvirse.js" $args
   }
   $ret=$LASTEXITCODE
 } else {
   # Support pipeline input
   if ($MyInvocation.ExpectingInput) {
-    $input | & "node$exe"  "$basedir/../../JSONverse/bin/x3d-jsonverse.js" $args
+    $input | & "node$exe"  "$basedir/../../JSONvirse/bin/x3d-jsonvirse.js" $args
   } else {
-    & "node$exe"  "$basedir/../../JSONverse/bin/x3d-jsonverse.js" $args
+    & "node$exe"  "$basedir/../../JSONvirse/bin/x3d-jsonvirse.js" $args
   }
   $ret=$LASTEXITCODE
 }

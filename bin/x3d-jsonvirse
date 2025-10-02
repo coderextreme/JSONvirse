@@ -6,7 +6,7 @@ case `uname` in
 esac
 
 if [ -x "$basedir/node" ]; then
-  exec "$basedir/node"  "$basedir/../../JSONverse/bin/x3d-jsonverse.js" "$@"
+  exec "$basedir/node"  "$basedir/../../JSONvirse/bin/x3d-jsonvirse.js" "$@"
 else 
-  exec node  "$basedir/../../JSONverse/bin/x3d-jsonverse.js" "$@"
+  exec node  "$basedir/../../JSONvirse/bin/x3d-jsonvirse.js" "$@"
 fi
