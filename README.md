@@ -1,5 +1,6 @@
 x3d-jsonvirse
 ==============
+Note:  This package was originally named JSONverse, but was renamed due to trademark infringement (but I can't find trademarks in Egypt, and the repository is archived and the website is no longer up).
 
 Multiuser server/client for X3D
 
