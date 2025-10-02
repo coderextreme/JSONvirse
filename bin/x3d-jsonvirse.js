@@ -1,1 +1,4 @@
-// Content of the file bin/x3d-jsonverse.js (please replace this with the actual content if known)
+#!/usr/bin/env node
+"use strict"
+
+var validate = require('../index.js')
