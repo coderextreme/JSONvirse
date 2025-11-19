@@ -6,7 +6,7 @@ Multiuser server/client for X3D
 
 First:
 
-Download nodejs/npm.  On Windows they come in the nodejs package.
+Download nodejs/npm.  On Linux they come in the nodejs package.
 
 AFAIK, this does not work on Windows Subsystem for Linux WSLg or WSL2. Assistance Welcome
 
