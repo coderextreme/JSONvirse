@@ -8,10 +8,13 @@ const addHAnimJoint = function(node) {
 	return hAnimJoint;
 }
 
+/*
 const dotProduct = function(vector1, vector2) {
   return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
 }
+*/
 
+/*
 const crossProduct = function(vector1, vector2) {
   return [
     vector1.y * vector2.z - vector1.z * vector2.y,
@@ -19,7 +22,9 @@ const crossProduct = function(vector1, vector2) {
     vector1.x * vector2.y - vector1.y * vector2.x
   ];
 }
+*/
 
+/*
 function angleBetweenVectors(vector1, vector2) {
     const dot = dotProduct(vector1, vector2);
     const magnitude1 = vectorMagnitude(vector1);
@@ -32,11 +37,15 @@ function angleBetweenVectors(vector1, vector2) {
     const angle = Math.acos(dot/magnitude1/magnitude2)  // Use atan2 for correct quadrant
     return angle;
 }
+*/
 
+/*
 function vectorMagnitude(vector) {
     return Math.sqrt(dotProduct(vector, vector));
 }
+*/
 
+/*
 const normalize = function(vec) {
 	const mag = vectorMagnitude(vec);
 	if (mag != 0) {
@@ -46,36 +55,72 @@ const normalize = function(vec) {
 	}
 	return vec
 }
+*/
 
-const updateJointRotation = function(sourceNode, sourceJoint, targetNode, targetJoint) {
+/**
+ * Converts a normalized quaternion to an axis and angle representation.
+ * @param {number[]} q The quaternion as an array [x, y, z, w].
+ * @returns {object} An object containing the axis [x, y, z] and angle (in radians).
+ */
+function quaternionToAxisAngle(q) {
+    // Ensure the quaternion is normalized (optional, but good practice to avoid errors)
+    // In practice, rotation quaternions are usually already normalized.
+    // If not, you should normalize it first.
+    // const length = Math.sqrt(q[0]*q[0] + q[1]*q[1] + q[2]*q[2] + q[3]*q[3]);
+    // q = [q[0]/length, q[1]/length, q[2]/length, q[3]/length];
+
+    const angle = 2 * Math.acos(q[3]); // Angle in radians
+    let s = Math.sqrt(1 - q[3] * q[3]); // sin(angle/2)
+
+    // Handle the case where the angle is close to zero or 180 degrees to prevent division by zero
+    if (s < 0.001) {
+        // If s is close to zero, then the angle is close to 0 or 180 degrees (pi radians).
+        // If angle is 0, any axis will work (no rotation).
+        // If angle is 180 (pi), the axis is the vector part of the quaternion.
+        // The direction of the axis may not be important in this case.
+        return {
+            axis: [q[0], q[1], q[2]],
+            angle: angle
+        };
+    } else {
+        // Normalise the axis
+        return {
+            axis: [q[0] / s, q[1] / s, q[2] / s],
+            angle: angle
+        };
+    }
+}
+
+const updateJointRotation = function(sourceJoint, node) {
+	
 	if (!sourceJoint.center) {  // Joint center should be set in X3D file
 		LOG("Center isn't set", JSON.stringify(sourceNode));
-	} else {
-		let newRay = {
-			x: targetNode.x - sourceJoint.center.x,
-			y: targetNode.y - sourceJoint.center.y,
-			z: targetNode.z - sourceJoint.center.z
-		};
-		newRay = normalize(newRay);
-		if (typeof sourceNode.oldRay === 'undefined') {
-			sourceNode.oldRay = newRay;
-		}
-		let angle = angleBetweenVectors(sourceNode.oldRay, newRay);
-		let axis = crossProduct(sourceNode.oldRay, newRay);
-		axis.x = axis[0];
-		axis.y = axis[1];
-		axis.z = axis[2];
-		axis = normalize(axis);
-		if (!isNaN(angle)) {
-			sourceJoint.rotation = new SFRotation( axis.x, axis.y, axis.z, angle);
-			if (sourceJoint.rotation !== {}) {
-				if (angle !== 0) {
-					LOG(sourceNode.DEF, sourceNode.id, targetNode.DEF, targetNode.id, angle);
-				}
+	}
+	if (!isNaN(node.angle)) {
+		if (!sourceJoint.name.endsWith("knee") &&
+		    // !sourceJoint.name.endsWith("hips") &&
+		    !sourceJoint.name.endsWith("sacroiliac") &&
+		    !sourceJoint.name.endsWith("vt1")) {
+			const myQuaternion = [ node.pitch, node.yaw, node.roll, node.angle ];
+			const rotation = quaternionToAxisAngle(myQuaternion);
+		    	if (sourceJoint.name.endsWith("hip")) {
+				sourceJoint.rotation = new SFRotation(0, 1, 0, 0);
+				console.log(sourceJoint.name, "rotation", sourceJoint.rotation.x, sourceJoint.rotation.y, sourceJoint.rotation.z, sourceJoint.rotation.angle);
+			} else {
+				sourceJoint.rotation = new SFRotation(rotation.axis[0], rotation.axis[1], rotation.axis[2], rotation.angle);
+				console.log(sourceJoint.name, "rotation", sourceJoint.rotation.x, sourceJoint.rotation.y, sourceJoint.rotation.z, sourceJoint.rotation.angle);
 			}
 		}
-		sourceNode.oldRay = newRay;
 	}
+}
+
+const updateJointLocation = function(sourceJoint, node) {
+	
+	if (!sourceJoint.center) {  // Joint center should be set in X3D file
+		LOG("Center isn't set", JSON.stringify(sourceNode));
+	}
+	// sourceJoint.center = new SFVec3f( node.x, (3 - node.y) / 2, node.z );
+	// console.log("center", sourceJoint.center.x, sourceJoint.center.y, sourceJoint.center.z);
 }
 
 const ensureHumanoidExists = function(nick, humanoidGroup) {
@@ -93,86 +138,43 @@ const ensureHumanoidExists = function(nick, humanoidGroup) {
   return hAnimHumanoid;
 }
 
-const x3d_serveravatar = function(usernumber, dml, allowedToken) {
-      let header = ["0", "0"];
-      let command = ["DUMMY"];
-      dml.forEach((line, index) => {
-        let header_command = line.split(",");
-	if (header_command.length == 1) {
-		command = header_command[0].split("|");
-	} else if (header_command.length == 2) {
-      		header = header_command[0].split("|");
-		command = header_command[1].split("|");
+const x3d_serveravatar = function(usernumber, command, allowedToken) {
+	// console.log(command);
+	const JOINT = 0;
+	const X = 1;
+	const Y = 2;
+	const Z = 3;
+	const Pitch = 4;
+	const Yaw = 5;
+	const Roll = 6;
+	const Angle = 7;
+	let nick = "Joe";
+
+	let node = {};
+	node.joint = command[JOINT].replace("\n", "");
+	node.DEF = nick+"_"+node.joint;
+	node.x = parseFloat(command[X]);
+	node.y = parseFloat(command[Y]);
+	node.z = parseFloat(command[Z]);
+	node.pitch = parseFloat(command[Pitch]);
+	node.yaw = parseFloat(command[Yaw]);
+	node.roll = parseFloat(command[Roll]);
+	node.angle = parseFloat(command[Angle]);
+
+	// TODO humanoidGroup must be present in scene
+	let humanoidGroup = Browser.currentScene.getNamedNode('humanoidGroup');
+	let hAnimHumanoid = ensureHumanoidExists(nick, humanoidGroup);
+	let hAnimJoint = null;
+	try {
+		hAnimJoint = Browser.currentScene.getNamedNode(node.DEF);
+	} catch (e) {
+		hAnimJoint = null;
 	}
-
-	let timestamp = parseInt(header[0]);
-	let sequence = parseInt(header[1]);
-	const NICK = 0;
-	const NODE = 1;
-	const ID = 2;
-	const SQL = 3;
-	const SOURCE = 4;
-	const TARGET = 5;
-	const X = 4;
-	const Y = 5;
-	const Z = 6;
-	const JOINT = 7;
-	let nick = command[NICK];
-
-
-	if (command[NODE] === "J") { // JOINT
-		let node = nodes.find(n => n.id === nick+command[ID]);
-		if (!node) {
-			node = {};
-		}
-
-		let side = (
-			(command[ID].startsWith("l") || command[ID].startsWith("r")) &&
-			!(command[JOINT].startsWith("l_") || command[JOINT].startsWith("r_"))
-			? command[ID].substring(0,1)+"_"
-			: "" );
-		node.joint = side+command[JOINT].replace("\n", "");
-		node.DEF = nick+"_"+node.joint;
-		node.id = nick+command[ID];
-		node.sql = command[SQL];
-		node.x = parseFloat(command[X]);
-		node.y = parseFloat(command[Y]);
-		node.z = parseFloat(command[Z]);
-
-		// TODO humanoidGroup must be present in scene
-		let humanoidGroup = Browser.currentScene.getNamedNode('humanoidGroup');
-		let hAnimHumanoid = ensureHumanoidExists(nick, humanoidGroup);
-		let hAnimJoint = null;
-		try {
-			hAnimJoint = Browser.currentScene.getNamedNode(node.DEF);
-		} catch (e) {
-			hAnimJoint = null;
-		}
-		if (hAnimJoint === null) {
-			hAnimJoint = addHAnimJoint(node);
-			// LOG("ADDED JOINT", node.DEF);
-		}
-		if (!hAnimJoints[node.id]) {
-			hAnimJoints[node.id] = hAnimJoint;
-			nodes.push(node);
-		}
-		// LOG("Got node", JSON.stringify(node));
-	} else if (command[NODE] === "S") { // SEGMENT
-		const sourceNode = nodes.find(n => n.id === nick+command[SOURCE]);
-		const targetNode = nodes.find(n => n.id === nick+command[TARGET]);
-		if (sourceNode && targetNode) {
-		  updateJointRotation(sourceNode, hAnimJoints[sourceNode.id], targetNode, hAnimJoints[targetNode.id]);
-		}
-	} else {
-		Browser.print("DEBUG", line);
+	if (hAnimJoint === null) {
+		hAnimJoint = addHAnimJoint(node);
 	}
-      });
-      /*
-      var xml = Browser.currentScene.toXMLString();
-      if (document.querySelector("#x3d").innerHTML !== xml) {
-      	document.querySelector("#x3d").innerHTML = xml;
-      }
-      */
+	updateJointLocation(hAnimJoint, node);
+	updateJointRotation(hAnimJoint, node);
 }
 
 const reconnect = function (x3duser) {

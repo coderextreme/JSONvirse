@@ -105,8 +105,7 @@ class Multiplayer {
             }
           });
           socket.on('python_clientavatar', function() {
-	    const dml = arguments[0].toString().split(" ");
-            mp.python_clientavatar(socket, dml);
+            mp.python_clientavatar(socket, arguments);
           });
           socket.on('clientsdp', function() {
             if (mp.getPlayer(socket)) {
