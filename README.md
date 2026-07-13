@@ -15,7 +15,7 @@ To run put the following in the bash prompt (or do the equivalent in zsh, comman
 git clone https://github.com/coderextreme/JSONvirse
 cd JSONvirse
 npm install
-export X3DJSONPORT=8088  # or 80 or whatever you like, normally something > 1024.  80 works on Windows.  Probably not Linux or Mac.
+export X3DJSONPORT=8088  # or omit, or =80 or whatever you like, normally something > 1024.  80 works on Windows.  Probably not Linux or Mac.
 npm run start
 ```
 Click on a one of the localhost:8088 links
